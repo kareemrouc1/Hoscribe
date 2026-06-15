@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أبو لورم | AboLorm - كريم محمد إسماعيل | محتوى عائلي هادف</title>
+    <meta name="description" content="أبو لورم - كريم محمد إسماعيل، يوتيوبر عربي يقدم محتوى عائلي ممتع يجمع بين الألعاب والتحديات والتجارب بأسلوب صادق ومحبب للجميع.">
+    <meta name="keywords" content="أبو لورم, AboLorm, كريم محمد إسماعيل, يوتيوبر عربي, محتوى عائلي, جيمنج, تحديات, تجارب, يوتيوب عربي, قناة عائلية, محتوى أخلاقي, العاب مضحكة">
+    <meta name="author" content="كريم محمد إسماعيل - أبو لورم">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://abolorm.netlife.app/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://abolorm.netlife.app/">
+    <meta property="og:title" content="أبو لورم | AboLorm - كريم محمد إسماعيل">
+    <meta property="og:description" content="محتوى عائلي صادق وممتع، ألعاب وتحديات وتجارب من قلب الوطن العربي. تعالَ استمتع معنا!">
+    <meta property="og:image" content="https://abolorm.netlife.app/logo.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://abolorm.netlife.app/">
+    <meta name="twitter:title" content="أبو لورم | AboLorm - كريم محمد إسماعيل">
+    <meta name="twitter:description" content="محتوى عائلي صادق وممتع، ألعاب وتحديات وتجارب من قلب الوطن العربي. تعالَ استمتع معنا!">
+    <meta name="twitter:image" content="https://abolorm.netlife.app/logo.png">
+
+    <!-- Favicon -->
+    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="logo.png">
+
+    <!-- تحسين تحميل الخطوط: اتصال مسبق وعرض سريع -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Marhey:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-deep: #080808;
+            --bg-card: #131313;
+            --bg-card-lighter: #1a1a1a;
+            --gold: #e6b422;
+            --gold-bright: #f5d046;
+            --gold-soft: #c99d1e;
+            --text-primary: #f2eddb;
+            --text-muted: #b7ae8c;
+            --accent-warm: #f0813a;
+            --shadow-gold: 0 6px 28px rgba(230, 180, 34, 0.22);
+            --shadow-dark: 0 10px 34px rgba(0, 0, 0, 0.7);
+            --radius-organic: 55% 45% 65% 35% / 45% 55% 35% 65%;
+            --radius-blob: 60% 40% 45% 55% / 35% 65% 55% 45%;
+            --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            line-height: 1.85;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.4'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 180px 180px;
+        }
+
+        .bg-blobs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .bg-blob {
+            position: absolute;
+            border-radius: var(--radius-organic);
+            filter: blur(75px);
+            opacity: 0.16;
+            transition: transform 0.5s ease;
+            will-change: transform;
+        }
+        .bg-blob--1 {
+            width: 500px;
+            height: 450px;
+            background: rgba(230, 180, 34, 0.11);
+            top: -10%;
+            left: -10%;
+            border-radius: var(--radius-blob);
+            animation: floatBlob1 20s ease-in-out infinite;
+        }
+        .bg-blob--2 {
+            width: 400px;
+            height: 420px;
+            background: rgba(240, 129, 58, 0.07);
+            top: 55%;
+            right: -12%;
+            border-radius: var(--radius-organic);
+            animation: floatBlob2 24s ease-in-out infinite;
+        }
+        .bg-blob--3 {
+            width: 350px;
+            height: 380px;
+            background: rgba(230, 180, 34, 0.08);
+            bottom: -8%;
+            left: 25%;
+            border-radius: var(--radius-blob);
+            animation: floatBlob3 22s ease-in-out infinite;
+        }
+        .bg-blob--4 {
+            width: 280px;
+            height: 300px;
+            background: rgba(230, 180, 34, 0.09);
+            top: 25%;
+            left: 50%;
+            border-radius: var(--radius-organic);
+            animation: floatBlob4 26s ease-in-out infinite;
+        }
+
+        @keyframes floatBlob1 {
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+            }
+            25% {
+                transform: translate(35px, -30px) rotate(3deg) scale(1.05);
+            }
+            50% {
+                transform: translate(-20px, 25px) rotate(-2deg) scale(0.96);
+            }
+            75% {
+                transform: translate(25px, 15px) rotate(1deg) scale(1.03);
+            }
+        }
+        @keyframes floatBlob2 {
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+            }
+            25% {
+                transform: translate(-30px, 20px) rotate(-2deg) scale(1.04);
+            }
+            50% {
+                transform: translate(25px, -35px) rotate(3deg) scale(0.97);
+            }
+            75% {
+                transform: translate(-15px, -20px) rotate(-1deg) scale(1.02);
+            }
+        }
+        @keyframes floatBlob3 {
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+            }
+            33% {
+                transform: translate(20px, -25px) rotate(2deg) scale(1.04);
+            }
+            66% {
+                transform: translate(-25px, 20px) rotate(-2.5deg) scale(0.96);
+            }
+        }
+        @keyframes floatBlob4 {
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+            }
+            30% {
+                transform: translate(-25px, -30px) rotate(-1.5deg) scale(1.06);
+            }
+            60% {
+                transform: translate(30px, 25px) rotate(2deg) scale(0.95);
+            }
+        }
+
+        .main-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2.2rem 1.8rem 3.5rem;
+        }
+
+        .top-strip {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.7rem 0;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+        .status-dot {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.04);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(230, 180, 34, 0.2);
+        }
+        .status-dot .pulse {
+            width: 9px;
+            height: 9px;
+            background: #2ed8a3;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(46, 216, 163, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 0 12px rgba(46, 216, 163, 0);
+            }
+        }
+        .lang-tag {
+            color: #b7ae8c;
+            font-size: 0.8rem;
+            letter-spacing: 0.02em;
+        }
+
+        .hero-area {
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+        .hero-flex {
+            display: flex;
+            align-items: center;
+            gap: 1.8rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .hero-text {
+            flex: 1 1 280px;
+            text-align: right;
+        }
+        .hero-text .greeting {
+            font-family: 'Marhey', 'Cairo', sans-serif;
+            font-size: 1.2rem;
+            color: var(--gold-soft);
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .hero-text .greeting .wave-emoji {
+            display: inline-block;
+            animation: wave 2.5s ease-in-out infinite;
+            transform-origin: bottom right;
+            font-size: 1.8rem;
+        }
+        @keyframes wave {
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+            20% {
+                transform: rotate(20deg);
+            }
+            40% {
+                transform: rotate(-10deg);
+            }
+            60% {
+                transform: rotate(15deg);
+            }
+            80% {
+                transform: rotate(-5deg);
+            }
+        }
+        .hero-name {
+            font-size: clamp(2.8rem, 7vw, 4.8rem);
+            font-weight: 900;
+            line-height: 1.1;
+            color: #fff;
+            margin: 0.2rem 0;
+            background: linear-gradient(to left, #f5d046, #e6b422, #f8d86b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 12px rgba(230, 180, 34, 0.3);
+        }
+        .hero-sub {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            opacity: 0.85;
+            margin-top: 0.4rem;
+            line-height: 1.6;
+        }
+        .hero-sub .real-name {
+            color: var(--gold-bright);
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+        .hero-logo {
+            flex: 0 0 auto;
+            position: relative;
+        }
+        .logo-container {
+            position: relative;
+            display: inline-block;
+            border-radius: var(--radius-organic);
+            padding: 4px;
+            background: linear-gradient(135deg, var(--gold-bright), #f0813a, var(--gold-soft));
+            background-size: 200% 200%;
+            animation: gradientShift 6s ease infinite;
+            box-shadow: var(--shadow-gold);
+        }
+        @keyframes gradientShift {
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+        .logo-container img {
+            display: block;
+            width: 110px;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 45% 55% 60% 40% / 40% 50% 50% 60%;
+            background: #0a0a0a;
+            transition: transform var(--transition-bounce);
+        }
+        .logo-container:hover img {
+            transform: scale(1.05) rotate(-3deg);
+        }
+
+        .personal-chat {
+            position: relative;
+            margin: 3.5rem 0 3rem;
+            display: flex;
+            justify-content: flex-start;
+            max-width: 720px;
+        }
+        .chat-bubble {
+            background: var(--bg-card);
+            border: 1px solid rgba(230, 180, 34, 0.3);
+            border-radius: 28px 28px 28px 8px;
+            padding: 1.8rem 2rem;
+            box-shadow: var(--shadow-dark);
+            position: relative;
+            font-size: 0.98rem;
+            color: #e0d7c0;
+            line-height: 2;
+        }
+        .chat-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            right: 28px;
+            width: 0;
+            height: 0;
+            border-left: 14px solid transparent;
+            border-right: 14px solid transparent;
+            border-top: 18px solid var(--bg-card);
+            filter: drop-shadow(0 4px 2px rgba(0, 0, 0, 0.3));
+        }
+        .chat-bubble .persona-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--gold-soft);
+            float: left;
+            margin: 0 0 0.5rem 1rem;
+            shape-outside: circle();
+        }
+        .chat-bubble p {
+            margin-bottom: 0.9rem;
+        }
+        .chat-bubble p:last-child {
+            margin-bottom: 0;
+        }
+        .highlight-gold {
+            color: var(--gold-bright);
+            font-weight: 700;
+        }
+        .highlight-warm {
+            font-family: 'Marhey', 'Cairo', sans-serif;
+            color: #f5a060;
+            font-weight: 600;
+        }
+
+        .content-pillars {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+        .pillar-card {
+            background: var(--bg-card-lighter);
+            border: 1px solid rgba(230, 180, 34, 0.2);
+            border-radius: 34px;
+            padding: 1.8rem 1.6rem;
+            text-align: center;
+            transition: all 0.35s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-dark);
+        }
+        .pillar-card::after {
+            content: '';
+            position: absolute;
+            top: -30%;
+            left: -30%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(230, 180, 34, 0.07) 0%, transparent 70%);
+            transition: transform 0.5s;
+        }
+        .pillar-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--gold-soft);
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.7), 0 0 20px rgba(230, 180, 34, 0.25);
+        }
+        .pillar-card:hover::after {
+            transform: scale(1.5);
+        }
+        .pillar-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+        .pillar-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--gold-bright);
+            margin-bottom: 0.5rem;
+        }
+        .pillar-desc {
+            font-size: 0.85rem;
+            color: #b7ae8c;
+            line-height: 1.7;
+        }
+
+        .photo-gallery {
+            margin: 3.5rem 0 3rem;
+            position: relative;
+        }
+        .section-title {
+            font-family: 'Marhey', 'Cairo', sans-serif;
+            font-size: 1.7rem;
+            color: var(--gold-bright);
+            text-align: center;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+        .section-title span {
+            background: var(--bg-card);
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            border: 1px dashed var(--gold-soft);
+        }
+        .masonry-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.2rem;
+        }
+        .photo-frame {
+            background: var(--bg-card);
+            border: 2px solid rgba(230, 180, 34, 0.3);
+            border-radius: 24px;
+            padding: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+            transform: rotate(-2deg);
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .photo-frame:nth-child(even) {
+            transform: rotate(1.8deg);
+        }
+        .photo-frame:hover {
+            transform: rotate(0deg) scale(1.06);
+            border-color: var(--gold-bright);
+            box-shadow: 0 0 22px rgba(230, 180, 34, 0.4);
+            z-index: 2;
+        }
+        .photo-frame img {
+            display: block;
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 18px;
+            background: #1a1a1a;
+        }
+        .photo-frame .caption {
+            position: absolute;
+            bottom: 0.5rem;
+            left: 0.5rem;
+            right: 0.5rem;
+            background: rgba(0, 0, 0, 0.75);
+            color: #f2eddb;
+            font-size: 0.7rem;
+            text-align: center;
+            padding: 0.2rem;
+            border-radius: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .photo-frame:hover .caption {
+            opacity: 1;
+        }
+
+        .youtube-cta {
+            background: linear-gradient(135deg, #1a1a1a, #0e0e0e);
+            border: 1.5px solid rgba(230, 180, 34, 0.3);
+            border-radius: 36px;
+            padding: 2.2rem;
+            margin: 2.5rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-dark);
+        }
+        .youtube-cta::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M20 20 L80 20 L80 80 L20 80 Z" fill="none" stroke="rgba(230,180,34,0.12)" stroke-width="0.8" stroke-dasharray="5 5"/></svg>') repeat;
+            opacity: 0.35;
+            pointer-events: none;
+        }
+        .youtube-cta .yt-icon {
+            font-size: 3rem;
+            margin-bottom: 0.8rem;
+            animation: gentleBounce 2s ease-in-out infinite;
+        }
+        @keyframes gentleBounce {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        .youtube-cta h3 {
+            font-size: 1.8rem;
+            color: #fff;
+            margin: 0.3rem 0;
+        }
+        .youtube-cta .channel-tag {
+            font-weight: 700;
+            color: var(--gold-bright);
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+        .youtube-cta p {
+            color: #b7ae8c;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+        .yt-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #ff0000;
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            padding: 0.9rem 2.2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(255, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .yt-button:hover {
+            background: #e60000;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(255, 0, 0, 0.7), 0 0 30px rgba(230, 180, 34, 0.3);
+        }
+        .yt-button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .yt-button:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* تنسيق إضافي لبطاقة الإعلانات والشراكة */
+        .ads-button {
+            background: #2c2c2c;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+        }
+        .ads-button:hover {
+            background: #3a3a3a;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.7), 0 0 30px rgba(230, 180, 34, 0.3);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px dashed rgba(230, 180, 34, 0.3);
+        }
+        .footer .sign-off {
+            font-family: 'Marhey', 'Cairo', sans-serif;
+            font-size: 1.15rem;
+            color: var(--gold-soft);
+            margin-bottom: 0.6rem;
+            line-height: 1.8;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+            margin: 1.2rem 0;
+        }
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            text-decoration: none;
+            color: #d1c8a9;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(230, 180, 34, 0.25);
+            transition: all 0.3s;
+        }
+        .social-link:hover {
+            background: rgba(230, 180, 34, 0.08);
+            border-color: var(--gold-bright);
+            color: var(--gold-bright);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(230, 180, 34, 0.2);
+        }
+        .footer-credit {
+            font-size: 0.75rem;
+            color: #6b6b6b;
+            margin-top: 1rem;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s cubic-bezier(0.23, 1, 0.32, 1), transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .main-wrapper {
+                padding: 1.5rem 1rem 2.5rem;
+            }
+            .hero-flex {
+                flex-direction: column-reverse;
+                text-align: center;
+            }
+            .hero-text {
+                text-align: center;
+            }
+            .logo-container img {
+                width: 85px;
+                height: 85px;
+            }
+            .chat-bubble {
+                padding: 1.4rem 1.5rem;
+                border-radius: 24px 24px 24px 6px;
+            }
+            .photo-frame img {
+                width: 100px;
+                height: 100px;
+            }
+            .masonry-grid {
+                gap: 0.8rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero-name {
+                font-size: 2.4rem;
+            }
+            .pillar-card {
+                padding: 1.2rem;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #080808;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(230, 180, 34, 0.3);
+            border-radius: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-blobs" aria-hidden="true">
+        <div class="bg-blob bg-blob--1"></div>
+        <div class="bg-blob bg-blob--2"></div>
+        <div class="bg-blob bg-blob--3"></div>
+        <div class="bg-blob bg-blob--4"></div>
+    </div>
+
+    <div class="main-wrapper">
+        <div class="top-strip reveal">
+            <div class="status-dot">
+                <span class="pulse"></span>
+                <span>🎮 جارٍ العمل على فيديو جديد وممتع</span>
+            </div>
+            <div class="lang-tag">🌍 لكل الوطن العربي</div>
+        </div>
+
+        <div class="hero-area reveal">
+            <div class="hero-flex">
+                <div class="hero-text">
+                    <div class="greeting">
+                        <span class="wave-emoji">👋🏽</span> أهلًا وسهلًا، أنا
+                    </div>
+                    <h1 class="hero-name">أبو لورم</h1>
+                    <p class="hero-sub">
+                        واسمي الحقيقي <span class="real-name">كريم محمد إسماعيل</span><br>
+                        لكن لا أحد يناديني بذلك إلّا في المناسبات الرسمية 😄
+                    </p>
+                </div>
+                <div class="hero-logo">
+                    <div class="logo-container">
+                        <img src="logo.png" alt="شعار قناة أبو لورم" onerror="this.style.background='#1a1a1a'; this.alt='logo';">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="personal-chat reveal">
+            <div class="chat-bubble">
+                <img src="a.png" alt="كريم" class="persona-img" loading="lazy" decoding="async" onerror="this.style.display='none'">
+                <p>
+                    اسمي <span class="highlight-gold">كريم</span>، وأقدّم محتوى على يوتيوب تحت اسم <span class="highlight-warm">أبو لورم</span>.
+                    شخصيتي مفعمة بالحياة، سريعة الانفعال في المواقف المضحكة، وصادقة في كل ردّة فعل.
+                    لا أتكلّف شيئًا مما أقدّمه، بل أترك عفويتي تقودني، لأنني أؤمن بأن <span class="highlight-gold">البساطة والصدق</span> هما أقصر طريق إلى قلوب الناس.
+                </p>
+                <p>
+                    المحتوى الذي أقدّمه يتأرجح بين <span class="highlight-gold">الألعاب</span> الحماسية، و<span class="highlight-gold">التحديات</span> المضحكة،
+                    و<span class="highlight-gold">التجارب</span> المثيرة التي نعيشها معًا. والأهم من ذلك كلّه أنني
+                    <span class="highlight-warm">أحرص على تقديم محتوى عائلي هادف</span>، يلتزم القيم الأخلاقية
+                    ويناسب جميع أفراد الأسرة العربية. أنتم لستم مجرد مشاهدين، أنتم جزء من الرحلة.
+                </p>
+                <p style="font-size:0.92rem; color:#d4a320; font-style: italic;">
+                    — لا أنحاز لبلد بعينه، فالوطن العربي كله يسكن قلبي 🤍
+                </p>
+            </div>
+        </div>
+
+        <div class="content-pillars reveal">
+            <div class="pillar-card">
+                <span class="pillar-icon">🎮</span>
+                <div class="pillar-title">الألعاب</div>
+                <div class="pillar-desc">أعيش داخل اللعبة بكل حواسي، لحظات حماس وانفعالات صادقة تتحوّل إلى ذكريات.</div>
+            </div>
+            <div class="pillar-card">
+                <span class="pillar-icon">🔥</span>
+                <div class="pillar-title">التحديات</div>
+                <div class="pillar-desc">تحديات طريفة تجمعنا، نضحك فيها حتى البكاء، ونعيش الفوضى الجميلة معًا.</div>
+            </div>
+            <div class="pillar-card">
+                <span class="pillar-icon">🧪👻</span>
+                <div class="pillar-title">التجارب</div>
+                <div class="pillar-desc">نخوض تجارب غير متوقعة، ونكتشف معًا ما تخبّئه لنا المفاجآت من متعة وإثارة.</div>
+            </div>
+        </div>
+
+        <div class="photo-gallery reveal">
+            <div class="section-title">
+                <span>📸 لقطات من كواليس المرح</span>
+            </div>
+            <div class="masonry-grid">
+                <div class="photo-frame"><img src="a.png" alt="كريم" loading="lazy" decoding="async" onerror="this.style.display='none'"><span class="caption">ابتسامة صادقة</span></div>
+                <div class="photo-frame"><img src="b.png" alt="كريم" loading="lazy" decoding="async" onerror="this.style.display='none'"><span class="caption">انفعال عفوي</span></div>
+                <div class="photo-frame"><img src="c.png" alt="كريم" loading="lazy" decoding="async" onerror="this.style.display='none'"><span class="caption">ضحكة من القلب</span></div>
+                <div class="photo-frame"><img src="d.png" alt="كريم" loading="lazy" decoding="async" onerror="this.style.display='none'"><span class="caption">لحظة تركيز</span></div>
+                <div class="photo-frame"><img src="e.png" alt="كريم" loading="lazy" decoding="async" onerror="this.style.display='none'"><span class="caption">تجربة جديدة</span></div>
+            </div>
+            <p style="text-align:center; color:#b7ae8c; margin-top:1rem; font-size:0.85rem;">
+                هذه لمحات من عالمي، حيث المرح والعفوية يلتقيان في كل زاوية 😊
+            </p>
+        </div>
+
+        <div class="youtube-cta reveal">
+            <div class="yt-icon">💥🎬</div>
+            <h3>القناة التي سنعيش فيها اللحظات معًا</h3>
+            <span class="channel-tag">AboLorm</span>
+            <p>
+                هنا لا يوجد مكان للرتابة. هنا نلعب، نتحدى، نجرّب، ونضحك من القلب.
+                إن كنت تبحث عن محتوى عائلي راقٍ، صادق، ومليء بالمشاعر الحقيقية، فأنت في المكان الصحيح.
+                سأكون في انتظارك بكل حب.
+            </p>
+            <a href="https://youtube.com/@AboLorm" target="_blank" rel="noopener" class="yt-button">
+                🎥 انضم إلى القناة
+            </a>
+        </div>
+
+        <!-- البطاقة الجديدة: للإعلانات والشراكة -->
+        <div class="youtube-cta reveal">
+            <div class="yt-icon">🤝💼</div>
+            <h3>فرص التعاون والإعلانات</h3>
+            <span class="channel-tag">شراكة ناجحة</span>
+            <p>
+                نرحب بالعلامات التجارية وشركاء الإعلانات الذين يشاركوننا رؤيتنا في تقديم محتوى هادف وممتع.
+                تعاون معنا لتصل إلى جمهورك بطريقة صادقة ومؤثرة.
+            </p>
+            <a href="ads.html" class="yt-button ads-button">
+                📢 عرض الشراكة والإعلانات
+            </a>
+        </div>
+
+        <div class="footer reveal">
+            <p class="sign-off">
+                — وجودك معنا يعني لي الكثير، وأتمنى أن تستمتع معنا في كل مرة —
+            </p>
+            <div class="social-links">
+                <a href="https://youtube.com/@AboLorm" target="_blank" rel="noopener" class="social-link">📺 يوتيوب</a>
+                <a href="#" class="social-link">📷 إنستجرام</a>
+                <a href="#" class="social-link">🐦 تويتر</a>
+                <!-- تم استبدال رابط البريد الإلكتروني بصفحة تيك توك -->
+                <a href="https://tiktok.com/@abolorm" target="_blank" rel="noopener" class="social-link">📱 تيك توك</a>
+            </div>
+            <p class="footer-credit">© 2025 AboLorm — كريم محمد إسماعيل · صُنع بكل حب للوطن العربي 🤍</p>
+        </div>
+    </div>
+
+    <script>
+        const revealElements = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -30px 0px' });
+        revealElements.forEach(el => observer.observe(el));
+
+        const blobs = document.querySelectorAll('.bg-blob');
+        let mouseX = 0,
+            mouseY = 0,
+            targetX = 0,
+            targetY = 0;
+        const ease = 0.04;
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateBlobs() {
+            targetX += (mouseX - targetX) * ease;
+            targetY += (mouseY - targetY) * ease;
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            const offsetX = (targetX - centerX) * 0.018;
+            const offsetY = (targetY - centerY) * 0.018;
+            blobs.forEach((blob, i) => {
+                const factor = (i + 1) * 0.8;
+                blob.style.transform = `translate(${offsetX * factor}px, ${offsetY * factor}px) rotate(${offsetX * 0.05}deg)`;
+            });
+            requestAnimationFrame(animateBlobs);
+        }
+        animateBlobs();
+
+        const ytBtn = document.querySelector('.yt-button');
+        if (ytBtn) {
+            ytBtn.addEventListener('click', function(e) {
+                const rect = this.getBoundingClientRect();
+                const cx = rect.left + rect.width / 2;
+                const cy = rect.top + rect.height / 2;
+                spawnEmojis(cx, cy);
+            });
+        }
+
+        function spawnEmojis(x, y) {
+            const emojis = ['😂', '🎮', '🔥', '🤣', '💥', '✨', '🎉', '🤍'];
+            for (let i = 0; i < 10; i++) {
+                const particle = document.createElement('span');
+                particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                particle.style.cssText = `
+                    position: fixed; left: ${x}px; top: ${y}px;
+                    font-size: ${1 + Math.random()*1.8}rem;
+                    pointer-events: none; z-index: 9999;
+                    transition: all ${0.5+Math.random()*0.7}s cubic-bezier(0.25,0.1,0.25,1);
+                    opacity: 1;
+                `;
+                document.body.appendChild(particle);
+                const angle = Math.random() * Math.PI * 2;
+                const dist = 50 + Math.random() * 80;
+                const dx = Math.cos(angle) * dist;
+                const dy = Math.sin(angle) * dist - 40;
+                requestAnimationFrame(() => {
+                    particle.style.transform = `translate(${dx}px, ${dy}px) scale(0.4)`;
+                    particle.style.opacity = '0';
+                });
+                setTimeout(() => particle.remove(), 1300);
+            }
+        }
+    </script>
+</body>
+</html>
