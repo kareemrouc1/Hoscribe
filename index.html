@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>هوسكريب | Hoscribe</title>
-    <meta name="description" content="هوسكريب - محتوى عائلي بسيط وممتع." />
+    <title data-i18n="title">هوسكريب | Hoscribe</title>
+    <meta name="description" data-i18n="meta-description" content="هوسكريب - محتوى عائلي بسيط وممتع." />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://hoscribe.netlify.app/" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="هوسكريب | Hoscribe" />
-    <meta property="og:description" content="محتوى عائلي بسيط وممتع." />
+    <meta property="og:title" data-i18n="og-title" content="هوسكريب | Hoscribe" />
+    <meta property="og:description" data-i18n="og-description" content="محتوى عائلي بسيط وممتع." />
     <meta property="og:image" content="logo.png" />
 
     <link rel="icon" href="logo.png" type="image/png" />
@@ -56,6 +56,47 @@
             max-width: 760px;
             width: 100%;
             margin: 0 auto;
+        }
+
+        /* ============================================================
+                   مبدل اللغة — أعلى الصفحة
+                   ============================================================ */
+        .lang-switcher {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.4rem;
+            margin-bottom: 0.8rem;
+            padding: 0.4rem 0.2rem;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: 1.5px solid #d0cec8;
+            border-radius: 30px;
+            padding: 0.2rem 0.9rem;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #5e5e5a;
+            cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+            line-height: 1.6;
+        }
+
+        .lang-btn:hover {
+            background: #f0eee8;
+            border-color: #b0aea8;
+        }
+
+        .lang-btn.active {
+            background: #1e1e1c;
+            border-color: #1e1e1c;
+            color: #f7f5f0;
+        }
+
+        .lang-btn.active:hover {
+            background: #2e2e2c;
+            border-color: #2e2e2c;
         }
 
         /* ============================================================
@@ -376,11 +417,30 @@
             background: #d0cec8;
             border-radius: 20px;
         }
+
+        /* تحسين ظهور أزرار اللغة في الوضع الضيق */
+        @media (max-width: 480px) {
+            .lang-switcher {
+                justify-content: center;
+            }
+            .lang-btn {
+                font-size: 0.75rem;
+                padding: 0.1rem 0.7rem;
+            }
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
+
+        <!-- ==========================================================
+        مبدل اللغة — أعلى الصفحة
+        ========================================================== -->
+        <div class="lang-switcher">
+            <button class="lang-btn" data-lang="ar" aria-label="العربية">🇸🇦 عربي</button>
+            <button class="lang-btn" data-lang="en" aria-label="English">🇬🇧 English</button>
+        </div>
 
         <!-- ==========================================================
         هيرو — الاسم + الشعار
@@ -389,22 +449,22 @@
             <div class="logo-wrap">
                 <img src="logo.png" alt="هوسكريب" loading="eager" fetchpriority="high" onerror="this.style.background='#e8e4dc'; this.alt='Hoscribe';" />
             </div>
-            <h1>هوسكريب</h1>
-            <p class="sub"><span class="real">كريم محمد إسماعيل</span> — Hoscribe</p>
-            <p class="tagline">محتوى عائلي بسيط، ألعاب، تحديات، وتجارب.</p>
+            <h1 data-i18n="brand-name">هوسكريب</h1>
+            <p class="sub"><span class="real">كريم محمد إسماعيل</span> — <span data-i18n="brand-sub">Hoscribe</span></p>
+            <p class="tagline" data-i18n="hero-tagline">محتوى عائلي بسيط، ألعاب، تحديات، وتجارب.</p>
         </header>
 
         <!-- ==========================================================
         نبذة — About
         ========================================================== -->
         <section class="about reveal">
-            <p>
+            <p data-i18n="about-text">
                 أنا <span class="accent">كريم</span>، أصنع فيديوهات على يوتيوب
                 باسم <span class="accent">هوسكريب</span>.
                 أحب الألعاب، التحديات، والتجارب الجديدة.
                 محتواي عائلي وبسيط، مناسب للكل.
             </p>
-            <p class="sig">— هدفي إنكم تستمتعوا وتنسوا همومكم شوية 🤍</p>
+            <p class="sig" data-i18n="about-sig">— هدفي إنكم تستمتعوا وتنسوا همومكم شوية 🤍</p>
         </section>
 
         <!-- ==========================================================
@@ -413,18 +473,18 @@
         <div class="pillars reveal">
             <div class="pillar">
                 <span class="icon">🎮</span>
-                <h3>ألعاب</h3>
-                <p>ألعاب حماسية، انفعالات، ومواقف مضحكة.</p>
+                <h3 data-i18n="pillar1-title">ألعاب</h3>
+                <p data-i18n="pillar1-desc">ألعاب حماسية، انفعالات، ومواقف مضحكة.</p>
             </div>
             <div class="pillar">
                 <span class="icon">🔥</span>
-                <h3>تحديات</h3>
-                <p>تحديات جنونية، كلها ضحك ومرح.</p>
+                <h3 data-i18n="pillar2-title">تحديات</h3>
+                <p data-i18n="pillar2-desc">تحديات جنونية، كلها ضحك ومرح.</p>
             </div>
             <div class="pillar">
                 <span class="icon">🧪</span>
-                <h3>تجارب</h3>
-                <p>نجرب حاجات جديدة ونشوف وش بيصير.</p>
+                <h3 data-i18n="pillar3-title">تجارب</h3>
+                <p data-i18n="pillar3-desc">نجرب حاجات جديدة ونشوف وش بيصير.</p>
             </div>
         </div>
 
@@ -432,11 +492,11 @@
         YouTube CTA
         ========================================================== -->
         <section class="cta-section reveal">
-            <span class="label">🎥 القناة</span>
-            <h2>هوسكريب</h2>
-            <p>قناتي مكان بسيط للمرح، ألعاب، تحديات، وتجارب. إذا كنت تحب المحتوى العائلي المليان ضحك، أنت بالمكان الصح.</p>
+            <span class="label" data-i18n="yt-label">🎥 القناة</span>
+            <h2 data-i18n="yt-title">هوسكريب</h2>
+            <p data-i18n="yt-desc">قناتي مكان بسيط للمرح، ألعاب، تحديات، وتجارب. إذا كنت تحب المحتوى العائلي المليان ضحك، أنت بالمكان الصح.</p>
             <a href="https://youtube.com/@Hoscribe" target="_blank" rel="noopener" class="btn btn--yt">
-                <span class="emoji">▶</span> اشترك بالقناة
+                <span class="emoji">▶</span> <span data-i18n="yt-btn">اشترك بالقناة</span>
             </a>
         </section>
 
@@ -444,11 +504,11 @@
         شراكة CTA
         ========================================================== -->
         <section class="cta-section reveal">
-            <span class="label">🤝 شراكة</span>
-            <h2>للتعاون والإعلانات</h2>
-            <p>نرحب بالعلامات التجارية اللي تشاركنا نفس الرؤية. تواصل معنا عشان نوصل لجمهورك بطريقة بسيطة وصادقة.</p>
+            <span class="label" data-i18n="ads-label">🤝 شراكة</span>
+            <h2 data-i18n="ads-title">للتعاون والإعلانات</h2>
+            <p data-i18n="ads-desc">نرحب بالعلامات التجارية اللي تشاركنا نفس الرؤية. تواصل معنا عشان نوصل لجمهورك بطريقة بسيطة وصادقة.</p>
             <a href="ads.html" class="btn btn--ghost">
-                <span class="emoji">📢</span> عرض الشراكة
+                <span class="emoji">📢</span> <span data-i18n="ads-btn">عرض الشراكة</span>
             </a>
         </section>
 
@@ -456,22 +516,195 @@
         تذييل
         ========================================================== -->
         <footer class="footer reveal">
-            <p class="signoff">— وجودكم معنا هو كل شيء، نتمنى تستمتعوا دايمًا —</p>
-            <p class="credit">© 2025 Hoscribe · هوسكريب — كريم محمد إسماعيل</p>
+            <p class="signoff" data-i18n="footer-signoff">— وجودكم معنا هو كل شيء، نتمنى تستمتعوا دايمًا —</p>
+            <p class="credit" data-i18n="footer-credit">© 2025 Hoscribe · هوسكريب — كريم محمد إسماعيل</p>
         </footer>
 
     </div>
 
     <!-- ==========================================================
-    سكريبت — كشف بسيط عند التمرير (خفيف جداً)
+    سكريبت — الترجمة + كشف التمرير
     ========================================================== -->
     <script>
         (function() {
             'use strict';
 
-            // كشف العناصر عند التمرير — بدون أي حركات ثقيلة
-            const els = document.querySelectorAll('.reveal');
-            if (els.length) {
+            // ----------------------------------------------------------
+            // 1. كائن الترجمة
+            // ----------------------------------------------------------
+            const translations = {
+                ar: {
+                    // Meta
+                    'title': 'هوسكريب | Hoscribe',
+                    'meta-description': 'هوسكريب - محتوى عائلي بسيط وممتع.',
+                    'og-title': 'هوسكريب | Hoscribe',
+                    'og-description': 'محتوى عائلي بسيط وممتع.',
+
+                    // Hero
+                    'brand-name': 'هوسكريب',
+                    'brand-sub': 'Hoscribe',
+                    'hero-tagline': 'محتوى عائلي بسيط، ألعاب، تحديات، وتجارب.',
+
+                    // About
+                    'about-text': 'أنا <span class="accent">كريم</span>، أصنع فيديوهات على يوتيوب باسم <span class="accent">هوسكريب</span>. أحب الألعاب، التحديات، والتجارب الجديدة. محتواي عائلي وبسيط، مناسب للكل.',
+                    'about-sig': '— هدفي إنكم تستمتعوا وتنسوا همومكم شوية 🤍',
+
+                    // Pillars
+                    'pillar1-title': 'ألعاب',
+                    'pillar1-desc': 'ألعاب حماسية، انفعالات، ومواقف مضحكة.',
+                    'pillar2-title': 'تحديات',
+                    'pillar2-desc': 'تحديات جنونية، كلها ضحك ومرح.',
+                    'pillar3-title': 'تجارب',
+                    'pillar3-desc': 'نجرب حاجات جديدة ونشوف وش بيصير.',
+
+                    // YouTube CTA
+                    'yt-label': '🎥 القناة',
+                    'yt-title': 'هوسكريب',
+                    'yt-desc': 'قناتي مكان بسيط للمرح، ألعاب، تحديات، وتجارب. إذا كنت تحب المحتوى العائلي المليان ضحك، أنت بالمكان الصح.',
+                    'yt-btn': 'اشترك بالقناة',
+
+                    // Ads CTA
+                    'ads-label': '🤝 شراكة',
+                    'ads-title': 'للتعاون والإعلانات',
+                    'ads-desc': 'نرحب بالعلامات التجارية اللي تشاركنا نفس الرؤية. تواصل معنا عشان نوصل لجمهورك بطريقة بسيطة وصادقة.',
+                    'ads-btn': 'عرض الشراكة',
+
+                    // Footer
+                    'footer-signoff': '— وجودكم معنا هو كل شيء، نتمنى تستمتعوا دايمًا —',
+                    'footer-credit': '© 2025 Hoscribe · هوسكريب — كريم محمد إسماعيل',
+                },
+                en: {
+                    // Meta
+                    'title': 'Hoscribe | هوسكريب',
+                    'meta-description': 'Hoscribe - simple family-friendly content, games, challenges, and experiments.',
+                    'og-title': 'Hoscribe | هوسكريب',
+                    'og-description': 'Simple family-friendly content, games, challenges, and experiments.',
+
+                    // Hero
+                    'brand-name': 'Hoscribe',
+                    'brand-sub': 'Hoscribe',
+                    'hero-tagline': 'Simple family content, games, challenges, and experiments.',
+
+                    // About
+                    'about-text': 'I\'m <span class="accent">Karim</span>, I make YouTube videos under the name <span class="accent">Hoscribe</span>. I love games, challenges, and trying new things. My content is family-friendly and simple, suitable for everyone.',
+                    'about-sig': '— My goal is for you to have fun and forget your worries for a while 🤍',
+
+                    // Pillars
+                    'pillar1-title': 'Games',
+                    'pillar1-desc': 'Exciting games, reactions, and funny moments.',
+                    'pillar2-title': 'Challenges',
+                    'pillar2-desc': 'Crazy challenges, all laughs and fun.',
+                    'pillar3-title': 'Experiments',
+                    'pillar3-desc': 'We try new things and see what happens.',
+
+                    // YouTube CTA
+                    'yt-label': '🎥 Channel',
+                    'yt-title': 'Hoscribe',
+                    'yt-desc': 'My channel is a simple place for fun, games, challenges, and experiments. If you love family-friendly content full of laughs, you\'re in the right place.',
+                    'yt-btn': 'Subscribe to the channel',
+
+                    // Ads CTA
+                    'ads-label': '🤝 Partnership',
+                    'ads-title': 'Collaboration & Ads',
+                    'ads-desc': 'We welcome brands that share our vision. Contact us to reach your audience in a simple and honest way.',
+                    'ads-btn': 'View partnership',
+
+                    // Footer
+                    'footer-signoff': '— Your presence means everything, we hope you always enjoy —',
+                    'footer-credit': '© 2025 Hoscribe · هوسكريب — Karim Mohamed Ismail',
+                }
+            };
+
+            // ----------------------------------------------------------
+            // 2. العناصر القابلة للترجمة
+            // ----------------------------------------------------------
+            const i18nElements = document.querySelectorAll('[data-i18n]');
+            const metaDescription = document.querySelector('meta[name="description"]');
+            const ogTitle = document.querySelector('meta[property="og:title"]');
+            const ogDescription = document.querySelector('meta[property="og:description"]');
+            const htmlEl = document.documentElement;
+
+            // أزرار اللغة
+            const langBtns = document.querySelectorAll('.lang-btn');
+
+            // ----------------------------------------------------------
+            // 3. دالة تطبيق اللغة
+            // ----------------------------------------------------------
+            function setLanguage(lang) {
+                // التحقق من وجود الترجمة
+                const dict = translations[lang];
+                if (!dict) return;
+
+                // تحديث النصوص
+                i18nElements.forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (dict[key] !== undefined) {
+                        el.innerHTML = dict[key];
+                    }
+                });
+
+                // تحديث meta tags
+                if (metaDescription && dict['meta-description'] !== undefined) {
+                    metaDescription.setAttribute('content', dict['meta-description']);
+                }
+                if (ogTitle && dict['og-title'] !== undefined) {
+                    ogTitle.setAttribute('content', dict['og-title']);
+                }
+                if (ogDescription && dict['og-description'] !== undefined) {
+                    ogDescription.setAttribute('content', dict['og-description']);
+                }
+
+                // تحديث lang و dir
+                htmlEl.setAttribute('lang', lang);
+                htmlEl.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+
+                // تحديث حالة الأزرار
+                langBtns.forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+                });
+
+                // حفظ التفضيل
+                localStorage.setItem('hoscribe-lang', lang);
+            }
+
+            // ----------------------------------------------------------
+            // 4. كشف اللغة المفضلة
+            // ----------------------------------------------------------
+            function getPreferredLanguage() {
+                // 1. localStorage
+                const stored = localStorage.getItem('hoscribe-lang');
+                if (stored === 'ar' || stored === 'en') return stored;
+
+                // 2. لغة المتصفح
+                const browserLang = navigator.language || navigator.languages?.[0] || '';
+                if (browserLang.startsWith('ar')) return 'ar';
+                if (browserLang.startsWith('en')) return 'en';
+
+                // 3. افتراضي
+                return 'ar';
+            }
+
+            // ----------------------------------------------------------
+            // 5. تهيئة الأزرار
+            // ----------------------------------------------------------
+            langBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const lang = this.getAttribute('data-lang');
+                    if (lang) setLanguage(lang);
+                });
+            });
+
+            // ----------------------------------------------------------
+            // 6. تشغيل الترجمة الأولية
+            // ----------------------------------------------------------
+            const initialLang = getPreferredLanguage();
+            setLanguage(initialLang);
+
+            // ----------------------------------------------------------
+            // 7. كشف التمرير (reveal) — كما هو
+            // ----------------------------------------------------------
+            const revealEls = document.querySelectorAll('.reveal');
+            if (revealEls.length) {
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
@@ -483,7 +716,7 @@
                     threshold: 0.12,
                     rootMargin: '0px 0px -20px 0px'
                 });
-                els.forEach(el => observer.observe(el));
+                revealEls.forEach(el => observer.observe(el));
             }
 
             // تحميل الصور بتكاسل (lazy) للصور التي لم يتم تعيين loading="lazy" لها
