@@ -2,158 +2,416 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>إعلانات وشراكات | AboLorm</title>
-    <link rel="canonical" href="https://abolorm.netlify.app/ads.html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شراكات وإعلانات | هوسكريب</title>
+    <meta name="description" content="فرص التعاون والإعلانات مع هوسكريب - محتوى عائلي بسيط.">
+    <link rel="canonical" href="https://hoscribe.netlify.app/ads.html">
     <link rel="icon" href="logo.png" type="image/png">
     <link rel="apple-touch-icon" href="logo.png">
 
+    <!-- خط واحد فقط، تحميل سريع -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Marhey:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Marhey:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
-    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
     <style>
-        :root {
-            --bg-deep: #080808;
-            --bg-card: #131313;
-            --bg-card-lighter: #1a1a1a;
-            --gold: #FFD700;
-            --gold-bright: #FFED4E;
-            --gold-soft: #FFC700;
-            --text-primary: #f2eddb;
-            --text-muted: #b7ae8c;
-            --accent-warm: #f0813a;
-            --shadow-gold: 0 6px 28px rgba(255, 215, 0, 0.22);
-            --shadow-dark: 0 10px 34px rgba(0, 0, 0, 0.7);
-            --radius-organic: 55% 45% 65% 35% / 45% 55% 35% 65%;
-            --radius-blob: 60% 40% 45% 55% / 35% 65% 55% 45%;
-            --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        /* ============================================================
+                   RESET & BASE — نفس استيل الصفحة الرئيسية
+                   ============================================================ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        *{margin:0;padding:0;box-sizing:border-box}
-        html{scroll-behavior:smooth;font-size:16px}
-        body{font-family:'Cairo',sans-serif;background:var(--bg-deep);color:var(--text-primary);line-height:1.85;overflow-x:hidden;min-height:100vh}
 
-        body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' result='n'/%3E%3C/filter%3E%3Crect width='200' height='200' fill='%23080808' filter='url(%23noise)'/%3E%3C/svg%3E");background-repeat:repeat;background-size:180px 180px}
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
 
-        .bg-blobs{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
-        .bg-blob{position:absolute;border-radius:var(--radius-organic);filter:blur(75px);opacity:0.16;will-change:transform}
-        .bg-blob--1{width:500px;height:450px;background:rgba(255,215,0,0.11);top:-10%;left:-10%;border-radius:var(--radius-blob);animation:floatBlob1 20s ease-in-out infinite}
-        .bg-blob--2{width:400px;height:420px;background:rgba(240,129,58,0.07);top:55%;right:-12%;border-radius:var(--radius-organic);animation:floatBlob2 24s ease-in-out infinite}
-        .bg-blob--3{width:350px;height:380px;background:rgba(255,215,0,0.08);bottom:-8%;left:25%;border-radius:var(--radius-blob);animation:floatBlob3 22s ease-in-out infinite}
-        .bg-blob--4{width:280px;height:300px;background:rgba(255,215,0,0.09);top:25%;left:50%;border-radius:var(--radius-organic);animation:floatBlob4 26s ease-in-out infinite}
+        body {
+            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f7f5f0;
+            color: #1e1e1c;
+            line-height: 1.7;
+            min-height: 100vh;
+            padding: 2.4rem 1.6rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-        @keyframes floatBlob1{0%,100%{transform:translate(0,0) rotate(0deg) scale(1)}25%{transform:translate(35px,-30px) rotate(3deg) scale(1.05)}50%{transform:translate(-20px,25px) rotate(-2deg) scale(0.98)}75%{transform:translate(25px,35px) rotate(1.5deg) scale(1.02)}}
-        @keyframes floatBlob2{0%,100%{transform:translate(0,0) rotate(0deg) scale(1)}25%{transform:translate(-30px,20px) rotate(-2deg) scale(1.04)}50%{transform:translate(25px,-35px) rotate(3deg) scale(1)}75%{transform:translate(-15px,-20px) rotate(-1deg) scale(1.03)}}
-        @keyframes floatBlob3{0%,100%{transform:translate(0,0) rotate(0deg) scale(1)}33%{transform:translate(20px,-25px) rotate(2deg) scale(1.04)}66%{transform:translate(-25px,20px) rotate(-2.5deg) scale(0.99)}}
-        @keyframes floatBlob4{0%,100%{transform:translate(0,0) rotate(0deg) scale(1)}30%{transform:translate(-25px,-30px) rotate(-1.5deg) scale(1.06)}60%{transform:translate(30px,25px) rotate(2deg) scale(1.01)}}
+        .container {
+            max-width: 760px;
+            width: 100%;
+            margin: 0 auto;
+        }
 
-        .main-wrapper{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:2.2rem 1.8rem 3.5rem}
-        .top-strip{display:flex;align-items:center;justify-content:space-between;padding:0.7rem 0;margin-bottom:2rem;flex-wrap:wrap;gap:0.8rem}
-        .status-dot{display:inline-flex;align-items:center;gap:0.5rem;font-size:0.85rem;color:var(--text-muted);background:rgba(255,255,255,0.04);padding:0.5rem 1.2rem;border-radius:40px}
-        .status-dot .pulse{width:9px;height:9px;background:#2ed8a3;border-radius:50%;animation:pulse 2s ease-in-out infinite}
-        @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(46,216,163,0.6)}50%{box-shadow:0 0 0 12px rgba(46,216,163,0)}}
-        .lang-tag{color:#b7ae8c;font-size:0.8rem}
+        /* ============================================================
+                   الهيرو — متوافق مع الرئيسية
+                   ============================================================ */
+        .hero {
+            padding: 2.8rem 0 2rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
 
-        .hero-area{margin-bottom:2.5rem;position:relative}
-        .hero-flex{display:flex;align-items:center;gap:1.8rem;flex-wrap:wrap;justify-content:center}
-        .hero-text{flex:1 1 280px;text-align:right}
-        .greeting{font-family:'Marhey','Cairo',sans-serif;font-size:1.2rem;color:var(--gold-soft);font-weight:600;margin-bottom:0.2rem;display:flex;align-items:center;justify-content:flex-end}
-        .hero-name{font-size:clamp(2.4rem,6vw,4rem);font-weight:900;line-height:1.1;color:#fff;margin:0.2rem 0;background:linear-gradient(to left,#FFED4E,#FFD700,#FFED4E);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .hero-sub{font-size:0.95rem;color:var(--text-muted);opacity:0.9;margin-top:0.4rem}
-        .logo-container{display:inline-block;border-radius:var(--radius-organic);padding:4px;background:linear-gradient(135deg,var(--gold-bright),#f0813a,var(--gold-soft));background-size:200% 200%;animation:gradientShift 3s ease infinite}
-        @keyframes gradientShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-        .logo-container img{display:block;width:110px;height:110px;object-fit:cover;border-radius:45%}
+        .logo-wrap {
+            display: inline-block;
+            margin-bottom: 1.2rem;
+        }
 
-        .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin:3rem 0}
-        .card{background:var(--bg-card);border:1px solid rgba(255,215,0,0.18);border-radius:28px;padding:1.8rem 1.6rem;transition:all 0.35s ease;position:relative}
-        .card:hover{transform:translateY(-8px);box-shadow:0 14px 28px rgba(0,0,0,0.7),0 0 20px rgba(255,215,0,0.18)}
-        .card h4{font-size:1.2rem;color:var(--gold-bright);margin-bottom:0.6rem}
-        .card p{color:#d9cfa3;line-height:1.6}
+        .logo-wrap img {
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            background: #e8e4dc;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        }
 
-        .contact-cta{background:linear-gradient(135deg,#1a1a1a,#0e0e0e);border:1.5px solid rgba(255,215,0,0.12);border-radius:36px;padding:2.2rem;margin:2.5rem 0;text-align:center;position:relative}
-        .contact-cta p{color:var(--text-muted);margin-bottom:1rem}
-        .contact-cta .btn{display:inline-flex;align-items:center;gap:0.6rem;background:var(--gold-bright);color:#000;padding:0.9rem 1.6rem;border-radius:40px;font-weight:700;text-decoration:none}
+        .hero h1 {
+            font-size: 2.6rem;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            color: #1e1e1c;
+            margin-bottom: 0.25rem;
+        }
 
-        .footer{margin-top:3rem;padding-top:2rem;border-top:1px dashed rgba(255,215,0,0.12);text-align:center}
-        .footer .sign-off{font-family:'Marhey','Cairo',sans-serif;color:var(--gold-soft)}
+        .hero .sub {
+            font-size: 1.05rem;
+            font-weight: 400;
+            color: #5e5e5a;
+            margin-top: 0.2rem;
+        }
 
-        .reveal{opacity:0;transform:translateY(30px);transition:opacity 0.7s cubic-bezier(0.23,1,0.32,1),transform 0.7s cubic-bezier(0.23,1,0.32,1)}
-        .reveal.visible{opacity:1;transform:translateY(0)}
+        .hero .tagline {
+            font-size: 0.95rem;
+            color: #7a7a76;
+            margin-top: 0.6rem;
+            max-width: 520px;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-        @media(max-width:768px){.main-wrapper{padding:1.5rem 1rem 2.5rem}.hero-flex{flex-direction:column-reverse;text-align:center}.hero-text{text-align:center}.logo-container img{width:85px;height:85px}}
-        ::-webkit-scrollbar{width:5px}
-        ::-webkit-scrollbar-track{background:#080808}
-        ::-webkit-scrollbar-thumb{background:rgba(255,215,0,0.3);border-radius:50px}
+        /* ============================================================
+                   بطاقات العروض — بسيطة وأنيقة
+                   ============================================================ */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+            padding: 2.4rem 0 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            margin-top: 0.4rem;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 1.6rem 1.2rem;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+            transition: box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .card .icon {
+            font-size: 1.6rem;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .card h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #1e1e1c;
+            margin-bottom: 0.3rem;
+        }
+
+        .card p {
+            font-size: 0.85rem;
+            color: #6e6e6a;
+            line-height: 1.7;
+        }
+
+        /* ============================================================
+                   قسم التواصل — CTA
+                   ============================================================ */
+        .contact-section {
+            padding: 2.4rem 0 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            text-align: center;
+        }
+
+        .contact-section h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e1e1c;
+            margin-bottom: 0.2rem;
+        }
+
+        .contact-section p {
+            color: #5e5e5a;
+            font-size: 0.95rem;
+            max-width: 480px;
+            margin: 0 auto 1.2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 2.2rem;
+            border-radius: 60px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            background: #1e1e1c;
+            color: #f7f5f0;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.15s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            line-height: 1.4;
+        }
+
+        .btn:hover {
+            background: #2e2e2c;
+            transform: scale(0.98);
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn .emoji {
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+
+        .btn--ghost {
+            background: transparent;
+            color: #1e1e1c;
+            border: 1.5px solid #d0cec8;
+            box-shadow: none;
+        }
+
+        .btn--ghost:hover {
+            background: #f0eee8;
+            border-color: #b0aea8;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: #7a7a76;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: #1e1e1c;
+        }
+
+        /* ============================================================
+                   تذييل — Footer
+                   ============================================================ */
+        .footer {
+            padding: 2.4rem 0 1.2rem;
+            text-align: center;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            margin-top: 0.4rem;
+        }
+
+        .footer .signoff {
+            font-size: 1rem;
+            color: #4e4e4a;
+            margin-bottom: 0.2rem;
+        }
+
+        .footer .credit {
+            font-size: 0.78rem;
+            color: #9a9a96;
+            margin-top: 0.6rem;
+        }
+
+        /* ============================================================
+                   كشف بسيط عند التمرير
+                   ============================================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 0.55s ease, transform 0.55s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ============================================================
+                   استجابة
+                   ============================================================ */
+        @media (max-width: 640px) {
+            body {
+                padding: 1.6rem 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero .sub {
+                font-size: 0.95rem;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+                padding: 1.6rem 0;
+            }
+
+            .card {
+                padding: 1.2rem 1rem;
+            }
+
+            .contact-section h2 {
+                font-size: 1.3rem;
+            }
+
+            .btn {
+                padding: 0.65rem 1.6rem;
+                font-size: 0.9rem;
+            }
+
+            .logo-wrap img {
+                width: 72px;
+                height: 72px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+
+            .hero .tagline {
+                font-size: 0.85rem;
+            }
+
+            .contact-section p {
+                font-size: 0.85rem;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f0eee8;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d0cec8;
+            border-radius: 20px;
+        }
     </style>
 </head>
 <body>
-    <div class="bg-blobs" aria-hidden="true">
-        <div class="bg-blob bg-blob--1"></div>
-        <div class="bg-blob bg-blob--2"></div>
-        <div class="bg-blob bg-blob--3"></div>
-        <div class="bg-blob bg-blob--4"></div>
-    </div>
 
-    <div class="main-wrapper">
-        <div class="top-strip reveal">
-            <div class="status-dot"><span class="pulse"></span><span>🎮 جارٍ العمل على فيديو جديد وممتع</span></div>
-            <div class="lang-tag">🌍 لكل الوطن العربي</div>
-        </div>
+    <div class="container">
 
-        <div class="hero-area reveal">
-            <div class="hero-flex">
-                <div class="hero-text">
-                    <div class="greeting">🤝 مرحبًا بكم في صفحة الإعلانات والشراكات</div>
-                    <h1 class="hero-name">فرص التعاون والإعلانات</h1>
-                    <p class="hero-sub">حلول تعاون مرنة ومُبتكرة تصل بالعلامات إلى جمهور عربي عائلي نشط ومتحمس.</p>
-                </div>
-                <div class="hero-logo"><div class="logo-container"><img src="logo.png" alt="شعار أبو لورم" loading="eager" fetchpriority="high"></div></div>
+        <!-- ==========================================================
+        هيرو — متوافق مع الرئيسية
+        ========================================================== -->
+        <header class="hero reveal">
+            <div class="logo-wrap">
+                <img src="logo.png" alt="هوسكريب" loading="eager" fetchpriority="high" onerror="this.style.background='#e8e4dc'; this.alt='Hoscribe';" />
             </div>
-        </div>
+            <h1>شراكات وإعلانات</h1>
+            <p class="sub">هوسكريب · <span style="font-weight:600; color:#3d3d3a;">كريم محمد إسماعيل</span></p>
+            <p class="tagline">فرص تعاون مرنة ومُبتكرة تصل بالعلامات إلى جمهور عربي عائلي نشط ومتحمس.</p>
+        </header>
 
+        <!-- ==========================================================
+        بطاقات العروض
+        ========================================================== -->
         <div class="cards reveal">
             <div class="card">
-                <h4>حزم رعاية فيديو</h4>
-                <p>تضمين المنتج أو الخدمة داخل الفيديو بشكل طبيعي ومبدع مع ذكر الفوائد العملية للمشاهد. مناسب لحملات رفع الوعي وتحفيز الشراء.</p>
+                <span class="icon">🎬</span>
+                <h3>رعاية فيديو</h3>
+                <p>تضمين المنتج أو الخدمة داخل الفيديو بشكل طبيعي مع ذكر الفوائد العملية للمشاهد. حملات رفع وعي وتحفيز شراء.</p>
             </div>
             <div class="card">
-                <h4>سلاسل محتوى مخصّصة</h4>
-                <p>سلاسل حلقات قصيرة تتناول رسالة العلامة التجارية بطريقة قصصية وتفاعلية لبناء علاقة مستمرة مع الجمهور.</p>
+                <span class="icon">📺</span>
+                <h3>سلاسل مخصصة</h3>
+                <p>سلسلة حلقات قصيرة تتناول رسالة العلامة التجارية بطريقة قصصية وتفاعلية لبناء علاقة مستمرة مع الجمهور.</p>
             </div>
             <div class="card">
-                <h4>نشر عبر منصات متعددة</h4>
+                <span class="icon">🌐</span>
+                <h3>نشر متعدد</h3>
                 <p>ترويج متقاطع عبر يوتيوب، تيك توك، إنستجرام وسناب شات للوصول إلى جمهور واسع مع تنسيق الرسالة لكل منصة.</p>
             </div>
         </div>
 
-        <div class="contact-cta reveal">
+        <!-- ==========================================================
+        قسم التواصل
+        ========================================================== -->
+        <section class="contact-section reveal">
+            <h2>🤝 نبدأ التعاون؟</h2>
             <p>هل تودّ أن نشارك فكرتك أو نرسل ملف التعاون؟ تواصل معنا الآن للحصول على عرض مُفصّل.</p>
-            <a class="btn" href="mailto:contact@abolorm.net">📩 تواصل عبر البريد</a>
-            <div style="margin-top:12px"><a class="back-home" href="/">← العودة للرئيسية</a></div>
-        </div>
+            <a href="mailto:contact@hoscribe.net" class="btn">
+                <span class="emoji">📩</span> تواصل عبر البريد
+            </a>
+            <br>
+            <a href="/" class="back-link">← العودة للرئيسية</a>
+        </section>
 
-        <div class="footer reveal">
-            <p class="sign-off">© 2026 AboLorm — كريم محمد إسماعيل · شراكات مؤثرة بقلب عائلي 🤍</p>
-        </div>
+        <!-- ==========================================================
+        تذييل
+        ========================================================== -->
+        <footer class="footer reveal">
+            <p class="signoff">— شراكات مؤثرة بقلب عائلي 🤍 —</p>
+            <p class="credit">© 2026 هوسكريب · Hoscribe — كريم محمد إسماعيل</p>
+        </footer>
+
     </div>
 
+    <!-- ==========================================================
+    سكريبت — كشف بسيط عند التمرير
+    ========================================================== -->
     <script>
-        (function(){
-            // reveal on scroll
-            const revealElements = document.querySelectorAll('.reveal');
-            const observer = new IntersectionObserver((entries)=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target)}})}, {threshold:0.15, rootMargin:'0px 0px -20px 0px'});
-            revealElements.forEach(el=>observer.observe(el));
+        (function() {
+            'use strict';
 
-            // blobs follow mouse
-            const blobs = document.querySelectorAll('.bg-blob');
-            let mouseX=0, mouseY=0, targetX=0, targetY=0; const ease=0.04;
-            document.addEventListener('mousemove', e=>{mouseX=e.clientX;mouseY=e.clientY});
-            function animateBlobs(){targetX+=(mouseX-targetX)*ease;targetY+=(mouseY-targetY)*ease;const centerX=window.innerWidth/2;const centerY=window.innerHeight/2;const offsetX=(targetX-centerX)*0.018;const offsetY=(targetY-centerY)*0.018;blobs.forEach((blob,i)=>{const factor=(i+1)*0.8;blob.style.transform=`translate(${offsetX*factor}px, ${offsetY*factor}px) rotate(${offsetX*0.05}deg)`});requestAnimationFrame(animateBlobs)}
-            animateBlobs();
+            const els = document.querySelectorAll('.reveal');
+            if (els.length) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    threshold: 0.12,
+                    rootMargin: '0px 0px -20px 0px'
+                });
+                els.forEach(el => observer.observe(el));
+            }
         })();
     </script>
+
 </body>
 </html>
