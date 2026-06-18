@@ -3,27 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="title">شراكات وإعلانات | هوسكريب</title>
-    <meta name="description" data-i18n="meta-description" content="فرص التعاون والإعلانات مع هوسكريب - محتوى عائلي بسيط.">
+    <title data-i18n="title">الشراكات والإعلانات | هوسكريب</title>
+    <meta name="description" data-i18n="meta-description" content="فرص التعاون والإعلانات مع هوسكريب — محتوى عائلي بسيط وأنيق.">
     <link rel="canonical" href="https://hoscribe.netlify.app/ads.html">
     <link rel="icon" href="logo.png" type="image/png">
     <link rel="apple-touch-icon" href="logo.png">
 
-    <!-- خط واحد فقط، تحميل سريع -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* ============================================================
-                   RESET & BASE — نفس استيل الصفحة الرئيسية
-                   ============================================================ */
+        /* ——————————————————————————————
+           Reset & Base – مطابق للرئيسية
+           —————————————————————————————— */
         *,
         *::before,
         *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #fafafa;
+            --surface: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #6e6e73;
+            --text-tertiary: #8e8e93;
+            --gold: #b8953a;
+            --border: #e5e5ea;
+            --radius: 16px;
+            --transition: 0.25s cubic-bezier(0.25, 0.1, 0.15, 1);
         }
 
         html {
@@ -33,268 +44,281 @@
         }
 
         body {
-            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f7f5f0;
-            color: #1e1e1c;
+            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
             line-height: 1.7;
             min-height: 100vh;
-            padding: 2.4rem 1.6rem;
+            padding: 2.8rem 1.8rem;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
         .container {
-            max-width: 760px;
+            max-width: 640px;
             width: 100%;
             margin: 0 auto;
         }
 
-        /* ============================================================
-                   مبدل اللغة — أعلى الصفحة
-                   ============================================================ */
+        /* ——————————————————————————————
+           Lang Switcher
+           —————————————————————————————— */
         .lang-switcher {
             display: flex;
             justify-content: flex-end;
-            gap: 0.4rem;
-            margin-bottom: 0.8rem;
-            padding: 0.4rem 0.2rem;
+            gap: 0.2rem;
+            margin-bottom: 2.4rem;
         }
 
         .lang-btn {
             background: transparent;
-            border: 1.5px solid #d0cec8;
-            border-radius: 30px;
+            border: none;
             padding: 0.2rem 0.9rem;
             font-family: 'Cairo', sans-serif;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #5e5e5a;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: var(--text-tertiary);
             cursor: pointer;
-            transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-            line-height: 1.6;
+            border-radius: 30px;
+            transition: var(--transition);
+            letter-spacing: 0.03em;
         }
 
         .lang-btn:hover {
-            background: #f0eee8;
-            border-color: #b0aea8;
+            color: var(--text-primary);
+            background: var(--border);
         }
 
         .lang-btn.active {
-            background: #1e1e1c;
-            border-color: #1e1e1c;
-            color: #f7f5f0;
+            color: var(--text-primary);
+            background: var(--surface);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+            font-weight: 600;
         }
 
-        .lang-btn.active:hover {
-            background: #2e2e2c;
-            border-color: #2e2e2c;
-        }
-
-        /* ============================================================
-                   الهيرو — متوافق مع الرئيسية
-                   ============================================================ */
+        /* ——————————————————————————————
+           Hero
+           —————————————————————————————— */
         .hero {
-            padding: 2.8rem 0 2rem;
             text-align: center;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            padding: 1.6rem 0 2.4rem;
+            border-bottom: 1px solid var(--border);
         }
 
         .logo-wrap {
             display: inline-block;
-            margin-bottom: 1.2rem;
+            margin-bottom: 1.4rem;
         }
 
         .logo-wrap img {
-            width: 88px;
-            height: 88px;
+            width: 76px;
+            height: 76px;
             border-radius: 50%;
             object-fit: cover;
             display: block;
-            background: #e8e4dc;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            background: #f0efe8;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
         }
 
         .hero h1 {
-            font-size: 2.6rem;
-            font-weight: 900;
+            font-size: 2.4rem;
+            font-weight: 700;
             letter-spacing: -0.02em;
-            line-height: 1.15;
-            color: #1e1e1c;
-            margin-bottom: 0.25rem;
+            line-height: 1.1;
+            color: var(--text-primary);
+            margin-bottom: 0.1rem;
         }
 
         .hero .sub {
-            font-size: 1.05rem;
-            font-weight: 400;
-            color: #5e5e5a;
-            margin-top: 0.2rem;
+            font-size: 0.9rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            margin-top: 0.1rem;
+        }
+
+        .hero .sub .real {
+            font-weight: 600;
+            color: var(--text-primary);
         }
 
         .hero .tagline {
-            font-size: 0.95rem;
-            color: #7a7a76;
+            font-size: 0.85rem;
+            font-weight: 300;
+            color: var(--text-tertiary);
             margin-top: 0.6rem;
-            max-width: 520px;
+            max-width: 440px;
             margin-left: auto;
             margin-right: auto;
+            letter-spacing: 0.02em;
         }
 
-        /* ============================================================
-                   بطاقات العروض — بسيطة وأنيقة
-                   ============================================================ */
+        /* ——————————————————————————————
+           Cards – بدون أيقونات، أنيقة
+           —————————————————————————————— */
         .cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.2rem;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
             padding: 2.4rem 0 2rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.06);
-            margin-top: 0.4rem;
+            border-top: 1px solid var(--border);
+            margin-top: 0.2rem;
         }
 
         .card {
-            background: #ffffff;
-            border-radius: 18px;
+            background: var(--surface);
+            border-radius: var(--radius);
             padding: 1.6rem 1.2rem;
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
-            transition: box-shadow 0.2s ease;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            text-align: center;
         }
 
         .card:hover {
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-        }
-
-        .card .icon {
-            font-size: 1.6rem;
-            display: block;
-            margin-bottom: 0.3rem;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
         }
 
         .card h3 {
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 700;
-            color: #1e1e1c;
+            color: var(--text-primary);
             margin-bottom: 0.3rem;
         }
 
         .card p {
-            font-size: 0.85rem;
-            color: #6e6e6a;
+            font-size: 0.8rem;
+            font-weight: 300;
+            color: var(--text-secondary);
             line-height: 1.7;
         }
 
-        /* ============================================================
-                   قسم التواصل — CTA
-                   ============================================================ */
+        /* ——————————————————————————————
+           Contact Section
+           —————————————————————————————— */
         .contact-section {
             padding: 2.4rem 0 2rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            border-top: 1px solid var(--border);
             text-align: center;
         }
 
         .contact-section h2 {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            color: #1e1e1c;
+            color: var(--text-primary);
             margin-bottom: 0.2rem;
         }
 
         .contact-section p {
-            color: #5e5e5a;
-            font-size: 0.95rem;
-            max-width: 480px;
-            margin: 0 auto 1.2rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 300;
+            max-width: 420px;
+            margin: 0 auto 1.4rem;
+            line-height: 1.8;
         }
 
+        /* Buttons – رسمية، بدون إيموجي */
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            padding: 0.75rem 2.2rem;
-            border-radius: 60px;
+            padding: 0.6rem 2.2rem;
+            border-radius: 40px;
             font-family: 'Cairo', sans-serif;
-            font-weight: 700;
-            font-size: 1rem;
+            font-weight: 600;
+            font-size: 0.85rem;
             text-decoration: none;
-            background: #1e1e1c;
-            color: #f7f5f0;
-            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
             cursor: pointer;
-            transition: background 0.2s ease, transform 0.15s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            transition: var(--transition);
             line-height: 1.4;
+            letter-spacing: 0.02em;
         }
 
         .btn:hover {
-            background: #2e2e2c;
-            transform: scale(0.98);
+            background: var(--text-primary);
+            color: #fff;
+            border-color: var(--text-primary);
+            transform: scale(0.97);
         }
 
         .btn:active {
-            transform: scale(0.96);
+            transform: scale(0.95);
         }
 
-        .btn .emoji {
-            font-size: 1.1rem;
-            line-height: 1;
+        .btn--primary {
+            background: var(--text-primary);
+            color: #fff;
+            border-color: var(--text-primary);
+        }
+
+        .btn--primary:hover {
+            background: #2a2a2a;
+            border-color: #2a2a2a;
         }
 
         .btn--ghost {
             background: transparent;
-            color: #1e1e1c;
-            border: 1.5px solid #d0cec8;
-            box-shadow: none;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
         }
 
         .btn--ghost:hover {
-            background: #f0eee8;
-            border-color: #b0aea8;
+            background: var(--text-primary);
+            color: #fff;
+            border-color: var(--text-primary);
         }
 
         .back-link {
             display: inline-block;
-            margin-top: 1rem;
-            color: #7a7a76;
+            margin-top: 1.2rem;
+            color: var(--text-tertiary);
             text-decoration: none;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
+            font-weight: 300;
             transition: color 0.2s ease;
+            letter-spacing: 0.02em;
         }
 
         .back-link:hover {
-            color: #1e1e1c;
+            color: var(--text-primary);
         }
 
-        /* ============================================================
-                   تذييل — Footer
-                   ============================================================ */
+        /* ——————————————————————————————
+           Footer
+           —————————————————————————————— */
         .footer {
             padding: 2.4rem 0 1.2rem;
             text-align: center;
-            border-top: 1px solid rgba(0, 0, 0, 0.06);
-            margin-top: 0.4rem;
+            border-top: 1px solid var(--border);
+            margin-top: 0.2rem;
         }
 
         .footer .signoff {
-            font-size: 1rem;
-            color: #4e4e4a;
+            font-size: 0.85rem;
+            font-weight: 300;
+            color: var(--text-secondary);
             margin-bottom: 0.2rem;
         }
 
         .footer .credit {
-            font-size: 0.78rem;
-            color: #9a9a96;
-            margin-top: 0.6rem;
+            font-size: 0.65rem;
+            font-weight: 300;
+            color: var(--text-tertiary);
+            margin-top: 0.4rem;
+            letter-spacing: 0.02em;
         }
 
-        /* ============================================================
-                   كشف بسيط عند التمرير
-                   ============================================================ */
+        /* ——————————————————————————————
+           Reveal
+           —————————————————————————————— */
         .reveal {
             opacity: 0;
-            transform: translateY(14px);
-            transition: opacity 0.55s ease, transform 0.55s ease;
+            transform: translateY(16px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
 
         .reveal.visible {
@@ -302,12 +326,12 @@
             transform: translateY(0);
         }
 
-        /* ============================================================
-                   استجابة
-                   ============================================================ */
+        /* ——————————————————————————————
+           Responsive
+           —————————————————————————————— */
         @media (max-width: 640px) {
             body {
-                padding: 1.6rem 1rem;
+                padding: 1.6rem 1.2rem;
             }
 
             .hero h1 {
@@ -315,7 +339,7 @@
             }
 
             .hero .sub {
-                font-size: 0.95rem;
+                font-size: 0.8rem;
             }
 
             .cards {
@@ -329,25 +353,21 @@
             }
 
             .contact-section h2 {
-                font-size: 1.3rem;
+                font-size: 1.2rem;
             }
 
             .btn {
-                padding: 0.65rem 1.6rem;
-                font-size: 0.9rem;
+                padding: 0.5rem 1.6rem;
+                font-size: 0.8rem;
             }
 
             .logo-wrap img {
-                width: 72px;
-                height: 72px;
+                width: 64px;
+                height: 64px;
             }
 
             .lang-switcher {
                 justify-content: center;
-            }
-            .lang-btn {
-                font-size: 0.75rem;
-                padding: 0.1rem 0.7rem;
             }
         }
 
@@ -355,25 +375,20 @@
             .hero h1 {
                 font-size: 1.6rem;
             }
-
-            .hero .tagline {
-                font-size: 0.85rem;
-            }
-
             .contact-section p {
-                font-size: 0.85rem;
+                font-size: 0.8rem;
             }
         }
 
         ::-webkit-scrollbar {
-            width: 4px;
+            width: 3px;
         }
         ::-webkit-scrollbar-track {
-            background: #f0eee8;
+            background: var(--bg);
         }
         ::-webkit-scrollbar-thumb {
-            background: #d0cec8;
-            border-radius: 20px;
+            background: var(--border);
+            border-radius: 10px;
         }
     </style>
 </head>
@@ -381,140 +396,112 @@
 
     <div class="container">
 
-        <!-- ==========================================================
-        مبدل اللغة — أعلى الصفحة
-        ========================================================== -->
+        <!-- Language Switcher -->
         <div class="lang-switcher">
-            <button class="lang-btn" data-lang="ar" aria-label="العربية">🇸🇦 عربي</button>
-            <button class="lang-btn" data-lang="en" aria-label="English">🇬🇧 English</button>
+            <button class="lang-btn" data-lang="ar" aria-label="العربية">عربي</button>
+            <button class="lang-btn" data-lang="en" aria-label="English">English</button>
         </div>
 
-        <!-- ==========================================================
-        هيرو — متوافق مع الرئيسية
-        ========================================================== -->
+        <!-- Hero -->
         <header class="hero reveal">
             <div class="logo-wrap">
-                <img src="logo.png" alt="هوسكريب" loading="eager" fetchpriority="high" onerror="this.style.background='#e8e4dc'; this.alt='Hoscribe';" />
+                <img src="logo.png" alt="هوسكريب" loading="eager" fetchpriority="high" onerror="this.style.background='#f0efe8'; this.alt='Hoscribe';" />
             </div>
-            <h1 data-i18n="hero-title">شراكات وإعلانات</h1>
-            <p class="sub" data-i18n="hero-sub">هوسكريب · <span style="font-weight:600; color:#3d3d3a;">كريم محمد إسماعيل</span></p>
-            <p class="tagline" data-i18n="hero-tagline">فرص تعاون مرنة ومُبتكرة تصل بالعلامات إلى جمهور عربي عائلي نشط ومتحمس.</p>
+            <h1 data-i18n="hero-title">الشراكات والإعلانات</h1>
+            <p class="sub"><span class="real" data-i18n="brand-owner">كريم محمد إسماعيل</span> <span style="color:var(--text-tertiary);">·</span> <span data-i18n="brand-sub">Hoscribe</span></p>
+            <p class="tagline" data-i18n="hero-tagline">فرص تعاون مرنة ومبتكرة تصل بالعلامات التجارية إلى جمهور عربي عائلي نشط ومتفاعل.</p>
         </header>
 
-        <!-- ==========================================================
-        بطاقات العروض
-        ========================================================== -->
+        <!-- Cards – خدمات الشراكة -->
         <div class="cards reveal">
             <div class="card">
-                <span class="icon">🎬</span>
-                <h3 data-i18n="card1-title">رعاية فيديو</h3>
-                <p data-i18n="card1-desc">تضمين المنتج أو الخدمة داخل الفيديو بشكل طبيعي مع ذكر الفوائد العملية للمشاهد. حملات رفع وعي وتحفيز شراء.</p>
+                <h3 data-i18n="card1-title">رعاية الفيديو</h3>
+                <p data-i18n="card1-desc">دمج طبيعي للمنتج أو الخدمة داخل المحتوى مع عرض الفوائد العملية للمشاهد، بما يعزز الوعي ويحفز الشراء.</p>
             </div>
             <div class="card">
-                <span class="icon">📺</span>
                 <h3 data-i18n="card2-title">سلاسل مخصصة</h3>
-                <p data-i18n="card2-desc">سلسلة حلقات قصيرة تتناول رسالة العلامة التجارية بطريقة قصصية وتفاعلية لبناء علاقة مستمرة مع الجمهور.</p>
+                <p data-i18n="card2-desc">سلسلة حلقات قصيرة تحكي رسالة العلامة التجارية بأسلوب قصصي وتفاعلي، لبناء علاقة مستدامة مع الجمهور.</p>
             </div>
             <div class="card">
-                <span class="icon">🌐</span>
-                <h3 data-i18n="card3-title">نشر متعدد</h3>
-                <p data-i18n="card3-desc">ترويج متقاطع عبر يوتيوب، تيك توك، إنستجرام وسناب شات للوصول إلى جمهور واسع مع تنسيق الرسالة لكل منصة.</p>
+                <h3 data-i18n="card3-title">نشر متعدد المنصات</h3>
+                <p data-i18n="card3-desc">ترويج متقاطع عبر يوتيوب، تيك توك، إنستغرام وسناب شات، مع تخصيص الرسالة لتتناسب مع طبيعة كل منصة.</p>
             </div>
         </div>
 
-        <!-- ==========================================================
-        قسم التواصل
-        ========================================================== -->
+        <!-- Contact Section -->
         <section class="contact-section reveal">
-            <h2 data-i18n="contact-title">🤝 نبدأ التعاون؟</h2>
-            <p data-i18n="contact-desc">هل تودّ أن نشارك فكرتك أو نرسل ملف التعاون؟ تواصل معنا الآن للحصول على عرض مُفصّل.</p>
-            <a href="mailto:contact@hoscribe.net" class="btn">
-                <span class="emoji">📩</span> <span data-i18n="contact-btn">تواصل عبر البريد</span>
+            <h2 data-i18n="contact-title">بدء التعاون</h2>
+            <p data-i18n="contact-desc">للاستفسار عن العروض أو مشاركة فكرتك، تواصل معنا للحصول على عرض مفصل وملائم.</p>
+            <a href="mailto:contact@hoscribe.net" class="btn btn--primary">
+                <span data-i18n="contact-btn">مراسلة البريد الإلكتروني</span>
             </a>
             <br>
-            <a href="/" class="back-link" data-i18n="back-link">← العودة للرئيسية</a>
+            <a href="/" class="back-link" data-i18n="back-link">العودة إلى الرئيسية</a>
         </section>
 
-        <!-- ==========================================================
-        تذييل
-        ========================================================== -->
+        <!-- Footer -->
         <footer class="footer reveal">
-            <p class="signoff" data-i18n="footer-signoff">— شراكات مؤثرة بقلب عائلي 🤍 —</p>
+            <p class="signoff" data-i18n="footer-signoff">— شراكات مؤثرة بروح عائلية —</p>
             <p class="credit" data-i18n="footer-credit">© 2026 هوسكريب · Hoscribe — كريم محمد إسماعيل</p>
         </footer>
 
     </div>
 
     <!-- ==========================================================
-    سكريبت — الترجمة + كشف التمرير
+    Script – i18n + reveal
     ========================================================== -->
     <script>
         (function() {
             'use strict';
 
-            // ----------------------------------------------------------
-            // 1. كائن الترجمة
-            // ----------------------------------------------------------
             const translations = {
                 ar: {
-                    'title': 'شراكات وإعلانات | هوسكريب',
-                    'meta-description': 'فرص التعاون والإعلانات مع هوسكريب - محتوى عائلي بسيط.',
-                    'hero-title': 'شراكات وإعلانات',
-                    'hero-sub': 'هوسكريب · <span style="font-weight:600; color:#3d3d3a;">كريم محمد إسماعيل</span>',
-                    'hero-tagline': 'فرص تعاون مرنة ومُبتكرة تصل بالعلامات إلى جمهور عربي عائلي نشط ومتحمس.',
-
-                    'card1-title': 'رعاية فيديو',
-                    'card1-desc': 'تضمين المنتج أو الخدمة داخل الفيديو بشكل طبيعي مع ذكر الفوائد العملية للمشاهد. حملات رفع وعي وتحفيز شراء.',
+                    'title': 'الشراكات والإعلانات | هوسكريب',
+                    'meta-description': 'فرص التعاون والإعلانات مع هوسكريب — محتوى عائلي بسيط وأنيق.',
+                    'hero-title': 'الشراكات والإعلانات',
+                    'brand-owner': 'كريم محمد إسماعيل',
+                    'brand-sub': 'Hoscribe',
+                    'hero-tagline': 'فرص تعاون مرنة ومبتكرة تصل بالعلامات التجارية إلى جمهور عربي عائلي نشط ومتفاعل.',
+                    'card1-title': 'رعاية الفيديو',
+                    'card1-desc': 'دمج طبيعي للمنتج أو الخدمة داخل المحتوى مع عرض الفوائد العملية للمشاهد، بما يعزز الوعي ويحفز الشراء.',
                     'card2-title': 'سلاسل مخصصة',
-                    'card2-desc': 'سلسلة حلقات قصيرة تتناول رسالة العلامة التجارية بطريقة قصصية وتفاعلية لبناء علاقة مستمرة مع الجمهور.',
-                    'card3-title': 'نشر متعدد',
-                    'card3-desc': 'ترويج متقاطع عبر يوتيوب، تيك توك، إنستجرام وسناب شات للوصول إلى جمهور واسع مع تنسيق الرسالة لكل منصة.',
-
-                    'contact-title': '🤝 نبدأ التعاون؟',
-                    'contact-desc': 'هل تودّ أن نشارك فكرتك أو نرسل ملف التعاون؟ تواصل معنا الآن للحصول على عرض مُفصّل.',
-                    'contact-btn': 'تواصل عبر البريد',
-                    'back-link': '← العودة للرئيسية',
-
-                    'footer-signoff': '— شراكات مؤثرة بقلب عائلي 🤍 —',
+                    'card2-desc': 'سلسلة حلقات قصيرة تحكي رسالة العلامة التجارية بأسلوب قصصي وتفاعلي، لبناء علاقة مستدامة مع الجمهور.',
+                    'card3-title': 'نشر متعدد المنصات',
+                    'card3-desc': 'ترويج متقاطع عبر يوتيوب، تيك توك، إنستغرام وسناب شات، مع تخصيص الرسالة لتتناسب مع طبيعة كل منصة.',
+                    'contact-title': 'بدء التعاون',
+                    'contact-desc': 'للاستفسار عن العروض أو مشاركة فكرتك، تواصل معنا للحصول على عرض مفصل وملائم.',
+                    'contact-btn': 'مراسلة البريد الإلكتروني',
+                    'back-link': 'العودة إلى الرئيسية',
+                    'footer-signoff': '— شراكات مؤثرة بروح عائلية —',
                     'footer-credit': '© 2026 هوسكريب · Hoscribe — كريم محمد إسماعيل',
                 },
                 en: {
-                    'title': 'Partnerships & Ads | Hoscribe',
-                    'meta-description': 'Collaboration and advertising opportunities with Hoscribe - simple family-friendly content.',
-                    'hero-title': 'Partnerships & Ads',
-                    'hero-sub': 'Hoscribe · <span style="font-weight:600; color:#3d3d3a;">Karim Mohamed Ismail</span>',
+                    'title': 'Partnerships & Advertising | Hoscribe',
+                    'meta-description': 'Collaboration and advertising opportunities with Hoscribe — simple and elegant family content.',
+                    'hero-title': 'Partnerships & Advertising',
+                    'brand-owner': 'Karim Mohamed Ismail',
+                    'brand-sub': 'Hoscribe',
                     'hero-tagline': 'Flexible and innovative collaboration opportunities that connect brands with an active, family-oriented Arab audience.',
-
                     'card1-title': 'Video Sponsorship',
-                    'card1-desc': 'Seamlessly integrate your product or service into the video, highlighting practical benefits for viewers. Awareness campaigns and purchase incentives.',
+                    'card1-desc': 'Natural integration of your product or service into the content, highlighting practical benefits to viewers, enhancing awareness and driving purchase.',
                     'card2-title': 'Custom Series',
-                    'card2-desc': 'Short series episodes that convey your brand message in a storytelling and interactive way, building a lasting relationship with the audience.',
+                    'card2-desc': 'Short series episodes that convey your brand message through storytelling and interaction, building a lasting relationship with the audience.',
                     'card3-title': 'Multi-Platform Publishing',
-                    'card3-desc': 'Cross-promotion across YouTube, TikTok, Instagram, and Snapchat to reach a wide audience, tailoring the message for each platform.',
-
-                    'contact-title': '🤝 Let\'s collaborate?',
-                    'contact-desc': 'Would you like to share your idea or send a collaboration brief? Contact us now for a detailed proposal.',
+                    'card3-desc': 'Cross-promotion across YouTube, TikTok, Instagram, and Snapchat, with tailored messaging for each platform.',
+                    'contact-title': 'Start Collaborating',
+                    'contact-desc': 'For inquiries or to share your idea, contact us for a detailed and tailored proposal.',
                     'contact-btn': 'Email us',
-                    'back-link': '← Back to home',
-
-                    'footer-signoff': '— Impactful partnerships with a family heart 🤍 —',
+                    'back-link': 'Back to home',
+                    'footer-signoff': '— Impactful partnerships with a family spirit —',
                     'footer-credit': '© 2026 Hoscribe · هوسكريب — Karim Mohamed Ismail',
                 }
             };
 
-            // ----------------------------------------------------------
-            // 2. العناصر القابلة للترجمة
-            // ----------------------------------------------------------
             const i18nElements = document.querySelectorAll('[data-i18n]');
             const metaDescription = document.querySelector('meta[name="description"]');
             const htmlEl = document.documentElement;
-
-            // أزرار اللغة
             const langBtns = document.querySelectorAll('.lang-btn');
 
-            // ----------------------------------------------------------
-            // 3. دالة تطبيق اللغة
-            // ----------------------------------------------------------
             function setLanguage(lang) {
                 const dict = translations[lang];
                 if (!dict) return;
@@ -540,39 +527,26 @@
                 localStorage.setItem('hoscribe-lang', lang);
             }
 
-            // ----------------------------------------------------------
-            // 4. كشف اللغة المفضلة
-            // ----------------------------------------------------------
             function getPreferredLanguage() {
                 const stored = localStorage.getItem('hoscribe-lang');
                 if (stored === 'ar' || stored === 'en') return stored;
-
                 const browserLang = navigator.language || navigator.languages?.[0] || '';
                 if (browserLang.startsWith('ar')) return 'ar';
                 if (browserLang.startsWith('en')) return 'en';
-
                 return 'ar';
             }
 
-            // ----------------------------------------------------------
-            // 5. تهيئة الأزرار
-            // ----------------------------------------------------------
             langBtns.forEach(btn => {
-                btn.addEventListener('click', function(e) {
+                btn.addEventListener('click', function() {
                     const lang = this.getAttribute('data-lang');
                     if (lang) setLanguage(lang);
                 });
             });
 
-            // ----------------------------------------------------------
-            // 6. تشغيل الترجمة الأولية
-            // ----------------------------------------------------------
             const initialLang = getPreferredLanguage();
             setLanguage(initialLang);
 
-            // ----------------------------------------------------------
-            // 7. كشف التمرير (reveal) — كما هو
-            // ----------------------------------------------------------
+            // Reveal on scroll
             const revealEls = document.querySelectorAll('.reveal');
             if (revealEls.length) {
                 const observer = new IntersectionObserver((entries) => {
@@ -582,10 +556,7 @@
                             observer.unobserve(entry.target);
                         }
                     });
-                }, {
-                    threshold: 0.12,
-                    rootMargin: '0px 0px -20px 0px'
-                });
+                }, { threshold: 0.12, rootMargin: '0px 0px -20px 0px' });
                 revealEls.forEach(el => observer.observe(el));
             }
 
