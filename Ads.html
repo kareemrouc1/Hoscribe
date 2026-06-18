@@ -194,7 +194,7 @@
         }
 
         /* ——————————————————————————————
-           Contact Section
+           Contact Section - New Form Style
            —————————————————————————————— */
         .contact-section {
             padding: 2.4rem 0 2rem;
@@ -209,16 +209,68 @@
             margin-bottom: 0.2rem;
         }
 
-        .contact-section p {
+        .contact-section .sub-text {
             color: var(--text-secondary);
             font-size: 0.85rem;
             font-weight: 300;
             max-width: 420px;
-            margin: 0 auto 1.4rem;
+            margin: 0 auto 1.8rem;
             line-height: 1.8;
         }
 
-        /* Buttons – رسمية، بدون إيموجي */
+        /* Form Styles */
+        .contact-form {
+            text-align: right;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            text-align: right;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.2rem;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: var(--transition);
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--text-primary);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.03);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+
         .btn {
             display: inline-flex;
             align-items: center;
@@ -236,6 +288,7 @@
             transition: var(--transition);
             line-height: 1.4;
             letter-spacing: 0.02em;
+            width: 100%;
         }
 
         .btn:hover {
@@ -285,6 +338,23 @@
 
         .back-link:hover {
             color: var(--text-primary);
+        }
+
+        /* Success Message */
+        .form-success {
+            display: none;
+            padding: 1.2rem;
+            background: #f0f7f0;
+            border: 1px solid #b8d9b8;
+            border-radius: var(--radius);
+            color: #2a5e2a;
+            font-size: 0.95rem;
+            margin-top: 1.2rem;
+            text-align: center;
+        }
+
+        .form-success.visible {
+            display: block;
         }
 
         /* ——————————————————————————————
@@ -356,6 +426,11 @@
                 font-size: 1.2rem;
             }
 
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
             .btn {
                 padding: 0.5rem 1.6rem;
                 font-size: 0.8rem;
@@ -375,7 +450,7 @@
             .hero h1 {
                 font-size: 1.6rem;
             }
-            .contact-section p {
+            .contact-section .sub-text {
                 font-size: 0.8rem;
             }
         }
@@ -428,13 +503,40 @@
             </div>
         </div>
 
-        <!-- Contact Section -->
+        <!-- Contact Section with Form -->
         <section class="contact-section reveal">
             <h2 data-i18n="contact-title">بدء التعاون</h2>
-            <p data-i18n="contact-desc">للاستفسار عن العروض أو مشاركة فكرتك، تواصل معنا للحصول على عرض مفصل وملائم.</p>
-            <a href="mailto:contact@hoscribe.net" class="btn btn--primary">
-                <span data-i18n="contact-btn">مراسلة البريد الإلكتروني</span>
-            </a>
+            <p class="sub-text" data-i18n="contact-desc">للاستفسار عن العروض أو مشاركة فكرتك، املأ النموذج أدناه وسنرد عليك في أقرب وقت.</p>
+
+            <!-- START: Contact Form -->
+            <!-- IMPORTANT: Replace YOUR_FORM_ID with your actual Formspree form ID -->
+            <form id="contactForm" class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fullName" data-i18n="form-name">الاسم الكامل</label>
+                        <input type="text" id="fullName" name="name" required placeholder="أحمد محمد" data-i18n-placeholder="form-name-placeholder">
+                    </div>
+                    <div class="form-group">
+                        <label for="email" data-i18n="form-email">البريد الإلكتروني</label>
+                        <input type="email" id="email" name="email" required placeholder="example@mail.com" data-i18n-placeholder="form-email-placeholder">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="subject" data-i18n="form-subject">الموضوع</label>
+                    <input type="text" id="subject" name="subject" required placeholder="استفسار عن رعاية فيديو" data-i18n-placeholder="form-subject-placeholder">
+                </div>
+                <div class="form-group">
+                    <label for="message" data-i18n="form-message">الرسالة</label>
+                    <textarea id="message" name="message" required placeholder="أكتب تفاصيل طلبك هنا..." data-i18n-placeholder="form-message-placeholder"></textarea>
+                </div>
+                <button type="submit" class="btn btn--primary" data-i18n="form-submit">إرسال الطلب</button>
+            </form>
+
+            <div id="formSuccess" class="form-success" data-i18n="form-success-msg">
+                ✓ تم إرسال طلبك بنجاح! سنتواصل معك قريباً.
+            </div>
+            <!-- END: Contact Form -->
+
             <br>
             <a href="/" class="back-link" data-i18n="back-link">العودة إلى الرئيسية</a>
         </section>
@@ -448,7 +550,7 @@
     </div>
 
     <!-- ==========================================================
-    Script – i18n + reveal
+    Script – i18n + reveal + Form Handler
     ========================================================== -->
     <script>
         (function() {
@@ -469,8 +571,17 @@
                     'card3-title': 'نشر متعدد المنصات',
                     'card3-desc': 'ترويج متقاطع عبر يوتيوب، تيك توك، إنستغرام وسناب شات، مع تخصيص الرسالة لتتناسب مع طبيعة كل منصة.',
                     'contact-title': 'بدء التعاون',
-                    'contact-desc': 'للاستفسار عن العروض أو مشاركة فكرتك، تواصل معنا للحصول على عرض مفصل وملائم.',
-                    'contact-btn': 'مراسلة البريد الإلكتروني',
+                    'contact-desc': 'للاستفسار عن العروض أو مشاركة فكرتك، املأ النموذج أدناه وسنرد عليك في أقرب وقت.',
+                    'form-name': 'الاسم الكامل',
+                    'form-name-placeholder': 'أحمد محمد',
+                    'form-email': 'البريد الإلكتروني',
+                    'form-email-placeholder': 'example@mail.com',
+                    'form-subject': 'الموضوع',
+                    'form-subject-placeholder': 'استفسار عن رعاية فيديو',
+                    'form-message': 'الرسالة',
+                    'form-message-placeholder': 'أكتب تفاصيل طلبك هنا...',
+                    'form-submit': 'إرسال الطلب',
+                    'form-success-msg': '✓ تم إرسال طلبك بنجاح! سنتواصل معك قريباً.',
                     'back-link': 'العودة إلى الرئيسية',
                     'footer-signoff': '— شراكات مؤثرة بروح عائلية —',
                     'footer-credit': '© 2026 هوسكريب · Hoscribe — كريم محمد إسماعيل',
@@ -489,8 +600,17 @@
                     'card3-title': 'Multi-Platform Publishing',
                     'card3-desc': 'Cross-promotion across YouTube, TikTok, Instagram, and Snapchat, with tailored messaging for each platform.',
                     'contact-title': 'Start Collaborating',
-                    'contact-desc': 'For inquiries or to share your idea, contact us for a detailed and tailored proposal.',
-                    'contact-btn': 'Email us',
+                    'contact-desc': 'For inquiries or to share your idea, fill out the form below and we will get back to you shortly.',
+                    'form-name': 'Full Name',
+                    'form-name-placeholder': 'Ahmed Mohamed',
+                    'form-email': 'Email Address',
+                    'form-email-placeholder': 'example@mail.com',
+                    'form-subject': 'Subject',
+                    'form-subject-placeholder': 'Video sponsorship inquiry',
+                    'form-message': 'Message',
+                    'form-message-placeholder': 'Write your message details here...',
+                    'form-submit': 'Send Request',
+                    'form-success-msg': '✓ Your request has been sent successfully! We will contact you soon.',
                     'back-link': 'Back to home',
                     'footer-signoff': '— Impactful partnerships with a family spirit —',
                     'footer-credit': '© 2026 Hoscribe · هوسكريب — Karim Mohamed Ismail',
@@ -502,14 +622,26 @@
             const htmlEl = document.documentElement;
             const langBtns = document.querySelectorAll('.lang-btn');
 
+            // For placeholders (data-i18n-placeholder)
+            const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
+
             function setLanguage(lang) {
                 const dict = translations[lang];
                 if (!dict) return;
 
+                // Update innerHTML for data-i18n elements
                 i18nElements.forEach(el => {
                     const key = el.getAttribute('data-i18n');
                     if (dict[key] !== undefined) {
                         el.innerHTML = dict[key];
+                    }
+                });
+
+                // Update placeholders for data-i18n-placeholder elements
+                placeholderElements.forEach(el => {
+                    const key = el.getAttribute('data-i18n-placeholder');
+                    if (dict[key] !== undefined) {
+                        el.setAttribute('placeholder', dict[key]);
                     }
                 });
 
@@ -558,6 +690,45 @@
                     });
                 }, { threshold: 0.12, rootMargin: '0px 0px -20px 0px' });
                 revealEls.forEach(el => observer.observe(el));
+            }
+
+            // ——————————————————————————————
+            // Form Handler – Formspree
+            // ——————————————————————————————
+            const form = document.getElementById('contactForm');
+            const successDiv = document.getElementById('formSuccess');
+
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    // We let Formspree handle the actual submission.
+                    // But we want to show the success message if the submission is successful.
+                    // The form will redirect to a default Formspree page, so we intercept with fetch.
+
+                    e.preventDefault(); // Prevent default redirect
+
+                    const formData = new FormData(form);
+
+                    fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            form.reset();
+                            successDiv.classList.add('visible');
+                            // Hide success after 6 seconds
+                            setTimeout(() => {
+                                successDiv.classList.remove('visible');
+                            }, 6000);
+                        } else {
+                            alert('حدث خطأ. يرجى المحاولة مرة أخرى.');
+                        }
+                    }).catch(error => {
+                        alert('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.');
+                    });
+                });
             }
 
         })();
