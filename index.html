@@ -285,10 +285,41 @@
         }
 
         /* ——————————————————————————————
+                   Quick Links (سلسلة)
+                   —————————————————————————————— */
+        .quick-links {
+            padding: 2rem 0 1.2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .quick-links .links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8rem 1.6rem;
+            margin-top: 0.6rem;
+        }
+
+        .quick-links a {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-bottom: 1px dotted transparent;
+            transition: var(--transition);
+        }
+
+        .quick-links a:hover {
+            color: var(--text-primary);
+            border-bottom-color: var(--gold);
+        }
+
+        /* ——————————————————————————————
                    Footer – Discreet
                    —————————————————————————————— */
         .footer {
-            padding: 2.4rem 0 1.2rem;
+            padding: 2rem 0 1.2rem;
             text-align: center;
         }
 
@@ -354,6 +385,10 @@
             .lang-switcher {
                 justify-content: center;
             }
+
+            .quick-links .links {
+                gap: 0.6rem 1.2rem;
+            }
         }
 
         @media (max-width: 400px) {
@@ -417,6 +452,16 @@
             </a>
         </section>
 
+        <!-- Snapchat CTA -->
+        <section class="cta-section reveal">
+            <span class="label" data-i18n="snap-label">سناب شات</span>
+            <h2 data-i18n="snap-title">@hoscribe</h2>
+            <p data-i18n="snap-desc">محتوى يومي، خلف الكواليس، ولحظات ممتعة على سناب شات.</p>
+            <a href="https://www.snapchat.com/add/hoscribe" target="_blank" rel="noopener" class="btn btn--ghost">
+                <span data-i18n="snap-btn">تابعنا على سناب</span>
+            </a>
+        </section>
+
         <!-- Ads CTA -->
         <section class="cta-section reveal">
             <span class="label" data-i18n="ads-label">التعاون</span>
@@ -425,6 +470,16 @@
             <a href="ads.html" class="btn btn--ghost">
                 <span data-i18n="ads-btn">تواصل معنا</span>
             </a>
+        </section>
+
+        <!-- Quick Links (سلسلة) -->
+        <section class="quick-links reveal">
+            <div class="links" data-i18n="quick-links">
+                <a href="/" data-i18n="link-home">الرئيسية</a>
+                <a href="https://youtube.com/@Hoscribe" target="_blank" data-i18n="link-youtube">يوتيوب</a>
+                <a href="https://www.snapchat.com/add/hoscribe" target="_blank" data-i18n="link-snapchat">سناب شات</a>
+                <a href="ads.html" data-i18n="link-ads">تواصل</a>
+            </div>
         </section>
 
         <!-- Footer -->
@@ -458,10 +513,19 @@
                     'yt-title': 'هوسكريب',
                     'yt-desc': 'مكان للمرح، ألعاب، وتحديات مليئة بالضحكات. محتوى نظيف ولطيف للجميع.',
                     'yt-btn': 'زيارة القناة',
+                    'snap-label': 'سناب شات',
+                    'snap-title': '@hoscribe',
+                    'snap-desc': 'محتوى يومي، خلف الكواليس، ولحظات ممتعة على سناب شات.',
+                    'snap-btn': 'تابعنا على سناب',
                     'ads-label': 'التعاون',
                     'ads-title': 'للإعلانات والشراكات',
                     'ads-desc': 'نرحب بالعلامات التجارية التي تشاركنا الرؤية. نسعد بالتواصل معكم.',
                     'ads-btn': 'تواصل معنا',
+                    'quick-links': '',
+                    'link-home': 'الرئيسية',
+                    'link-youtube': 'يوتيوب',
+                    'link-snapchat': 'سناب شات',
+                    'link-ads': 'تواصل',
                     'footer-signoff': '— وجودكم معنا هو كل شيء، نتمنى أن تستمتعوا دائماً —',
                     'footer-credit': '© 2025 Hoscribe · هوسكريب — كريم محمد إسماعيل',
                 },
@@ -480,10 +544,19 @@
                     'yt-title': 'Hoscribe',
                     'yt-desc': 'A place for fun, games, and challenges full of laughs. Clean and kind content for all.',
                     'yt-btn': 'Visit channel',
+                    'snap-label': 'Snapchat',
+                    'snap-title': '@hoscribe',
+                    'snap-desc': 'Daily content, behind the scenes, and fun moments on Snapchat.',
+                    'snap-btn': 'Follow us on Snap',
                     'ads-label': 'Collaboration',
                     'ads-title': 'Advertising & Partnerships',
                     'ads-desc': 'We welcome brands that share our vision. We look forward to hearing from you.',
                     'ads-btn': 'Contact us',
+                    'quick-links': '',
+                    'link-home': 'Home',
+                    'link-youtube': 'YouTube',
+                    'link-snapchat': 'Snapchat',
+                    'link-ads': 'Contact',
                     'footer-signoff': '— Your presence means everything, we hope you always enjoy —',
                     'footer-credit': '© 2025 Hoscribe · هوسكريب — Karim Mohamed Ismail',
                 }
@@ -503,7 +576,17 @@
                 i18nElements.forEach(el => {
                     const key = el.getAttribute('data-i18n');
                     if (dict[key] !== undefined) {
+                        // for the quick-links container we skip setting innerHTML because it has child links
+                        if (key === 'quick-links') return;
                         el.innerHTML = dict[key];
+                    }
+                });
+
+                // Manually update quick-links children
+                document.querySelectorAll('.quick-links .links a').forEach(link => {
+                    const key = link.getAttribute('data-i18n');
+                    if (key && dict[key] !== undefined) {
+                        link.textContent = dict[key];
                     }
                 });
 
