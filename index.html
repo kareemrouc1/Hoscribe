@@ -22,8 +22,8 @@
 
     <style>
         /* ——————————————————————————————
-                   Reset & Base – Ultra Minimal
-                   —————————————————————————————— */
+           Reset & Base – Ultra Minimal
+           —————————————————————————————— */
         *,
         *::before,
         *::after {
@@ -63,14 +63,14 @@
         }
 
         .container {
-            max-width: 640px;
+            max-width: 720px;
             width: 100%;
             margin: 0 auto;
         }
 
         /* ——————————————————————————————
-                   Lang Switcher – Refined
-                   —————————————————————————————— */
+           Lang Switcher – Refined
+           —————————————————————————————— */
         .lang-switcher {
             display: flex;
             justify-content: flex-end;
@@ -105,8 +105,8 @@
         }
 
         /* ——————————————————————————————
-                   Hero – Serene & Balanced
-                   —————————————————————————————— */
+           Hero – Serene & Balanced
+           —————————————————————————————— */
         .hero {
             text-align: center;
             padding: 1.6rem 0 2.4rem;
@@ -161,8 +161,8 @@
         }
 
         /* ——————————————————————————————
-                   About – Minimalist statement
-                   —————————————————————————————— */
+           About – Minimalist statement
+           —————————————————————————————— */
         .about {
             padding: 2.6rem 0 1.6rem;
             text-align: center;
@@ -192,42 +192,63 @@
         }
 
         /* ——————————————————————————————
-                   CTA Sections – Quiet & Direct
-                   —————————————————————————————— */
-        .cta-section {
-            padding: 2.4rem 0 2rem;
+           CTA Row – Two columns grid
+           —————————————————————————————— */
+        .cta-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            padding: 1.8rem 0;
             border-top: 1px solid var(--border);
-            text-align: center;
         }
 
-        .cta-section:last-of-type {
+        .cta-row:last-of-type {
             border-bottom: 1px solid var(--border);
+        }
+
+        .cta-section {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 1.8rem 1.2rem;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+
+        .cta-section:hover {
+            border-color: var(--gold);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
         }
 
         .cta-section .label {
             display: inline-block;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: 700;
             letter-spacing: 0.08em;
             text-transform: uppercase;
             color: var(--gold);
-            margin-bottom: 0.15rem;
+            margin-bottom: 0.1rem;
         }
 
         .cta-section h2 {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 0.2rem;
+            margin-bottom: 0.1rem;
         }
 
         .cta-section p {
             color: var(--text-secondary);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 300;
-            max-width: 400px;
-            margin: 0 auto 1.4rem;
-            line-height: 1.8;
+            max-width: 260px;
+            margin: 0.2rem auto 1.2rem;
+            line-height: 1.7;
         }
 
         /* Buttons – Formal, refined, no emojis */
@@ -235,11 +256,11 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 0.6rem 2.2rem;
+            padding: 0.5rem 1.8rem;
             border-radius: 40px;
             font-family: 'Cairo', sans-serif;
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-decoration: none;
             background: transparent;
             color: var(--text-primary);
@@ -285,8 +306,8 @@
         }
 
         /* ——————————————————————————————
-                   Quick Links (سلسلة)
-                   —————————————————————————————— */
+           Quick Links (سلسلة)
+           —————————————————————————————— */
         .quick-links {
             padding: 2rem 0 1.2rem;
             border-top: 1px solid var(--border);
@@ -316,8 +337,8 @@
         }
 
         /* ——————————————————————————————
-                   Footer – Discreet
-                   —————————————————————————————— */
+           Footer – Discreet
+           —————————————————————————————— */
         .footer {
             padding: 2rem 0 1.2rem;
             text-align: center;
@@ -339,8 +360,8 @@
         }
 
         /* ——————————————————————————————
-                   Reveal – Subtle
-                   —————————————————————————————— */
+           Reveal – Subtle
+           —————————————————————————————— */
         .reveal {
             opacity: 0;
             transform: translateY(16px);
@@ -353,8 +374,8 @@
         }
 
         /* ——————————————————————————————
-                   Responsive
-                   —————————————————————————————— */
+           Responsive
+           —————————————————————————————— */
         @media (max-width: 640px) {
             body {
                 padding: 1.6rem 1.2rem;
@@ -368,13 +389,24 @@
                 font-size: 0.85rem;
             }
 
+            .cta-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 1.2rem 0;
+            }
+
+            .cta-section {
+                min-height: 160px;
+                padding: 1.4rem 1rem;
+            }
+
             .cta-section h2 {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
             }
 
             .btn {
-                padding: 0.5rem 1.6rem;
-                font-size: 0.8rem;
+                padding: 0.5rem 1.4rem;
+                font-size: 0.75rem;
             }
 
             .logo-wrap img {
@@ -389,6 +421,15 @@
             .quick-links .links {
                 gap: 0.6rem 1.2rem;
             }
+
+            .cta-row:last-of-type {
+                border-bottom: none;
+            }
+
+            .cta-row:last-of-type .cta-section:last-of-type {
+                border-bottom: 1px solid var(--border);
+                border-radius: var(--radius) var(--radius) var(--radius) var(--radius);
+            }
         }
 
         @media (max-width: 400px) {
@@ -397,6 +438,13 @@
             }
             .about p {
                 font-size: 0.9rem;
+            }
+            .cta-section {
+                min-height: 140px;
+                padding: 1.2rem 0.8rem;
+            }
+            .cta-section p {
+                font-size: 0.75rem;
             }
         }
 
@@ -442,45 +490,51 @@
             <p class="sig" data-i18n="about-sig">— نروي القصص ونكتشف الحقائق</p>
         </section>
 
-        <!-- YouTube CTA -->
-        <section class="cta-section reveal">
-            <span class="label" data-i18n="yt-label">القناة</span>
-            <h2 data-i18n="yt-title">هوسكرايب</h2>
-            <p data-i18n="yt-desc">قناة تقدم محتوى وثائقياً عالمياً، قصص وحقائق من جميع أنحاء العالم بأسلوب بسيط وجذاب.</p>
-            <a href="https://youtube.com/@Hoscribe" target="_blank" rel="noopener" class="btn btn--primary">
-                <span data-i18n="yt-btn">زيارة القناة</span>
-            </a>
-        </section>
+        <!-- Row 1: YouTube + Snapchat -->
+        <div class="cta-row reveal">
+            <!-- YouTube -->
+            <section class="cta-section">
+                <span class="label" data-i18n="yt-label">القناة</span>
+                <h2 data-i18n="yt-title">هوسكرايب</h2>
+                <p data-i18n="yt-desc">قناة تقدم محتوى وثائقياً عالمياً، قصص وحقائق من جميع أنحاء العالم بأسلوب بسيط وجذاب.</p>
+                <a href="https://youtube.com/@Hoscribe" target="_blank" rel="noopener" class="btn btn--primary">
+                    <span data-i18n="yt-btn">زيارة القناة</span>
+                </a>
+            </section>
 
-        <!-- Snapchat CTA -->
-        <section class="cta-section reveal">
-            <span class="label" data-i18n="snap-label">سناب شات</span>
-            <h2 data-i18n="snap-title">@hoscribe</h2>
-            <p data-i18n="snap-desc">محتوى يومي، خلف الكواليس، ولحظات ممتعة على سناب شات.</p>
-            <a href="https://www.snapchat.com/add/hoscribe" target="_blank" rel="noopener" class="btn btn--ghost">
-                <span data-i18n="snap-btn">تابعنا على سناب</span>
-            </a>
-        </section>
+            <!-- Snapchat -->
+            <section class="cta-section">
+                <span class="label" data-i18n="snap-label">سناب شات</span>
+                <h2 data-i18n="snap-title">@hoscribe</h2>
+                <p data-i18n="snap-desc">محتوى يومي، خلف الكواليس، ولحظات ممتعة على سناب شات.</p>
+                <a href="https://www.snapchat.com/add/hoscribe" target="_blank" rel="noopener" class="btn btn--ghost">
+                    <span data-i18n="snap-btn">تابعنا على سناب</span>
+                </a>
+            </section>
+        </div>
 
-        <!-- Ads CTA -->
-        <section class="cta-section reveal">
-            <span class="label" data-i18n="ads-label">التعاون</span>
-            <h2 data-i18n="ads-title">للإعلانات والشراكات</h2>
-            <p data-i18n="ads-desc">نرحب بالعلامات التجارية التي تشاركنا الرؤية. نسعد بالتواصل معكم.</p>
-            <a href="ads.html" class="btn btn--ghost">
-                <span data-i18n="ads-btn">تواصل معنا</span>
-            </a>
-        </section>
+        <!-- Row 2: Ads + Feedback -->
+        <div class="cta-row reveal">
+            <!-- Ads -->
+            <section class="cta-section">
+                <span class="label" data-i18n="ads-label">التعاون</span>
+                <h2 data-i18n="ads-title">للإعلانات والشراكات</h2>
+                <p data-i18n="ads-desc">نرحب بالعلامات التجارية التي تشاركنا الرؤية. نسعد بالتواصل معكم.</p>
+                <a href="ads.html" class="btn btn--ghost">
+                    <span data-i18n="ads-btn">تواصل معنا</span>
+                </a>
+            </section>
 
-        <!-- Feedback CTA (الشكاوى والاقتراحات) -->
-        <section class="cta-section reveal">
-            <span class="label" data-i18n="feedback-label">الشكاوى والاقتراحات</span>
-            <h2 data-i18n="feedback-title">رأيك يهمنا</h2>
-            <p data-i18n="feedback-desc">نرحب بملاحظاتكم وشكاويكم واقتراحاتكم لتحسين المحتوى.</p>
-            <a href="excretion.html" class="btn btn--ghost">
-                <span data-i18n="feedback-btn">أرسل ملاحظاتك</span>
-            </a>
-        </section>
+            <!-- Feedback -->
+            <section class="cta-section">
+                <span class="label" data-i18n="feedback-label">الشكاوى والاقتراحات</span>
+                <h2 data-i18n="feedback-title">رأيك يهمنا</h2>
+                <p data-i18n="feedback-desc">نرحب بملاحظاتكم وشكاويكم واقتراحاتكم لتحسين المحتوى.</p>
+                <a href="excretion.html" class="btn btn--ghost">
+                    <span data-i18n="feedback-btn">أرسل ملاحظاتك</span>
+                </a>
+            </section>
+        </div>
 
         <!-- Quick Links (سلسلة) -->
         <section class="quick-links reveal">
@@ -595,13 +649,11 @@
                 i18nElements.forEach(el => {
                     const key = el.getAttribute('data-i18n');
                     if (dict[key] !== undefined) {
-                        // quick-links container is handled separately
                         if (key === 'quick-links') return;
                         el.innerHTML = dict[key];
                     }
                 });
 
-                // Update quick-links children
                 document.querySelectorAll('.quick-links .links a').forEach(link => {
                     const key = link.getAttribute('data-i18n');
                     if (key && dict[key] !== undefined) {
