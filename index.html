@@ -536,6 +536,29 @@
             </section>
         </div>
 
+        <!-- NEW Row 3: About Me + Brands -->
+        <div class="cta-row reveal">
+            <!-- About Me -->
+            <section class="cta-section">
+                <span class="label" data-i18n="me-label">من أكون</span>
+                <h2 data-i18n="me-title">قصة حياتي</h2>
+                <p data-i18n="me-desc">اكتشف رحلتي، شغفي، وكيف أصبحت هوسكرايب. قصة مليئة بالتحديات والطموح.</p>
+                <a href="me.html" class="btn btn--ghost">
+                    <span data-i18n="me-btn">اقرأ قصتي</span>
+                </a>
+            </section>
+
+            <!-- Brands -->
+            <section class="cta-section">
+                <span class="label" data-i18n="brand-label">برانداتي</span>
+                <h2 data-i18n="brand-title">علاماتي التجارية</h2>
+                <p data-i18n="brand-desc">تعرف على المشاريع والعلامات التجارية التي أملكها وأديرها بكل فخر.</p>
+                <a href="brand.html" class="btn btn--ghost">
+                    <span data-i18n="brand-btn">استكشف البراندات</span>
+                </a>
+            </section>
+        </div>
+
         <!-- Quick Links (سلسلة) -->
         <section class="quick-links reveal">
             <div class="links">
@@ -544,6 +567,9 @@
                 <a href="https://www.snapchat.com/add/hoscribe" target="_blank" data-i18n="link-snapchat">سناب شات</a>
                 <a href="ads.html" data-i18n="link-ads">تواصل</a>
                 <a href="excretion.html" data-i18n="link-feedback">اقتراحات</a>
+                <!-- NEW links -->
+                <a href="me.html" data-i18n="link-me">من أكون</a>
+                <a href="brand.html" data-i18n="link-brand">برانداتي</a>
             </div>
         </section>
 
@@ -590,11 +616,22 @@
                     'feedback-title': 'رأيك يهمنا',
                     'feedback-desc': 'نرحب بملاحظاتكم وشكاويكم واقتراحاتكم لتحسين المحتوى.',
                     'feedback-btn': 'أرسل ملاحظاتك',
+                    // NEW translations for About Me & Brands
+                    'me-label': 'من أكون',
+                    'me-title': 'قصة حياتي',
+                    'me-desc': 'اكتشف رحلتي، شغفي، وكيف أصبحت هوسكرايب. قصة مليئة بالتحديات والطموح.',
+                    'me-btn': 'اقرأ قصتي',
+                    'brand-label': 'برانداتي',
+                    'brand-title': 'علاماتي التجارية',
+                    'brand-desc': 'تعرف على المشاريع والعلامات التجارية التي أملكها وأديرها بكل فخر.',
+                    'brand-btn': 'استكشف البراندات',
                     'link-home': 'الرئيسية',
                     'link-youtube': 'يوتيوب',
                     'link-snapchat': 'سناب شات',
                     'link-ads': 'تواصل',
                     'link-feedback': 'اقتراحات',
+                    'link-me': 'من أكون',
+                    'link-brand': 'برانداتي',
                     'footer-signoff': '— وجودكم معنا هو كل شيء، نتمنى أن تستمتعوا دائماً —',
                     'footer-credit': '© 2025 Hoscribe · هوسكرايب — كريم محمد إسماعيل',
                 },
@@ -625,11 +662,22 @@
                     'feedback-title': 'Your opinion matters',
                     'feedback-desc': 'We welcome your comments, complaints and suggestions to improve the content.',
                     'feedback-btn': 'Send your feedback',
+                    // NEW translations
+                    'me-label': 'About Me',
+                    'me-title': 'My Story',
+                    'me-desc': 'Discover my journey, my passion, and how I became Hoscribe. A story full of challenges and ambition.',
+                    'me-btn': 'Read my story',
+                    'brand-label': 'My Brands',
+                    'brand-title': 'My Trademarks',
+                    'brand-desc': 'Learn about the projects and brands I own and manage with pride.',
+                    'brand-btn': 'Explore brands',
                     'link-home': 'Home',
                     'link-youtube': 'YouTube',
                     'link-snapchat': 'Snapchat',
                     'link-ads': 'Contact',
                     'link-feedback': 'Feedback',
+                    'link-me': 'About Me',
+                    'link-brand': 'My Brands',
                     'footer-signoff': '— Your presence means everything, we hope you always enjoy —',
                     'footer-credit': '© 2025 Hoscribe · هوسكرايب — Karim Mohamed Ismail',
                 }
@@ -654,6 +702,7 @@
                     }
                 });
 
+                // update quick links separately
                 document.querySelectorAll('.quick-links .links a').forEach(link => {
                     const key = link.getAttribute('data-i18n');
                     if (key && dict[key] !== undefined) {
