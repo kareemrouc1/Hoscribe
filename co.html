@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>المسابقة السنوية — هوسكرايب</title>
+    <meta name="description" content="سجل في المسابقة السنوية لهوسكرايب واربح أحدث إيفون! شروط بسيطة وفرصة للجميع." />
+    <link rel="canonical" href="https://hoscribe.netlify.app/co.html" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="المسابقة السنوية — هوسكرايب" />
+    <meta property="og:description" content="سجل في المسابقة السنوية لهوسكرايب واربح أحدث إيفون!" />
+    <meta property="og:image" content="logo.png" />
+
+    <link rel="icon" href="logo.png" type="image/png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js">
+    </script>
+
+    <style>
+        /* ============================================================
+           Reset & Base – same as main page
+           ============================================================ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #fafafa;
+            --surface: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #6e6e73;
+            --text-tertiary: #8e8e93;
+            --gold: #b8953a;
+            --gold-light: #f5edd6;
+            --border: #e5e5ea;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: 0.25s cubic-bezier(0.25, 0.1, 0.15, 1);
+            --shadow: 0 2px 16px rgba(0, 0, 0, 0.03);
+            --shadow-hover: 0 6px 28px rgba(0, 0, 0, 0.05);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            contain: layout style paint;
+        }
+
+        body {
+            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 820px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* ============================================================
+           Back link
+           ============================================================ */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--text-tertiary);
+            text-decoration: none;
+            margin-bottom: 2rem;
+            transition: var(--transition);
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            background: transparent;
+            border: 1px solid transparent;
+        }
+        .back-link:hover {
+            color: var(--text-primary);
+            background: var(--surface);
+            border-color: var(--border);
+        }
+        .back-link svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* ============================================================
+           Hero – Competition
+           ============================================================ */
+        .hero-comp {
+            text-align: center;
+            padding: 1.2rem 0 2.4rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hero-comp .badge {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--gold);
+            background: var(--gold-light);
+            padding: 0.2rem 1.2rem;
+            border-radius: 40px;
+            margin-bottom: 0.8rem;
+        }
+
+        .hero-comp h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            color: var(--text-primary);
+        }
+        .hero-comp h1 .highlight {
+            color: var(--gold);
+        }
+
+        .hero-comp .sub {
+            font-size: 0.95rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            margin-top: 0.2rem;
+            max-width: 460px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-comp .prize-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-top: 1rem;
+            background: var(--surface);
+            border: 1px solid var(--gold);
+            border-radius: 60px;
+            padding: 0.4rem 1.6rem 0.4rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            box-shadow: 0 2px 12px rgba(184, 149, 58, 0.08);
+        }
+        .hero-comp .prize-badge .icon {
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        /* ============================================================
+           Conditions – 3 cards
+           ============================================================ */
+        .conditions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+            padding: 2.4rem 0 1.6rem;
+        }
+
+        .condition-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 1.4rem 1rem;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+            contain: layout style;
+        }
+        .condition-card:hover {
+            border-color: var(--gold);
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .condition-card .num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gold-light);
+            color: var(--gold);
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .condition-card h3 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.1rem;
+        }
+
+        .condition-card p {
+            font-size: 0.75rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 200px;
+            margin: 0 auto;
+        }
+
+        .condition-card .check {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        /* ============================================================
+           Form – Registration
+           ============================================================ */
+        .form-section {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 2rem 2.2rem;
+            border: 1px solid var(--border);
+            margin: 1.6rem 0 2.4rem;
+            box-shadow: var(--shadow);
+        }
+
+        .form-section .form-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.2rem;
+        }
+        .form-section .form-sub {
+            font-size: 0.8rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.2rem;
+            letter-spacing: 0.02em;
+        }
+        .form-group label .req {
+            color: #c0392b;
+            font-weight: 700;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.6rem 1rem;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            color: var(--text-primary);
+            transition: var(--transition);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(184, 149, 58, 0.08);
+            background: #fff;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-group-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            margin-bottom: 0.6rem;
+            padding: 0.3rem 0;
+        }
+        .form-group-check input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            min-width: 18px;
+            margin-top: 0.2rem;
+            accent-color: var(--gold);
+            cursor: pointer;
+        }
+        .form-group-check label {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+            cursor: pointer;
+            line-height: 1.5;
+        }
+        .form-group-check label strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .btn-submit {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            width: 100%;
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            background: var(--gold);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 20px rgba(184, 149, 58, 0.2);
+            margin-top: 0.4rem;
+            letter-spacing: 0.02em;
+        }
+        .btn-submit:hover {
+            background: #a07f2e;
+            transform: scale(0.98);
+            box-shadow: 0 6px 28px rgba(184, 149, 58, 0.3);
+        }
+        .btn-submit:active {
+            transform: scale(0.96);
+        }
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* ============================================================
+           Message – success / error
+           ============================================================ */
+        .form-message {
+            margin-top: 1.2rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-align: center;
+            display: none;
+        }
+        .form-message.success {
+            display: block;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+        .form-message.error {
+            display: block;
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+
+        /* ============================================================
+           Participants – List
+           ============================================================ */
+        .participants-section {
+            padding: 1.6rem 0 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .participants-section .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .participants-section .section-header h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .participants-section .section-header .count {
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: var(--text-tertiary);
+            background: var(--bg);
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+        }
+
+        .participants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.8rem;
+        }
+
+        .participant-card {
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+            contain: layout style;
+        }
+        .participant-card:hover {
+            border-color: var(--gold);
+            box-shadow: var(--shadow-hover);
+        }
+        .participant-card .p-name {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+        .participant-card .p-country {
+            font-size: 0.7rem;
+            font-weight: 300;
+            color: var(--text-tertiary);
+        }
+        .participant-card .p-youtube {
+            font-size: 0.65rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-bottom: 1px dotted transparent;
+            transition: var(--transition);
+            display: inline-block;
+            width: fit-content;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .participant-card .p-youtube:hover {
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+        }
+        .participant-card .p-date {
+            font-size: 0.55rem;
+            font-weight: 300;
+            color: var(--text-tertiary);
+            margin-top: 0.1rem;
+        }
+
+        .participants-empty {
+            text-align: center;
+            padding: 2.4rem 1rem;
+            color: var(--text-tertiary);
+            font-weight: 300;
+            font-size: 0.9rem;
+        }
+
+        /* ============================================================
+           Footer
+           ============================================================ */
+        .footer-comp {
+            padding: 2rem 0 1.2rem;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            margin-top: 0.8rem;
+        }
+        .footer-comp .credit {
+            font-size: 0.65rem;
+            font-weight: 300;
+            color: var(--text-tertiary);
+            letter-spacing: 0.02em;
+        }
+
+        /* ============================================================
+           Reveal
+           ============================================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+            will-change: opacity, transform;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ============================================================
+           Responsive
+           ============================================================ */
+        @media (max-width: 700px) {
+            .conditions {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.8rem;
+            }
+            .conditions .condition-card:last-child {
+                grid-column: 1 / -1;
+                max-width: 300px;
+                margin: 0 auto;
+                width: 100%;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+            .form-section {
+                padding: 1.6rem 1.2rem;
+            }
+            .hero-comp h1 {
+                font-size: 2rem;
+            }
+            .participants-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 1.2rem 0.8rem;
+            }
+            .conditions {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+            .conditions .condition-card:last-child {
+                grid-column: auto;
+                max-width: 100%;
+            }
+            .hero-comp h1 {
+                font-size: 1.6rem;
+            }
+            .hero-comp .prize-badge {
+                font-size: 0.75rem;
+                padding: 0.3rem 1.2rem 0.3rem 0.8rem;
+            }
+            .participants-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-section {
+                padding: 1.2rem 0.8rem;
+            }
+            .back-link {
+                font-size: 0.7rem;
+                margin-bottom: 1.2rem;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 3px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Back link -->
+        <a href="index.html" class="back-link" data-i18n="back-home">
+            <svg viewBox="0 0 24 24"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+            <span>العودة للرئيسية</span>
+        </a>
+
+        <!-- Hero -->
+        <header class="hero-comp reveal">
+            <div class="badge" id="year-badge">مسابقة</div>
+            <h1 data-i18n="comp-heading">سجل في <span class="highlight">المسابقة السنوية</span></h1>
+            <p class="sub" data-i18n="comp-sub">فرصة لربح <strong>أحدث إيفون</strong>! اشترك الآن وكن من الفائزين.</p>
+            <div class="prize-badge">
+                <span class="icon">📱</span>
+                <span data-i18n="prize-label">الجائزة: أحدث إيفون</span>
+            </div>
+        </header>
+
+        <!-- Conditions (3) -->
+        <section class="conditions reveal">
+            <div class="condition-card">
+                <div class="num">١</div>
+                <h3 data-i18n="cond1-title">مشترك في يوتيوب</h3>
+                <p data-i18n="cond1-desc">يجب أن تكون مشتركاً في قناة <strong>هوسكرايب</strong> على يوتيوب.</p>
+            </div>
+            <div class="condition-card">
+                <div class="num">٢</div>
+                <h3 data-i18n="cond2-title">متابع على سناب شات</h3>
+                <p data-i18n="cond2-desc">يجب أن تتابع حساب <strong>@hoscribe</strong> على سناب شات.</p>
+            </div>
+            <div class="condition-card">
+                <div class="num">٣</div>
+                <h3 data-i18n="cond3-title">إجابة إبداعية</h3>
+                <p data-i18n="cond3-desc">أجب على السؤال الإبداعي: <strong>"لماذا تستحق الفوز؟"</strong> في ٣ أسطر.</p>
+            </div>
+        </section>
+
+        <!-- Registration Form -->
+        <section class="form-section reveal" id="registration">
+            <h2 class="form-title" data-i18n="form-title">سجل الآن</h2>
+            <p class="form-sub" data-i18n="form-sub">املأ البيانات أدناه وانضم لقائمة المتسابقين</p>
+
+            <form id="competition-form" novalidate>
+                <!-- Name -->
+                <div class="form-group">
+                    <label for="fullname" data-i18n="label-name">الاسم الكامل <span class="req">*</span></label>
+                    <input type="text" id="fullname" name="fullname" placeholder="مثال: كريم محمد إسماعيل" required />
+                </div>
+
+                <!-- Row: Country + Phone -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="country" data-i18n="label-country">الدولة <span class="req">*</span></label>
+                        <input type="text" id="country" name="country" placeholder="مصر" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="phone" data-i18n="label-phone">رقم الهاتف <span class="req">*</span></label>
+                        <input type="tel" id="phone" name="phone" placeholder="+20 100 000 0000" required />
+                    </div>
+                </div>
+
+                <!-- YouTube URL -->
+                <div class="form-group">
+                    <label for="youtube_url" data-i18n="label-youtube">رابط قناتك على يوتيوب <span class="req">*</span></label>
+                    <input type="url" id="youtube_url" name="youtube_url" placeholder="https://youtube.com/@..." required />
+                </div>
+
+                <!-- Email (optional) -->
+                <div class="form-group">
+                    <label for="email" data-i18n="label-email">البريد الإلكتروني <span style="color:var(--text-tertiary);font-weight:400;">(اختياري)</span></label>
+                    <input type="email" id="email" name="email" placeholder="karim@example.com" />
+                </div>
+
+                <!-- Creative answer -->
+                <div class="form-group">
+                    <label for="creative_answer" data-i18n="label-creative">لماذا تستحق الفوز؟ <span class="req">*</span></label>
+                    <textarea id="creative_answer" name="creative_answer" rows="3" placeholder="اكتب في ٣ أسطر لماذا تستحق الفوز بالجائزة..." required></textarea>
+                </div>
+
+                <!-- Checkboxes -->
+                <div class="form-group-check">
+                    <input type="checkbox" id="cond_youtube" required />
+                    <label for="cond_youtube" data-i18n="check-youtube">أؤكد أنني <strong>مشترك</strong> في قناة <strong>هوسكرايب</strong> على يوتيوب.</label>
+                </div>
+
+                <div class="form-group-check">
+                    <input type="checkbox" id="cond_snapchat" required />
+                    <label for="cond_snapchat" data-i18n="check-snapchat">أؤكد أنني <strong>متابع</strong> لحساب <strong>@hoscribe</strong> على سناب شات.</label>
+                </div>
+
+                <div class="form-group-check">
+                    <input type="checkbox" id="cond_terms" required />
+                    <label for="cond_terms" data-i18n="check-terms">أوافق على <strong>شروط المسابقة</strong> وأؤكد أنني <strong>أكبر من 10 سنوات</strong>.</label>
+                </div>
+
+                <button type="submit" class="btn-submit" id="submit-btn" data-i18n="submit-btn">
+                    <span id="btn-text">سجل الآن</span>
+                    <span id="btn-spinner" class="spinner hidden"></span>
+                </button>
+
+                <div id="form-message" class="form-message"></div>
+            </form>
+        </section>
+
+        <!-- Participants List -->
+        <section class="participants-section reveal">
+            <div class="section-header">
+                <h2 data-i18n="participants-title">المتسابقون</h2>
+                <span class="count" id="participants-count">٠</span>
+            </div>
+            <div id="participants-grid" class="participants-grid">
+                <div class="participants-empty" data-i18n="participants-empty">لا يوجد متسابقون حتى الآن. كن الأول!</div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer-comp">
+            <p class="credit" data-i18n="footer-credit">© 2025 Hoscribe · هوسكرايب — كريم محمد إسماعيل</p>
+        </footer>
+
+    </div>
+
+    <!-- ============================================================
+    SCRIPT – Supabase + i18n + Reveal + Form + Year update
+    ============================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ——————————————————————————————
+            // 0. Auto-update year & prize text
+            // ——————————————————————————————
+            const currentYear = new Date().getFullYear();
+            const yearBadge = document.getElementById('year-badge');
+            if (yearBadge) {
+                yearBadge.textContent = 'مسابقة ' + currentYear;
+            }
+
+            // Update prize label if needed (already dynamic via i18n)
+            // No need to change further because we use "أحدث إيفون"
+
+            // ——————————————————————————————
+            // 1. Supabase Config
+            // ——————————————————————————————
+            const SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
+            const SUPABASE_KEY =
+            'YOUR_ANON_KEY';
+            // ⚠️ استبدل بـ URL و Key الخاصين بمشروعك
+
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            const TABLE = 'competitors';
+
+            // ——————————————————————————————
+            // 2. i18n Translations (without emojis)
+            // ——————————————————————————————
+            const translations = {
+                ar: {
+                    'back-home': 'العودة للرئيسية',
+                    'comp-heading': 'سجل في <span class="highlight">المسابقة السنوية</span>',
+                    'comp-sub': 'فرصة لربح <strong>أحدث إيفون</strong>! اشترك الآن وكن من الفائزين.',
+                    'prize-label': 'الجائزة: أحدث إيفون',
+                    'cond1-title': 'مشترك في يوتيوب',
+                    'cond1-desc': 'يجب أن تكون مشتركاً في قناة <strong>هوسكرايب</strong> على يوتيوب.',
+                    'cond2-title': 'متابع على سناب شات',
+                    'cond2-desc': 'يجب أن تتابع حساب <strong>@hoscribe</strong> على سناب شات.',
+                    'cond3-title': 'إجابة إبداعية',
+                    'cond3-desc': 'أجب على السؤال الإبداعي: <strong>"لماذا تستحق الفوز؟"</strong> في ٣ أسطر.',
+                    'form-title': 'سجل الآن',
+                    'form-sub': 'املأ البيانات أدناه وانضم لقائمة المتسابقين',
+                    'label-name': 'الاسم الكامل',
+                    'label-country': 'الدولة',
+                    'label-phone': 'رقم الهاتف',
+                    'label-youtube': 'رابط قناتك على يوتيوب',
+                    'label-email': 'البريد الإلكتروني (اختياري)',
+                    'label-creative': 'لماذا تستحق الفوز؟',
+                    'check-youtube': 'أؤكد أنني <strong>مشترك</strong> في قناة <strong>هوسكرايب</strong> على يوتيوب.',
+                    'check-snapchat': 'أؤكد أنني <strong>متابع</strong> لحساب <strong>@hoscribe</strong> على سناب شات.',
+                    'check-terms': 'أوافق على <strong>شروط المسابقة</strong> وأؤكد أنني <strong>أكبر من 10 سنوات</strong>.',
+                    'submit-btn': 'سجل الآن',
+                    'participants-title': 'المتسابقون',
+                    'participants-empty': 'لا يوجد متسابقون حتى الآن. كن الأول!',
+                    'footer-credit': '© 2025 Hoscribe · هوسكرايب — كريم محمد إسماعيل',
+                },
+                en: {
+                    'back-home': 'Back to Home',
+                    'comp-heading': 'Register for the <span class="highlight">Annual Competition</span>',
+                    'comp-sub': 'Chance to win the <strong>latest iPhone</strong>! Sign up now and be a winner.',
+                    'prize-label': 'Prize: latest iPhone',
+                    'cond1-title': 'YouTube Subscriber',
+                    'cond1-desc': 'You must be subscribed to the <strong>Hoscribe</strong> YouTube channel.',
+                    'cond2-title': 'Snapchat Follower',
+                    'cond2-desc': 'You must follow <strong>@hoscribe</strong> on Snapchat.',
+                    'cond3-title': 'Creative Answer',
+                    'cond3-desc': 'Answer the creative question: <strong>"Why do you deserve to win?"</strong> in 3 lines.',
+                    'form-title': 'Register Now',
+                    'form-sub': 'Fill in the details below and join the contestants.',
+                    'label-name': 'Full Name',
+                    'label-country': 'Country',
+                    'label-phone': 'Phone Number',
+                    'label-youtube': 'Your YouTube Channel URL',
+                    'label-email': 'Email (optional)',
+                    'label-creative': 'Why do you deserve to win?',
+                    'check-youtube': 'I confirm that I am <strong>subscribed</strong> to the <strong>Hoscribe</strong> YouTube channel.',
+                    'check-snapchat': 'I confirm that I <strong>follow</strong> <strong>@hoscribe</strong> on Snapchat.',
+                    'check-terms': 'I agree to the <strong>competition terms</strong> and confirm I am <strong>over 10 years old</strong>.',
+                    'submit-btn': 'Sign up now',
+                    'participants-title': 'Contestants',
+                    'participants-empty': 'No contestants yet. Be the first!',
+                    'footer-credit': '© 2025 Hoscribe · هوسكرايب — Karim Mohamed Ismail',
+                }
+            };
+
+            const i18nElements = document.querySelectorAll('[data-i18n]');
+
+            function setLanguage(lang) {
+                const dict = translations[lang];
+                if (!dict) return;
+                i18nElements.forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (dict[key] !== undefined) {
+                        el.innerHTML = dict[key];
+                    }
+                });
+                document.documentElement.setAttribute('lang', lang);
+                document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+                localStorage.setItem('hoscribe-lang', lang);
+            }
+
+            function getPreferredLanguage() {
+                const stored = localStorage.getItem('hoscribe-lang');
+                if (stored === 'ar' || stored === 'en') return stored;
+                const browserLang = navigator.language || '';
+                if (browserLang.startsWith('ar')) return 'ar';
+                return 'ar';
+            }
+
+            setLanguage(getPreferredLanguage());
+
+            // ——————————————————————————————
+            // 3. Reveal on scroll
+            // ——————————————————————————————
+            const revealEls = document.querySelectorAll('.reveal');
+            if (revealEls.length && 'IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+                revealEls.forEach(el => observer.observe(el));
+            } else {
+                revealEls.forEach(el => el.classList.add('visible'));
+            }
+
+            // ——————————————————————————————
+            // 4. Load participants from Supabase
+            // ——————————————————————————————
+            async function loadParticipants() {
+                const grid = document.getElementById('participants-grid');
+                const countEl = document.getElementById('participants-count');
+
+                try {
+                    const { data, error } = await supabase
+                        .from(TABLE)
+                        .select('id, name, country, youtube_url, created_at')
+                        .order('created_at', { ascending: false });
+
+                    if (error) throw error;
+
+                    if (!data || data.length === 0) {
+                        grid.innerHTML =
+                            `<div class="participants-empty" data-i18n="participants-empty">لا يوجد متسابقون حتى الآن. كن الأول!</div>`;
+                        countEl.textContent = '٠';
+                        return;
+                    }
+
+                    countEl.textContent = data.length;
+
+                    grid.innerHTML = data.map(p => {
+                        const date = new Date(p.created_at);
+                        const dateStr =
+                            `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`;
+                        const youtubeDisplay = p.youtube_url ? p.youtube_url.replace(/^https?:\/\//, '').slice(0,
+                            30) : '';
+                        return `
+                            <div class="participant-card">
+                                <div class="p-name">${escapeHtml(p.name)}</div>
+                                <div class="p-country">📍 ${escapeHtml(p.country)}</div>
+                                ${p.youtube_url ? `<a href="${escapeHtml(p.youtube_url)}" target="_blank" rel="noopener" class="p-youtube">▶ ${escapeHtml(youtubeDisplay)}</a>` : ''}
+                                <div class="p-date">🗓 ${dateStr}</div>
+                            </div>
+                        `;
+                    }).join('');
+
+                } catch (err) {
+                    console.error('❌ Error loading participants:', err);
+                    grid.innerHTML =
+                        `<div class="participants-empty" style="color:#c62828;">⚠️ تعذر تحميل المتسابقين. حاول تحديث الصفحة.</div>`;
+                }
+            }
+
+            // Simple escape
+            function escapeHtml(text) {
+                if (!text) return '';
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            // ——————————————————————————————
+            // 5. Form submission
+            // ——————————————————————————————
+            const form = document.getElementById('competition-form');
+            const submitBtn = document.getElementById('submit-btn');
+            const btnText = document.getElementById('btn-text');
+            const btnSpinner = document.getElementById('btn-spinner');
+            const msgEl = document.getElementById('form-message');
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                // Gather data
+                const name = document.getElementById('fullname').value.trim();
+                const country = document.getElementById('country').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const youtube_url = document.getElementById('youtube_url').value.trim();
+                const email = document.getElementById('email').value.trim() || null;
+                const creative_answer = document.getElementById('creative_answer').value.trim();
+
+                const condYt = document.getElementById('cond_youtube').checked;
+                const condSnap = document.getElementById('cond_snapchat').checked;
+                const condTerms = document.getElementById('cond_terms').checked;
+
+                // Validate
+                if (!name || !country || !phone || !youtube_url || !creative_answer) {
+                    showMessage('⚠️ يرجى ملء جميع الحقول المطلوبة.', 'error');
+                    return;
+                }
+                if (!condYt || !condSnap || !condTerms) {
+                    showMessage('⚠️ يرجى الموافقة على جميع الشروط للمشاركة.', 'error');
+                    return;
+                }
+
+                // Validate YouTube URL
+                if (!youtube_url.includes('youtube.com') && !youtube_url.includes('youtu.be')) {
+                    showMessage('⚠️ الرابط المدخل ليس رابط يوتيوب صحيحاً.', 'error');
+                    return;
+                }
+
+                // Disable button
+                submitBtn.disabled = true;
+                btnText.textContent = 'جاري التسجيل...';
+                btnSpinner.classList.remove('hidden');
+
+                try {
+                    const { data, error } = await supabase
+                        .from(TABLE)
+                        .insert([{
+                            name: name,
+                            country: country,
+                            phone: phone,
+                            youtube_url: youtube_url,
+                            email: email,
+                            creative_answer: creative_answer,
+                            cond_youtube: condYt,
+                            cond_snapchat: condSnap,
+                            cond_terms: condTerms,
+                        }])
+                        .select();
+
+                    if (error) throw error;
+
+                    showMessage('✅ تم التسجيل بنجاح! أنت الآن ضمن المتسابقين. حظ سعيد!', 'success');
+                    form.reset();
+                    // Reload participants
+                    loadParticipants();
+
+                } catch (err) {
+                    console.error('❌ Submission error:', err);
+                    let msg = '⚠️ حدث خطأ أثناء التسجيل. حاول مرة أخرى.';
+                    if (err.message && err.message.includes('duplicate')) {
+                        msg = '⚠️ هذا الرقم أو البريد مسجل بالفعل.';
+                    }
+                    showMessage(msg, 'error');
+                } finally {
+                    submitBtn.disabled = false;
+                    btnText.textContent = document.querySelector('[data-i18n="submit-btn"]')?.textContent ||
+                        'سجل الآن';
+                    btnSpinner.classList.add('hidden');
+                }
+            });
+
+            function showMessage(text, type) {
+                msgEl.textContent = text;
+                msgEl.className = 'form-message ' + type;
+                msgEl.style.display = 'block';
+                if (type === 'success') {
+                    setTimeout(() => {
+                        msgEl.style.display = 'none';
+                    }, 6000);
+                }
+            }
+
+            // ——————————————————————————————
+            // 6. Init
+            // ——————————————————————————————
+            loadParticipants();
+
+            // Refresh participants every 30s
+            setInterval(loadParticipants, 30000);
+
+        })();
+    </script>
+
+</body>
+</html>
