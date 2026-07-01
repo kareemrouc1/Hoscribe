@@ -93,12 +93,20 @@
             font-weight: 600;
         }
 
-        /* ---- Hero ---- */
+        /* ---- Hero (with image) ---- */
         .story-hero {
             text-align: right;
             padding: 1.6rem 0 2.4rem;
             border-bottom: 1px solid var(--border);
             margin-bottom: 2.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1.5rem 2rem;
+        }
+
+        .story-hero .hero-text {
+            flex: 1 1 200px;
         }
 
         .story-hero .back-link {
@@ -108,7 +116,7 @@
             text-decoration: none;
             border-bottom: 1px dotted transparent;
             transition: var(--transition);
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
 
         .story-hero .back-link:hover {
@@ -133,6 +141,32 @@
         .story-hero .subhead .highlight {
             color: var(--gold);
             font-weight: 600;
+        }
+
+        /* ---- Profile Image ---- */
+        .profile-img-wrapper {
+            flex-shrink: 0;
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 3px solid var(--gold);
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(184, 149, 58, 0.15);
+            transition: var(--transition);
+            background: var(--surface);
+        }
+
+        .profile-img-wrapper:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 30px rgba(184, 149, 58, 0.25);
+        }
+
+        .profile-img-wrapper img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
         }
 
         /* ---- Story Body ---- */
@@ -284,6 +318,21 @@
             body {
                 padding: 1.6rem 1.2rem;
             }
+            .story-hero {
+                flex-direction: column-reverse;
+                align-items: flex-start;
+                text-align: right;
+                gap: 0.8rem;
+            }
+            .story-hero .hero-text {
+                flex: auto;
+                width: 100%;
+            }
+            .profile-img-wrapper {
+                width: 85px;
+                height: 85px;
+                align-self: flex-start;
+            }
             .story-hero h1 {
                 font-size: 2rem;
             }
@@ -301,6 +350,13 @@
                 padding: 1rem 1.2rem;
             }
         }
+
+        @media (max-width: 400px) {
+            .profile-img-wrapper {
+                width: 70px;
+                height: 70px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -313,11 +369,26 @@
             <button class="lang-btn" data-lang="en" aria-label="English">English</button>
         </div>
 
-        <!-- Hero -->
+        <!-- Hero with Image -->
         <header class="story-hero reveal">
-            <a href="/" class="back-link" data-i18n="back-home">→ العودة للرئيسية</a>
-            <h1 data-i18n="hero-title">مين أنا؟</h1>
-            <p class="subhead" data-i18n="hero-sub">حكاية راوٍ مجهول — رحلة من ولا حاجة لهوسكرايب</p>
+            <div class="hero-text">
+                <a href="/" class="back-link" data-i18n="back-home">→ العودة للرئيسية</a>
+                <h1 data-i18n="hero-title">مين أنا؟</h1>
+                <p class="subhead" data-i18n="hero-sub">حكاية راوٍ مجهول — رحلة من ولا حاجة لهوسكرايب</p>
+            </div>
+            <div class="profile-img-wrapper">
+                <img 
+                    src="a.png" 
+                    alt="صورة شخصية - هوسكرايب" 
+                    title="هوسكرايب"
+                    loading="lazy"
+                    decoding="async"
+                    width="110"
+                    height="110"
+                    srcset="a.png 1x, a.png 2x"
+                    data-i18n-alt="profile-alt"
+                />
+            </div>
         </header>
 
         <!-- Story Body -->
@@ -421,6 +492,7 @@
                     'back-home': '→ العودة للرئيسية',
                     'hero-title': 'مين أنا؟',
                     'hero-sub': 'حكاية راوٍ مجهول — رحلة من ولا حاجة لهوسكرايب',
+                    'profile-alt': 'صورة شخصية - هوسكرايب',
                     'ch1-label': 'الفصل الأول',
                     'ch1-title': 'البداية: تابلت مدرسي وحلم في أوضة ضلمة',
                     'ch1-p1': 'ما كنتش مالك حاجة. ولا كاميرا محترفة، ولا ميكروفون، ولا حتى مكتب مظبوط. كنت مراهق عندي 19 سنة، ساكن في محافظة الشرقية، معايا تابلت بتاع المدرسة رخيص، وشاشته متكسرة من الناحية اليمين. كل اللي كان معايا هو فضول مش طبيعي، ورغبة غريبة إني أفهم الدنيا شغالة ازاي.',
@@ -467,6 +539,7 @@
                     'back-home': '← Back to Home',
                     'hero-title': 'About Me?',
                     'hero-sub': 'The story of an anonymous narrator — A journey from nothing to Hoscribe',
+                    'profile-alt': 'Profile picture - Hoscribe',
                     'ch1-label': 'Chapter One',
                     'ch1-title': 'The Beginning: A School Tablet and a Dream in a Dark Room',
                     'ch1-p1': 'I had nothing. No professional camera, no microphone, not even a proper desk. I was a teenager, nineteen years old, living in Sharqia Governorate, holding a cheap school tablet with a cracked screen on the right corner. All I had was an insatiable curiosity and a strange desire to understand how the world works.',
@@ -527,6 +600,12 @@
                         el.innerHTML = dict[key];
                     }
                 });
+
+                // update image alt via data-i18n-alt (manual)
+                const profileImg = document.querySelector('.profile-img-wrapper img');
+                if (profileImg && dict['profile-alt']) {
+                    profileImg.alt = dict['profile-alt'];
+                }
 
                 document.querySelectorAll('.quick-links .links a').forEach(link => {
                     const key = link.getAttribute('data-i18n');
