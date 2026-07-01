@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title data-i18n="title">من أكون — هوسكرايب</title>
-    <meta name="description" data-i18n="meta-description" content="قصة كريم محمد إسماعيل، رحلة اليوتيوب، الخيانة، الحب الضائع، والولادة من جديد." />
+    <meta name="description" data-i18n="meta-description" content="قصة راوٍ مجهول، رحلة اليوتيوب، الخيانة، الحب الضائع، والولادة من جديد." />
     <link rel="icon" href="logo.png" type="image/png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -35,10 +35,11 @@
         html {
             scroll-behavior: smooth;
             -webkit-font-smoothing: antialiased;
+            text-size-adjust: 100%;
         }
 
         body {
-            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg);
             color: var(--text-primary);
             line-height: 1.9;
@@ -47,14 +48,17 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            font-display: swap;
         }
 
         .container {
             max-width: 780px;
             width: 100%;
             margin: 0 auto;
+            contain: layout style;
         }
 
+        /* ---- Lang Switcher ---- */
         .lang-switcher {
             display: flex;
             justify-content: flex-end;
@@ -74,6 +78,7 @@
             border-radius: 30px;
             transition: var(--transition);
             letter-spacing: 0.03em;
+            touch-action: manipulation;
         }
 
         .lang-btn:hover {
@@ -88,6 +93,7 @@
             font-weight: 600;
         }
 
+        /* ---- Hero ---- */
         .story-hero {
             text-align: right;
             padding: 1.6rem 0 2.4rem;
@@ -129,6 +135,7 @@
             font-weight: 600;
         }
 
+        /* ---- Story Body ---- */
         .story-body {
             display: flex;
             flex-direction: column;
@@ -141,6 +148,7 @@
             padding: 2.2rem 2rem;
             border: 1px solid var(--border);
             transition: var(--transition);
+            contain: layout style;
         }
 
         .story-chapter:hover {
@@ -203,6 +211,7 @@
             opacity: 0.3;
         }
 
+        /* ---- Quick Links ---- */
         .quick-links {
             padding: 2.5rem 0 1.2rem;
             border-top: 1px solid var(--border);
@@ -232,6 +241,7 @@
             border-bottom-color: var(--gold);
         }
 
+        /* ---- Footer ---- */
         .footer {
             padding: 2rem 0 0.5rem;
             text-align: center;
@@ -244,10 +254,12 @@
             letter-spacing: 0.02em;
         }
 
+        /* ---- Reveal Animation ---- */
         .reveal {
             opacity: 0;
             transform: translateY(16px);
             transition: opacity 0.8s ease, transform 0.8s ease;
+            will-change: opacity, transform;
         }
 
         .reveal.visible {
@@ -255,6 +267,19 @@
             transform: translateY(0);
         }
 
+        /* ---- Scrollbar ---- */
+        ::-webkit-scrollbar {
+            width: 3px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+
+        /* ---- Responsive ---- */
         @media (max-width: 640px) {
             body {
                 padding: 1.6rem 1.2rem;
@@ -276,36 +301,29 @@
                 padding: 1rem 1.2rem;
             }
         }
-
-        ::-webkit-scrollbar {
-            width: 3px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 10px;
-        }
     </style>
 </head>
 <body>
 
     <div class="container">
 
+        <!-- Language Switcher -->
         <div class="lang-switcher">
             <button class="lang-btn" data-lang="ar" aria-label="العربية">عربي</button>
             <button class="lang-btn" data-lang="en" aria-label="English">English</button>
         </div>
 
+        <!-- Hero -->
         <header class="story-hero reveal">
             <a href="/" class="back-link" data-i18n="back-home">→ العودة للرئيسية</a>
             <h1 data-i18n="hero-title">مين أنا؟</h1>
-            <p class="subhead" data-i18n="hero-sub">حكاية <span class="highlight">كريم محمد إسماعيل</span> — رحلة من ولا حاجة لهوسكرايب</p>
+            <p class="subhead" data-i18n="hero-sub">حكاية راوٍ مجهول — رحلة من ولا حاجة لهوسكرايب</p>
         </header>
 
+        <!-- Story Body -->
         <div class="story-body">
 
+            <!-- Chapter 1 -->
             <section class="story-chapter reveal">
                 <span class="chapter-label" data-i18n="ch1-label">الفصل الأول</span>
                 <h2 data-i18n="ch1-title">البداية: تابلت مدرسي وحلم في أوضة ضلمة</h2>
@@ -315,6 +333,7 @@
                 <p data-i18n="ch1-p3">وقتها، كنت فاكر إني مجرد شاب بيضيع وقته. لكن اكتشفت إن أنا مش بعمل فيديوهات بس؛ أنا بدور على الحقيقة. كنت بحلل، وبربط، وبفتش في التفاصيل الصغيرة اللي الناس بتعديها. كنت حاسس إني محقق في عالم موازي، والأوضة الصغيرة دي كانت مخبئي السري.</p>
             </section>
 
+            <!-- Chapter 2 -->
             <section class="story-chapter reveal">
                 <span class="chapter-label" data-i18n="ch2-label">الفصل الثاني</span>
                 <h2 data-i18n="ch2-title">عقل INTP-T .. لما التحليل يبقى الملجأ</h2>
@@ -326,27 +345,30 @@
                 <p data-i18n="ch2-p3">كنت عايش في دماغي أكتر ما أنا عايش في الواقع. وده خلاني أعتمد على صحاب قليلين، بس كنت بديهم ثقتي كاملة. كنت فاكر إن الصراحة والبساطة هما مفتاح العلاقات. بس الحياة، زي ما هكتشف بعدين، كانت بتحضرلي درس قاسي في الخيانة.</p>
             </section>
 
+            <!-- Chapter 3 -->
             <section class="story-chapter reveal">
                 <span class="chapter-label" data-i18n="ch3-label">الفصل الثالث</span>
-                <h2 data-i18n="ch3-title">عبد العزيز .. الخيانة الجذور والغيرة العمياء</h2>
-                <p data-i18n="ch3-p1">اسمه كان عبد العزيز. صاحبي من أيام الطفولة، اللي كنت بشوفه أخويا. بس عبد العزيز ده كان مختلف. كان بيكرهني من جواه، ودايماً بيحاول يدمري. كنت حاسس بحقده في كل حاجة. مثلاً، لما كنت أنزل صورة ليا شكلها حلو، كان بيتعصب جداً رغم إنها مجرد صورة، ودايماً يقارن نفسه بيا. معرفتش ساعتها إن كل ده كان بسبب إنه كان شايفني عائق ليه.</p>
+                <h2 data-i18n="ch3-title">مجهول 1 .. الخيانة الجذور والغيرة العمياء</h2>
+                <p data-i18n="ch3-p1">اسمه كان مجهول 1. صاحبي من أيام الطفولة، اللي كنت بشوفه أخويا. بس مجهول 1 ده كان مختلف. كان بيكرهني من جواه، ودايماً بيحاول يدمري. كنت حاسس بحقده في كل حاجة. مثلاً، لما كنت أنزل صورة ليا شكلها حلو، كان بيتعصب جداً رغم إنها مجرد صورة، ودايماً يقارن نفسه بيا. معرفتش ساعتها إن كل ده كان بسبب إنه كان شايفني عائق ليه.</p>
                 <p data-i18n="ch3-p2">الموضوع بقى أوحش في تالتة ثانوي. كان دايمًا يلمح لي إن الدراسة ملهاش لازمة، وإن كل اللي بيتعلموا بيضيعوا في الآخر. وأنا للأسف صدقته، وبدأت أهمل في مذاكرتي، ووقتها كانت حياتي بتتدهور تدريجياً بسببه. كنت بلاحظ إنه بيفرح لما أبقى في مأزق، رغم إني كنت بدعمه دايمًا وواقف جنبه في كل حاجة.</p>
                 <div class="divider"></div>
                 <p data-i18n="ch3-p3">بعدين عرفت إنه أصلاً مش مجرد صاحبي. هو باعتبار العيلة، يعتبر عمي - أخو أبويا - لأن جدي اتجوز تاني بعد ما مراته الأولى ماتت. وكل اللي كان همه هو الميراث، وكان شايف إن وجودي هيقلل نصيبه. هو وأهله، أمه وأبوه، كانوا دايمًا بيبثوا جواه كره ليا، وزرعوا فيه الضغينة دي من وأنا صغير. كانت خيانته ليها جذور أعمق بكتير مما تخيلت، ومكنتش أعرف إن كل اللي بيظهره من مودة كان مجرد قناع عشان يقرب مني ويضربني في أضعف لحظاتي.</p>
                 <p data-i18n="ch3-p4">تم تجميد دخولي للجامعة السنة دي، وقعدت أدرس من تاني وأنا حاسس إن الدنيا انتهت. أهلي كانوا في حيرة، وكل الناس بصتلي كإني فاشل. قعدت في أوضتي، قدام التابلت المتكسر، بعيط بصوت واطي وصوابعي مرتجفة. مكنتش متخيل إن الخيانة طعمها مرّ للدرجة دي.</p>
             </section>
 
+            <!-- Chapter 4 -->
             <section class="story-chapter reveal">
                 <span class="chapter-label" data-i18n="ch4-label">الفصل الرابع</span>
-                <h2 data-i18n="ch4-title">إيمان .. حب بدأ برسالة وانتهى بغموض</h2>
-                <p data-i18n="ch4-p1">في وسط الفوضى دي، كنت بحب بنت اسمها "إيمان". كانت مختلفة، وقررت أعبرلها عن اللي في قلبي، وبعتها رسالة على الإنترنت إني بحبها. وكان رد فعلها إيجابي جداً، وحسيت إن الدنيا ابتسمتلي.</p>
-                <p data-i18n="ch4-p2">بس سرعان ما انقلبت الأمور. ابن خالها "يوسف" كان دايمًا بيقف في طريقي، وبيحاول يبوظ أي تقارب بينا. مش عارف ليه، وللآن مش عارف الأسباب الحقيقية، لكنه كان بيحاول بكل الطرق يخليها تبتعد عني، ويزرع الشكوك في قلبها. مع الوقت، تراكمت الأسباب ضدي، حاجات كتير مش مفهومة، وبدأت المسافات تزيد بينا، لغاية ما خسرتها في الآخر.</p>
+                <h2 data-i18n="ch4-title">مجهولة 2 .. حب بدأ برسالة وانتهى بغموض</h2>
+                <p data-i18n="ch4-p1">في وسط الفوضى دي، كنت بحب بنت اسمها مجهولة 2. كانت مختلفة، وقررت أعبرلها عن اللي في قلبي، وبعتها رسالة على الإنترنت إني بحبها. وكان رد فعلها إيجابي جداً، وحسيت إن الدنيا ابتسمتلي.</p>
+                <p data-i18n="ch4-p2">بس سرعان ما انقلبت الأمور. ابن خالها "مجهول 3" كان دايمًا بيقف في طريقي، وبيحاول يبوظ أي تقارب بينا. مش عارف ليه، وللآن مش عارف الأسباب الحقيقية، لكنه كان بيحاول بكل الطرق يخليها تبتعد عني، ويزرع الشكوك في قلبها. مع الوقت، تراكمت الأسباب ضدي، حاجات كتير مش مفهومة، وبدأت المسافات تزيد بينا، لغاية ما خسرتها في الآخر.</p>
                 <div class="quote" data-i18n="ch4-quote">
                     "ظننت إن الحب هينقذني، بس القدر كان بيضحك من بعيد."
                 </div>
                 <p data-i18n="ch4-p3">وقفت قدام التابلت المتكسر، وحسيت إن الكون كله تآمر عليا. خسرت صاحبي، خسرت مستقبلي، وخسرت حبي الوحيد. مافضلش غير أنا والجهاز المكسور ده.</p>
             </section>
 
+            <!-- Chapter 5 -->
             <section class="story-chapter reveal">
                 <span class="chapter-label" data-i18n="ch5-label">الفصل الخامس</span>
                 <h2 data-i18n="ch5-title">النهوض من تحت الأنقاض .. ميلاد هوسكرايب</h2>
@@ -354,9 +376,10 @@
                 <p data-i18n="ch5-p2">مع الوقت، المواضيع بدأت تتبلور. مبقيتش بدور على الشهرة، بدأت أدور على الحقيقة. قررت إنقل تحليلاتي عن الدنيا، عن تاريخ البشرية، عن الأحداث الخفية اللي بتشكل واقعنا، مش بعين الأكاديمي المتعجرف، لكن بعين الباحث الشغوف اللي عاش المعارك بنفسه. سميت قناتي "هوسكرايب" — مزيج بين الهوس والكتابة، لأني كنت مهووس بفهم الحياة، وكتابة روايتي الخاصة عنها.</p>
                 <div class="divider"></div>
                 <p data-i18n="ch5-p3">المشاهدين بدأوا ييجوا بالتدريج. مكنش عندي سيت اب، ولا إضاءة، ولا حتى ميكروفون كويس، بس الناس كانت حسّة بالصدق في كلامي. كانوا يعلقوا ويقولوا: "أسلوبك مختلف"، "حاسين إننا نعرفك". ده لأني مكنتش بقدم معلومات بس؛ كنت بقدم جزء من روحي. كل فيديو كان زي جلسة علاج نفسي، وكل مشاهد كان رفيق في رحلتي.</p>
-                <p data-i18n="ch5-p4">بعد سنين، قدرت أرجع أقدم في الكلية واخد شهادتي، بس مبقيتش الطالب الطموح اللي عايز يترقى. بقيت "كريم" صانع المحتوى، الشخص اللي بيحكي القصص المنسية، واللي حول جراحه لمادة لفهم العالم. مأنتقمتش من عبد العزيز، ومحاولتش أرجع إيمان، بس صنعت من رماد الماضي حاجة خالدة.</p>
+                <p data-i18n="ch5-p4">بعد سنين، قدرت أرجع أقدم في الكلية واخد شهادتي، بس مبقيتش الطالب الطموح اللي عايز يترقى. بقيت صانع المحتوى، الشخص اللي بيحكي القصص المنسية، واللي حول جراحه لمادة لفهم العالم. مأنتقمتش من مجهول 1، ومحاولتش أرجع مجهولة 2، بس صنعت من رماد الماضي حاجة خالدة.</p>
             </section>
 
+            <!-- Chapter 6 -->
             <section class="story-chapter reveal">
                 <span class="chapter-label" data-i18n="ch6-label">الخاتمة</span>
                 <h2 data-i18n="ch6-title">رسالة للي حاسس إنه تايه</h2>
@@ -370,18 +393,20 @@
 
         </div>
 
+        <!-- Quick Links -->
         <section class="quick-links reveal">
             <div class="links">
                 <a href="/" data-i18n="link-home">الرئيسية</a>
-                <a href="https://youtube.com/@Hoscribe" target="_blank" data-i18n="link-youtube">يوتيوب</a>
-                <a href="https://www.snapchat.com/add/hoscribe" target="_blank" data-i18n="link-snapchat">سناب شات</a>
+                <a href="https://youtube.com/@Hoscribe" target="_blank" rel="noopener" data-i18n="link-youtube">يوتيوب</a>
+                <a href="https://www.snapchat.com/add/hoscribe" target="_blank" rel="noopener" data-i18n="link-snapchat">سناب شات</a>
                 <a href="ads.html" data-i18n="link-ads">تواصل</a>
                 <a href="brand.html" data-i18n="link-brand">برانداتي</a>
             </div>
         </section>
 
+        <!-- Footer -->
         <footer class="footer">
-            <p class="credit" data-i18n="footer-credit">© 2025 Hoscribe · هوسكرايب — كريم محمد إسماعيل</p>
+            <p class="credit" data-i18n="footer-credit">© 2025 Hoscribe · هوسكرايب — راوي مجهول</p>
         </footer>
 
     </div>
@@ -390,11 +415,12 @@
         (function() {
             'use strict';
 
+            // ─── Translations ────────────────────────────────────────────────
             const translations = {
                 ar: {
                     'back-home': '→ العودة للرئيسية',
                     'hero-title': 'مين أنا؟',
-                    'hero-sub': 'حكاية <span class="highlight">كريم محمد إسماعيل</span> — رحلة من ولا حاجة لهوسكرايب',
+                    'hero-sub': 'حكاية راوٍ مجهول — رحلة من ولا حاجة لهوسكرايب',
                     'ch1-label': 'الفصل الأول',
                     'ch1-title': 'البداية: تابلت مدرسي وحلم في أوضة ضلمة',
                     'ch1-p1': 'ما كنتش مالك حاجة. ولا كاميرا محترفة، ولا ميكروفون، ولا حتى مكتب مظبوط. كنت مراهق عندي 19 سنة، ساكن في محافظة الشرقية، معايا تابلت بتاع المدرسة رخيص، وشاشته متكسرة من الناحية اليمين. كل اللي كان معايا هو فضول مش طبيعي، ورغبة غريبة إني أفهم الدنيا شغالة ازاي.',
@@ -407,15 +433,15 @@
                     'ch2-quote': '"كنت بشوف روابط ماحدش غيري شايفها، بس مكنتش بشوف طريق الخروج من أوضتي."',
                     'ch2-p3': 'كنت عايش في دماغي أكتر ما أنا عايش في الواقع. وده خلاني أعتمد على صحاب قليلين، بس كنت بديهم ثقتي كاملة. كنت فاكر إن الصراحة والبساطة هما مفتاح العلاقات. بس الحياة، زي ما هكتشف بعدين، كانت بتحضرلي درس قاسي في الخيانة.',
                     'ch3-label': 'الفصل الثالث',
-                    'ch3-title': 'عبد العزيز .. الخيانة الجذور والغيرة العمياء',
-                    'ch3-p1': 'اسمه كان عبد العزيز. صاحبي من أيام الطفولة، اللي كنت بشوفه أخويا. بس عبد العزيز ده كان مختلف. كان بيكرهني من جواه، ودايماً بيحاول يدمري. كنت حاسس بحقده في كل حاجة. مثلاً، لما كنت أنزل صورة ليا شكلها حلو، كان بيتعصب جداً رغم إنها مجرد صورة، ودايماً يقارن نفسه بيا. معرفتش ساعتها إن كل ده كان بسبب إنه كان شايفني عائق ليه.',
+                    'ch3-title': 'مجهول 1 .. الخيانة الجذور والغيرة العمياء',
+                    'ch3-p1': 'اسمه كان مجهول 1. صاحبي من أيام الطفولة، اللي كنت بشوفه أخويا. بس مجهول 1 ده كان مختلف. كان بيكرهني من جواه، ودايماً بيحاول يدمري. كنت حاسس بحقده في كل حاجة. مثلاً، لما كنت أنزل صورة ليا شكلها حلو، كان بيتعصب جداً رغم إنها مجرد صورة، ودايماً يقارن نفسه بيا. معرفتش ساعتها إن كل ده كان بسبب إنه كان شايفني عائق ليه.',
                     'ch3-p2': 'الموضوع بقى أوحش في تالتة ثانوي. كان دايمًا يلمح لي إن الدراسة ملهاش لازمة، وإن كل اللي بيتعلموا بيضيعوا في الآخر. وأنا للأسف صدقته، وبدأت أهمل في مذاكرتي، ووقتها كانت حياتي بتتدهور تدريجياً بسببه. كنت بلاحظ إنه بيفرح لما أبقى في مأزق، رغم إني كنت بدعمه دايمًا وواقف جنبه في كل حاجة.',
                     'ch3-p3': 'بعدين عرفت إنه أصلاً مش مجرد صاحبي. هو باعتبار العيلة، يعتبر عمي - أخو أبويا - لأن جدي اتجوز تاني بعد ما مراته الأولى ماتت. وكل اللي كان همه هو الميراث، وكان شايف إن وجودي هيقلل نصيبه. هو وأهله، أمه وأبوه، كانوا دايمًا بيبثوا جواه كره ليا، وزرعوا فيه الضغينة دي من وأنا صغير. كانت خيانته ليها جذور أعمق بكتير مما تخيلت، ومكنتش أعرف إن كل اللي بيظهره من مودة كان مجرد قناع عشان يقرب مني ويضربني في أضعف لحظاتي.',
                     'ch3-p4': 'تم تجميد دخولي للجامعة السنة دي، وقعدت أدرس من تاني وأنا حاسس إن الدنيا انتهت. أهلي كانوا في حيرة، وكل الناس بصتلي كإني فاشل. قعدت في أوضتي، قدام التابلت المتكسر، بعيط بصوت واطي وصوابعي مرتجفة. مكنتش متخيل إن الخيانة طعمها مرّ للدرجة دي.',
                     'ch4-label': 'الفصل الرابع',
-                    'ch4-title': 'إيمان .. حب بدأ برسالة وانتهى بغموض',
-                    'ch4-p1': 'في وسط الفوضى دي، كنت بحب بنت اسمها "إيمان". كانت مختلفة، وقررت أعبرلها عن اللي في قلبي، وبعتها رسالة على الإنترنت إني بحبها. وكان رد فعلها إيجابي جداً، وحسيت إن الدنيا ابتسمتلي.',
-                    'ch4-p2': 'بس سرعان ما انقلبت الأمور. ابن خالها "يوسف" كان دايمًا بيقف في طريقي، وبيحاول يبوظ أي تقارب بينا. مش عارف ليه، وللآن مش عارف الأسباب الحقيقية، لكنه كان بيحاول بكل الطرق يخليها تبتعد عني، ويزرع الشكوك في قلبها. مع الوقت، تراكمت الأسباب ضدي، حاجات كتير مش مفهومة، وبدأت المسافات تزيد بينا، لغاية ما خسرتها في الآخر.',
+                    'ch4-title': 'مجهولة 2 .. حب بدأ برسالة وانتهى بغموض',
+                    'ch4-p1': 'في وسط الفوضى دي، كنت بحب بنت اسمها مجهولة 2. كانت مختلفة، وقررت أعبرلها عن اللي في قلبي، وبعتها رسالة على الإنترنت إني بحبها. وكان رد فعلها إيجابي جداً، وحسيت إن الدنيا ابتسمتلي.',
+                    'ch4-p2': 'بس سرعان ما انقلبت الأمور. ابن خالها "مجهول 3" كان دايمًا بيقف في طريقي، وبيحاول يبوظ أي تقارب بينا. مش عارف ليه، وللآن مش عارف الأسباب الحقيقية، لكنه كان بيحاول بكل الطرق يخليها تبتعد عني، ويزرع الشكوك في قلبها. مع الوقت، تراكمت الأسباب ضدي، حاجات كتير مش مفهومة، وبدأت المسافات تزيد بينا، لغاية ما خسرتها في الآخر.',
                     'ch4-quote': '"ظننت إن الحب هينقذني، بس القدر كان بيضحك من بعيد."',
                     'ch4-p3': 'وقفت قدام التابلت المتكسر، وحسيت إن الكون كله تآمر عليا. خسرت صاحبي، خسرت مستقبلي، وخسرت حبي الوحيد. مافضلش غير أنا والجهاز المكسور ده.',
                     'ch5-label': 'الفصل الخامس',
@@ -423,7 +449,7 @@
                     'ch5-p1': 'في قعر الحفرة، حيث مافيش صوت يوصل ولا ضوء يدخل، حصل حاجة غريبة. بدل ما أستسلم، حسيت برغبة جامحة إني أتكلم. كنت هخسر كل حاجة، بس مش هخسر صوتي. التابلت المدرسي كان صاحبي الوحيد، فبدأت أسجل كل اللي ييجي في بالي. مبقيتش بعمل فيديوهات عشان الناس تتفرج، كنت بعملها عشان أثبت لنفسي إني لسه عايش.',
                     'ch5-p2': 'مع الوقت، المواضيع بدأت تتبلور. مبقيتش بدور على الشهرة، بدأت أدور على الحقيقة. قررت إنقل تحليلاتي عن الدنيا، عن تاريخ البشرية، عن الأحداث الخفية اللي بتشكل واقعنا، مش بعين الأكاديمي المتعجرف، لكن بعين الباحث الشغوف اللي عاش المعارك بنفسه. سميت قناتي "هوسكرايب" — مزيج بين الهوس والكتابة، لأني كنت مهووس بفهم الحياة، وكتابة روايتي الخاصة عنها.',
                     'ch5-p3': 'المشاهدين بدأوا ييجوا بالتدريج. مكنش عندي سيت اب، ولا إضاءة، ولا حتى ميكروفون كويس، بس الناس كانت حسّة بالصدق في كلامي. كانوا يعلقوا ويقولوا: "أسلوبك مختلف"، "حاسين إننا نعرفك". ده لأني مكنتش بقدم معلومات بس؛ كنت بقدم جزء من روحي. كل فيديو كان زي جلسة علاج نفسي، وكل مشاهد كان رفيق في رحلتي.',
-                    'ch5-p4': 'بعد سنين، قدرت أرجع أقدم في الكلية واخد شهادتي، بس مبقيتش الطالب الطموح اللي عايز يترقى. بقيت "كريم" صانع المحتوى، الشخص اللي بيحكي القصص المنسية، واللي حول جراحه لمادة لفهم العالم. مأنتقمتش من عبد العزيز، ومحاولتش أرجع إيمان، بس صنعت من رماد الماضي حاجة خالدة.',
+                    'ch5-p4': 'بعد سنين، قدرت أرجع أقدم في الكلية واخد شهادتي، بس مبقيتش الطالب الطموح اللي عايز يترقى. بقيت صانع المحتوى، الشخص اللي بيحكي القصص المنسية، واللي حول جراحه لمادة لفهم العالم. مأنتقمتش من مجهول 1، ومحاولتش أرجع مجهولة 2، بس صنعت من رماد الماضي حاجة خالدة.',
                     'ch6-label': 'الخاتمة',
                     'ch6-title': 'رسالة للي حاسس إنه تايه',
                     'ch6-p1': 'لو بتقرأ الكلام ده دلوقتي، وعدّاي بفترة صعبة في حياتك، عايزك تعرف حاجة: كل حاجة كانت ضدي. المعدات، الفلوس، الصحاب، الحب، والدراسة. بس السلاح الأقوى اللي كان معايا هو فضولي وعقلي. التابلت المتكسر كان مجرد قشرة؛ المهم كان اللي جوايا من إصرار على السؤال.',
@@ -435,12 +461,12 @@
                     'link-snapchat': 'سناب شات',
                     'link-ads': 'تواصل',
                     'link-brand': 'برانداتي',
-                    'footer-credit': '© 2025 Hoscribe · هوسكرايب — كريم محمد إسماعيل',
+                    'footer-credit': '© 2025 Hoscribe · هوسكرايب — راوي مجهول',
                 },
                 en: {
                     'back-home': '← Back to Home',
                     'hero-title': 'About Me?',
-                    'hero-sub': 'The story of <span class="highlight">Karim Mohamed Ismail</span> — A journey from nothing to Hoscribe',
+                    'hero-sub': 'The story of an anonymous narrator — A journey from nothing to Hoscribe',
                     'ch1-label': 'Chapter One',
                     'ch1-title': 'The Beginning: A School Tablet and a Dream in a Dark Room',
                     'ch1-p1': 'I had nothing. No professional camera, no microphone, not even a proper desk. I was a teenager, nineteen years old, living in Sharqia Governorate, holding a cheap school tablet with a cracked screen on the right corner. All I had was an insatiable curiosity and a strange desire to understand how the world works.',
@@ -453,15 +479,15 @@
                     'ch2-quote': '"I saw connections others didn\'t see, but I couldn\'t see the way out of my room."',
                     'ch2-p3': 'I lived in my head more than I lived in reality. This made me rely on few friends, but I gave them my full trust. I thought honesty and simplicity were the keys to relationships. But life, as I would later discover, was preparing a harsh lesson in betrayal.',
                     'ch3-label': 'Chapter Three',
-                    'ch3-title': 'Abdul Aziz .. The Betrayal of Roots and Blind Jealousy',
-                    'ch3-p1': 'His name was Abdul Aziz. My childhood friend, whom I considered a brother. But Abdul Aziz was different. He hated me from within, and always tried to destroy me. I could feel his resentment in everything. For example, whenever I posted a good picture of myself, he would get extremely angry even though it was just a photo, and he would always compare himself to me. I didn\'t know then that all of this was because he saw me as an obstacle.',
+                    'ch3-title': 'Unknown 1 .. The Betrayal of Roots and Blind Jealousy',
+                    'ch3-p1': 'His name was Unknown 1. My childhood friend, whom I considered a brother. But Unknown 1 was different. He hated me from within, and always tried to destroy me. I could feel his resentment in everything. For example, whenever I posted a good picture of myself, he would get extremely angry even though it was just a photo, and he would always compare himself to me. I didn\'t know then that all of this was because he saw me as an obstacle.',
                     'ch3-p2': 'Things got worse in high school. He would always hint to me that studying was useless, and that everyone who studied ended up wasting their time. Unfortunately, I believed him, and I started neglecting my studies, and my life began to deteriorate gradually because of him. I noticed that he was happy when I was in trouble, even though I always supported him and stood by his side in everything.',
                     'ch3-p3': 'Later, I found out that he wasn\'t just my friend. In terms of family, he is actually my uncle - my father\'s brother - because my grandfather remarried after his first wife died. All he cared about was inheritance, and he saw my existence as reducing his share. He and his family, his mother and father, constantly instilled hatred in him against me, planting this grudge in him from a young age. His betrayal had much deeper roots than I imagined, and I didn\'t know that all the affection he showed was just a mask to get close to me and strike me at my weakest moments.',
                     'ch3-p4': 'My college admission was frozen that year, and I had to study again from scratch, feeling like the world had ended. My family was confused, and everyone looked at me as a failure. I sat in my room, in front of the cracked tablet, crying silently as my fingers trembled. I didn\'t know that betrayal had such a bitter taste.',
                     'ch4-label': 'Chapter Four',
-                    'ch4-title': 'Eman .. A Love That Began with a Message and Ended in Mystery',
-                    'ch4-p1': 'In the midst of this chaos, I loved a girl named "Eman". She was different, and I decided to express what was in my heart, so I sent her a message online telling her I loved her. Her reaction was very positive, and I felt life smiled at me.',
-                    'ch4-p2': 'But things quickly turned around. Her cousin "Youssef" was always standing in my way, trying to ruin any closeness between us. I don\'t know why, and to this day I don\'t know the real reasons, but he tried everything to make her stay away from me and plant doubts in her heart. Over time, reasons piled up against me, many things I didn\'t understand, and the distance between us grew until I lost her in the end.',
+                    'ch4-title': 'Unknown 2 .. A Love That Began with a Message and Ended in Mystery',
+                    'ch4-p1': 'In the midst of this chaos, I loved a girl named Unknown 2. She was different, and I decided to express what was in my heart, so I sent her a message online telling her I loved her. Her reaction was very positive, and I felt life smiled at me.',
+                    'ch4-p2': 'But things quickly turned around. Her cousin "Unknown 3" was always standing in my way, trying to ruin any closeness between us. I don\'t know why, and to this day I don\'t know the real reasons, but he tried everything to make her stay away from me and plant doubts in her heart. Over time, reasons piled up against me, many things I didn\'t understand, and the distance between us grew until I lost her in the end.',
                     'ch4-quote': '"I thought love would save me, but fate was laughing from afar."',
                     'ch4-p3': 'I stood in front of the broken tablet, feeling that the whole universe had conspired against me. I lost my friend, I lost my future, and I lost my only love. Nothing remained but me and this broken device.',
                     'ch5-label': 'Chapter Five',
@@ -469,7 +495,7 @@
                     'ch5-p1': 'At the bottom of the pit, where no sound reaches and no light penetrates, something strange happened. Instead of giving up, I felt an overwhelming urge to speak. I would lose everything, but I wouldn\'t lose my voice. The school tablet was my only friend, so I started recording everything that came to mind. I no longer made videos for people to watch; I made them to prove to myself that I was still alive.',
                     'ch5-p2': 'Over time, the topics began to crystallize. I stopped seeking fame and started seeking the truth. I decided to convey my analyses of the world, of human history, of the hidden events that shape our reality, not through the eyes of an arrogant academic, but through the eyes of a passionate researcher who fought his own battles. I named my channel "Hoscribe" — a blend of obsession and writing, because I was obsessed with understanding life and writing my own narrative about it.',
                     'ch5-p3': 'Audiences began to arrive gradually. I had no setup, no lighting, not even a good microphone, but people felt the honesty in my words. They would comment, "Your style is different," "We feel like we know you." That\'s because I wasn\'t just providing information; I was providing a piece of my soul. Each video was a therapy session, and each viewer was a companion on my journey.',
-                    'ch5-p4': 'Years later, I reclaimed my right at the university and got my degree, but I was no longer that ambitious student seeking promotion. I became "Karim" the content creator, the one who tells forgotten stories and turns his wounds into rich material for understanding the world. I didn\'t take revenge on Abdul Aziz, and I didn\'t try to get Eman back, but I turned the ashes of the past into something eternal.',
+                    'ch5-p4': 'Years later, I reclaimed my right at the university and got my degree, but I was no longer that ambitious student seeking promotion. I became a content creator, the one who tells forgotten stories and turns his wounds into rich material for understanding the world. I didn\'t take revenge on Unknown 1, and I didn\'t try to get Unknown 2 back, but I turned the ashes of the past into something eternal.',
                     'ch6-label': 'Epilogue',
                     'ch6-title': 'A Message to Those Who Feel Lost',
                     'ch6-p1': 'If you\'re reading this now, and you\'re going through a dark moment in your life, I want you to know something: everything was against me. Equipment, money, friends, love, and studies. But the strongest tool I had was my curiosity and my mind. The cracked tablet was just a shell; what mattered was the determination to ask questions inside me.',
@@ -481,14 +507,16 @@
                     'link-snapchat': 'Snapchat',
                     'link-ads': 'Contact',
                     'link-brand': 'My Brands',
-                    'footer-credit': '© 2025 Hoscribe · هوسكرايب — Karim Mohamed Ismail',
+                    'footer-credit': '© 2025 Hoscribe · هوسكرايب — Anonymous Narrator',
                 }
             };
 
+            // ─── DOM refs ────────────────────────────────────────────────────
             const i18nElements = document.querySelectorAll('[data-i18n]');
             const htmlEl = document.documentElement;
             const langBtns = document.querySelectorAll('.lang-btn');
 
+            // ─── Set Language ──────────────────────────────────────────────
             function setLanguage(lang) {
                 const dict = translations[lang];
                 if (!dict) return;
@@ -517,6 +545,7 @@
                 localStorage.setItem('hoscribe-lang', lang);
             }
 
+            // ─── Preferred Language ────────────────────────────────────────
             function getPreferredLanguage() {
                 const stored = localStorage.getItem('hoscribe-lang');
                 if (stored === 'ar' || stored === 'en') return stored;
@@ -526,6 +555,7 @@
                 return 'ar';
             }
 
+            // ─── Event Listeners ──────────────────────────────────────────
             langBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
                     const lang = this.getAttribute('data-lang');
@@ -533,9 +563,11 @@
                 });
             });
 
+            // ─── Init ──────────────────────────────────────────────────────
             const initialLang = getPreferredLanguage();
             setLanguage(initialLang);
 
+            // ─── Reveal on Scroll ─────────────────────────────────────────
             const revealEls = document.querySelectorAll('.reveal');
             if (revealEls.length) {
                 const observer = new IntersectionObserver((entries) => {
