@@ -18,11 +18,13 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" href="logo.png" as="image" fetchpriority="high" />
+
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" />
 
     <style>
         /* ——————————————————————————————
-           Reset & Base – Ultra Minimal
+           Reset & Base – Ultra Minimal / Speed First
            —————————————————————————————— */
         *,
         *::before,
@@ -39,15 +41,17 @@
             --text-secondary: #6e6e73;
             --text-tertiary: #8e8e93;
             --gold: #b8953a;
+            --gold-light: #f5edd6;
             --border: #e5e5ea;
             --radius: 16px;
-            --transition: 0.25s cubic-bezier(0.25, 0.1, 0.15, 1);
+            --transition: 0.2s cubic-bezier(0.25, 0.1, 0.15, 1);
         }
 
         html {
             scroll-behavior: smooth;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            contain: layout style paint;
         }
 
         body {
@@ -60,12 +64,14 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            contain: layout style;
         }
 
         .container {
             max-width: 720px;
             width: 100%;
             margin: 0 auto;
+            contain: layout style;
         }
 
         /* ——————————————————————————————
@@ -90,6 +96,7 @@
             border-radius: 30px;
             transition: var(--transition);
             letter-spacing: 0.03em;
+            will-change: background, color;
         }
 
         .lang-btn:hover {
@@ -111,11 +118,14 @@
             text-align: center;
             padding: 1.6rem 0 2.4rem;
             border-bottom: 1px solid var(--border);
+            contain: layout style;
         }
 
         .logo-wrap {
             display: inline-block;
             margin-bottom: 1.4rem;
+            width: 76px;
+            height: 76px;
         }
 
         .logo-wrap img {
@@ -126,6 +136,8 @@
             display: block;
             background: #f0efe8;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+            aspect-ratio: 1/1;
+            will-change: transform;
         }
 
         .hero h1 {
@@ -218,11 +230,14 @@
             align-items: center;
             justify-content: center;
             min-height: 200px;
+            will-change: transform, border-color, box-shadow;
+            contain: layout style;
         }
 
         .cta-section:hover {
             border-color: var(--gold);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            transform: translateY(-2px);
         }
 
         .cta-section .label {
@@ -251,7 +266,7 @@
             line-height: 1.7;
         }
 
-        /* Buttons – Formal, refined, no emojis */
+        /* Buttons – Formal, refined */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -269,6 +284,7 @@
             transition: var(--transition);
             line-height: 1.4;
             letter-spacing: 0.02em;
+            will-change: transform, background, color;
         }
 
         .btn:hover {
@@ -277,7 +293,6 @@
             border-color: var(--text-primary);
             transform: scale(0.97);
         }
-
         .btn:active {
             transform: scale(0.95);
         }
@@ -287,7 +302,6 @@
             color: #fff;
             border-color: var(--text-primary);
         }
-
         .btn--primary:hover {
             background: #2a2a2a;
             border-color: #2a2a2a;
@@ -298,7 +312,6 @@
             color: var(--text-primary);
             border: 1px solid var(--border);
         }
-
         .btn--ghost:hover {
             background: var(--text-primary);
             color: #fff;
@@ -306,7 +319,87 @@
         }
 
         /* ——————————————————————————————
-           Quick Links (سلسلة)
+           Competition Card – Simplified, elegant, compact
+           —————————————————————————————— */
+        .competition-row {
+            padding: 1.8rem 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .competition-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 1.2rem 1.5rem;
+            /* more compact */
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            will-change: transform, border-color, box-shadow;
+            contain: layout style;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 160px;
+            /* smaller than the 200px of others */
+        }
+
+        .competition-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            transform: translateY(-2px);
+        }
+
+        .competition-card .label {
+            display: inline-block;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 0.05rem;
+        }
+
+        .competition-card h2 {
+            font-size: 1.05rem;
+            /* slightly smaller */
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.05rem;
+        }
+
+        .competition-card h2 .highlight {
+            color: var(--gold);
+        }
+
+        .competition-card p {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            /* smaller */
+            font-weight: 300;
+            max-width: 340px;
+            margin: 0.1rem auto 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Gold button for competition */
+        .btn--gold {
+            background: var(--gold);
+            color: #fff;
+            border-color: var(--gold);
+            padding: 0.4rem 1.6rem;
+            font-size: 0.75rem;
+            box-shadow: 0 2px 12px rgba(184, 149, 58, 0.15);
+        }
+        .btn--gold:hover {
+            background: #a07f2e;
+            border-color: #a07f2e;
+            transform: scale(0.97);
+            box-shadow: 0 4px 18px rgba(184, 149, 58, 0.25);
+        }
+
+        /* ——————————————————————————————
+           Quick Links
            —————————————————————————————— */
         .quick-links {
             padding: 2rem 0 1.2rem;
@@ -329,6 +422,7 @@
             text-decoration: none;
             border-bottom: 1px dotted transparent;
             transition: var(--transition);
+            will-change: color, border-color;
         }
 
         .quick-links a:hover {
@@ -337,7 +431,7 @@
         }
 
         /* ——————————————————————————————
-           Footer – Discreet
+           Footer
            —————————————————————————————— */
         .footer {
             padding: 2rem 0 1.2rem;
@@ -360,12 +454,14 @@
         }
 
         /* ——————————————————————————————
-           Reveal – Subtle
+           Reveal – Ultra-smooth
            —————————————————————————————— */
         .reveal {
             opacity: 0;
-            transform: translateY(16px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
+            transform: translateY(18px);
+            transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+            will-change: opacity, transform;
         }
 
         .reveal.visible {
@@ -380,55 +476,61 @@
             body {
                 padding: 1.6rem 1.2rem;
             }
-
             .hero h1 {
                 font-size: 2.2rem;
             }
-
             .hero .sub {
                 font-size: 0.85rem;
             }
-
             .cta-row {
                 grid-template-columns: 1fr;
                 gap: 1rem;
                 padding: 1.2rem 0;
             }
-
             .cta-section {
                 min-height: 160px;
                 padding: 1.4rem 1rem;
             }
-
             .cta-section h2 {
                 font-size: 1.1rem;
             }
-
             .btn {
                 padding: 0.5rem 1.4rem;
                 font-size: 0.75rem;
             }
-
+            .logo-wrap,
             .logo-wrap img {
                 width: 64px;
                 height: 64px;
             }
-
             .lang-switcher {
                 justify-content: center;
             }
-
             .quick-links .links {
                 gap: 0.6rem 1.2rem;
             }
-
             .cta-row:last-of-type {
                 border-bottom: none;
             }
-
             .cta-row:last-of-type .cta-section:last-of-type {
                 border-bottom: 1px solid var(--border);
                 border-radius: var(--radius) var(--radius) var(--radius) var(--radius);
+            }
+
+            .competition-card {
+                padding: 1rem 1.2rem;
+                min-height: 140px;
+            }
+            .competition-card h2 {
+                font-size: 0.95rem;
+            }
+            .competition-card p {
+                font-size: 0.7rem;
+                max-width: 280px;
+            }
+            .competition-card .btn--gold {
+                padding: 0.4rem 1.4rem;
+                font-size: 0.7rem;
             }
         }
 
@@ -445,6 +547,12 @@
             }
             .cta-section p {
                 font-size: 0.75rem;
+            }
+            .competition-card h2 {
+                font-size: 0.85rem;
+            }
+            .competition-card p {
+                font-size: 0.65rem;
             }
         }
 
@@ -474,7 +582,7 @@
         <!-- Hero -->
         <header class="hero reveal">
             <div class="logo-wrap">
-                <img src="logo.png" alt="هوسكرايب" loading="eager" fetchpriority="high" onerror="this.style.background='#f0efe8'; this.alt='Hoscribe';" />
+                <img src="logo.png" alt="هوسكرايب" loading="eager" fetchpriority="high" width="76" height="76" onerror="this.style.background='#f0efe8'; this.alt='Hoscribe';" />
             </div>
             <h1 data-i18n="brand-name">هوسكرايب</h1>
             <p class="sub"><span class="real" data-i18n="brand-owner">كريم محمد إسماعيل</span> <span style="color:var(--text-tertiary);">·</span> <span data-i18n="brand-sub">Hoscribe</span></p>
@@ -492,7 +600,6 @@
 
         <!-- Row 1: YouTube + Snapchat -->
         <div class="cta-row reveal">
-            <!-- YouTube -->
             <section class="cta-section">
                 <span class="label" data-i18n="yt-label">القناة</span>
                 <h2 data-i18n="yt-title">هوسكرايب</h2>
@@ -502,7 +609,6 @@
                 </a>
             </section>
 
-            <!-- Snapchat -->
             <section class="cta-section">
                 <span class="label" data-i18n="snap-label">سناب شات</span>
                 <h2 data-i18n="snap-title">@hoscribe</h2>
@@ -515,7 +621,6 @@
 
         <!-- Row 2: Ads + Feedback -->
         <div class="cta-row reveal">
-            <!-- Ads -->
             <section class="cta-section">
                 <span class="label" data-i18n="ads-label">التعاون</span>
                 <h2 data-i18n="ads-title">للإعلانات والشراكات</h2>
@@ -525,7 +630,6 @@
                 </a>
             </section>
 
-            <!-- Feedback -->
             <section class="cta-section">
                 <span class="label" data-i18n="feedback-label">الشكاوى والاقتراحات</span>
                 <h2 data-i18n="feedback-title">رأيك يهمنا</h2>
@@ -536,9 +640,8 @@
             </section>
         </div>
 
-        <!-- NEW Row 3: About Me + Brands -->
+        <!-- Row 3: About Me + Brands -->
         <div class="cta-row reveal">
-            <!-- About Me -->
             <section class="cta-section">
                 <span class="label" data-i18n="me-label">من أكون</span>
                 <h2 data-i18n="me-title">قصة حياتي</h2>
@@ -548,7 +651,6 @@
                 </a>
             </section>
 
-            <!-- Brands -->
             <section class="cta-section">
                 <span class="label" data-i18n="brand-label">برانداتي</span>
                 <h2 data-i18n="brand-title">علاماتي التجارية</h2>
@@ -559,7 +661,19 @@
             </section>
         </div>
 
-        <!-- Quick Links (سلسلة) -->
+        <!-- ——————————————————————————————
+             COMPETITION CARD – Simplified, elegant, compact
+             —————————————————————————————— -->
+        <div class="competition-row reveal">
+            <div class="competition-card">
+                <span class="label" data-i18n="comp-label">🏆 المسابقة</span>
+                <h2 data-i18n="comp-title">سجل في <span class="highlight">المسابقة السنوية</span></h2>
+                <p data-i18n="comp-desc">فرصة لربح <strong>أحدث إيفون</strong>! اشترك الآن وكن من الفائزين. المسابقة مفتوحة للجميع.</p>
+                <a href="co.html" class="btn btn--gold" data-i18n="comp-btn">سجل الآن ←</a>
+            </div>
+        </div>
+
+        <!-- Quick Links -->
         <section class="quick-links reveal">
             <div class="links">
                 <a href="/" data-i18n="link-home">الرئيسية</a>
@@ -567,9 +681,9 @@
                 <a href="https://www.snapchat.com/add/hoscribe" target="_blank" data-i18n="link-snapchat">سناب شات</a>
                 <a href="ads.html" data-i18n="link-ads">تواصل</a>
                 <a href="excretion.html" data-i18n="link-feedback">اقتراحات</a>
-                <!-- NEW links -->
                 <a href="me.html" data-i18n="link-me">من أكون</a>
                 <a href="brand.html" data-i18n="link-brand">برانداتي</a>
+                <a href="co.html" data-i18n="link-competition">المسابقة</a>
             </div>
         </section>
 
@@ -582,7 +696,7 @@
     </div>
 
     <!-- ==========================================================
-    Script – i18n + reveal
+    Script – i18n + reveal – Non-blocking
     ========================================================== -->
     <script>
         (function() {
@@ -616,7 +730,6 @@
                     'feedback-title': 'رأيك يهمنا',
                     'feedback-desc': 'نرحب بملاحظاتكم وشكاويكم واقتراحاتكم لتحسين المحتوى.',
                     'feedback-btn': 'أرسل ملاحظاتك',
-                    // NEW translations for About Me & Brands
                     'me-label': 'من أكون',
                     'me-title': 'قصة حياتي',
                     'me-desc': 'اكتشف رحلتي، شغفي، وكيف أصبحت هوسكرايب. قصة مليئة بالتحديات والطموح.',
@@ -625,6 +738,10 @@
                     'brand-title': 'علاماتي التجارية',
                     'brand-desc': 'تعرف على المشاريع والعلامات التجارية التي أملكها وأديرها بكل فخر.',
                     'brand-btn': 'استكشف البراندات',
+                    'comp-label': '🏆 المسابقة',
+                    'comp-title': 'سجل في <span class="highlight">المسابقة السنوية</span>',
+                    'comp-desc': 'فرصة لربح <strong>أحدث إيفون</strong>! اشترك الآن وكن من الفائزين. المسابقة مفتوحة للجميع.',
+                    'comp-btn': 'سجل الآن ←',
                     'link-home': 'الرئيسية',
                     'link-youtube': 'يوتيوب',
                     'link-snapchat': 'سناب شات',
@@ -632,6 +749,7 @@
                     'link-feedback': 'اقتراحات',
                     'link-me': 'من أكون',
                     'link-brand': 'برانداتي',
+                    'link-competition': 'المسابقة',
                     'footer-signoff': '— وجودكم معنا هو كل شيء، نتمنى أن تستمتعوا دائماً —',
                     'footer-credit': '© 2025 Hoscribe · هوسكرايب — كريم محمد إسماعيل',
                 },
@@ -662,7 +780,6 @@
                     'feedback-title': 'Your opinion matters',
                     'feedback-desc': 'We welcome your comments, complaints and suggestions to improve the content.',
                     'feedback-btn': 'Send your feedback',
-                    // NEW translations
                     'me-label': 'About Me',
                     'me-title': 'My Story',
                     'me-desc': 'Discover my journey, my passion, and how I became Hoscribe. A story full of challenges and ambition.',
@@ -671,6 +788,10 @@
                     'brand-title': 'My Trademarks',
                     'brand-desc': 'Learn about the projects and brands I own and manage with pride.',
                     'brand-btn': 'Explore brands',
+                    'comp-label': '🏆 Competition',
+                    'comp-title': 'Register for the <span class="highlight">Annual Competition</span>',
+                    'comp-desc': 'Chance to win the <strong>latest iPhone</strong>! Sign up now and be one of the lucky winners. Open to everyone.',
+                    'comp-btn': 'Sign up now →',
                     'link-home': 'Home',
                     'link-youtube': 'YouTube',
                     'link-snapchat': 'Snapchat',
@@ -678,6 +799,7 @@
                     'link-feedback': 'Feedback',
                     'link-me': 'About Me',
                     'link-brand': 'My Brands',
+                    'link-competition': 'Competition',
                     'footer-signoff': '— Your presence means everything, we hope you always enjoy —',
                     'footer-credit': '© 2025 Hoscribe · هوسكرايب — Karim Mohamed Ismail',
                 }
@@ -702,7 +824,6 @@
                     }
                 });
 
-                // update quick links separately
                 document.querySelectorAll('.quick-links .links a').forEach(link => {
                     const key = link.getAttribute('data-i18n');
                     if (key && dict[key] !== undefined) {
@@ -746,12 +867,10 @@
                 });
             });
 
-            const initialLang = getPreferredLanguage();
-            setLanguage(initialLang);
+            setLanguage(getPreferredLanguage());
 
-            // Reveal on scroll
             const revealEls = document.querySelectorAll('.reveal');
-            if (revealEls.length) {
+            if (revealEls.length && 'IntersectionObserver' in window) {
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
@@ -759,8 +878,16 @@
                             observer.unobserve(entry.target);
                         }
                     });
-                }, { threshold: 0.12, rootMargin: '0px 0px -20px 0px' });
-                revealEls.forEach(el => observer.observe(el));
+                }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
+                if ('requestIdleCallback' in window) {
+                    requestIdleCallback(() => {
+                        revealEls.forEach(el => observer.observe(el));
+                    });
+                } else {
+                    revealEls.forEach(el => observer.observe(el));
+                }
+            } else {
+                revealEls.forEach(el => el.classList.add('visible'));
             }
 
         })();
