@@ -472,13 +472,24 @@
             </a>
         </section>
 
+        <!-- Feedback CTA (الشكاوى والاقتراحات) -->
+        <section class="cta-section reveal">
+            <span class="label" data-i18n="feedback-label">الشكاوى والاقتراحات</span>
+            <h2 data-i18n="feedback-title">رأيك يهمنا</h2>
+            <p data-i18n="feedback-desc">نرحب بملاحظاتكم وشكاويكم واقتراحاتكم لتحسين المحتوى.</p>
+            <a href="excretion.html" class="btn btn--ghost">
+                <span data-i18n="feedback-btn">أرسل ملاحظاتك</span>
+            </a>
+        </section>
+
         <!-- Quick Links (سلسلة) -->
         <section class="quick-links reveal">
-            <div class="links" data-i18n="quick-links">
+            <div class="links">
                 <a href="/" data-i18n="link-home">الرئيسية</a>
                 <a href="https://youtube.com/@Hoscribe" target="_blank" data-i18n="link-youtube">يوتيوب</a>
                 <a href="https://www.snapchat.com/add/hoscribe" target="_blank" data-i18n="link-snapchat">سناب شات</a>
                 <a href="ads.html" data-i18n="link-ads">تواصل</a>
+                <a href="excretion.html" data-i18n="link-feedback">اقتراحات</a>
             </div>
         </section>
 
@@ -521,11 +532,15 @@
                     'ads-title': 'للإعلانات والشراكات',
                     'ads-desc': 'نرحب بالعلامات التجارية التي تشاركنا الرؤية. نسعد بالتواصل معكم.',
                     'ads-btn': 'تواصل معنا',
-                    'quick-links': '',
+                    'feedback-label': 'الشكاوى والاقتراحات',
+                    'feedback-title': 'رأيك يهمنا',
+                    'feedback-desc': 'نرحب بملاحظاتكم وشكاويكم واقتراحاتكم لتحسين المحتوى.',
+                    'feedback-btn': 'أرسل ملاحظاتك',
                     'link-home': 'الرئيسية',
                     'link-youtube': 'يوتيوب',
                     'link-snapchat': 'سناب شات',
                     'link-ads': 'تواصل',
+                    'link-feedback': 'اقتراحات',
                     'footer-signoff': '— وجودكم معنا هو كل شيء، نتمنى أن تستمتعوا دائماً —',
                     'footer-credit': '© 2025 Hoscribe · هوسكرايب — كريم محمد إسماعيل',
                 },
@@ -552,11 +567,15 @@
                     'ads-title': 'Advertising & Partnerships',
                     'ads-desc': 'We welcome brands that share our vision. We look forward to hearing from you.',
                     'ads-btn': 'Contact us',
-                    'quick-links': '',
+                    'feedback-label': 'Feedback & Suggestions',
+                    'feedback-title': 'Your opinion matters',
+                    'feedback-desc': 'We welcome your comments, complaints and suggestions to improve the content.',
+                    'feedback-btn': 'Send your feedback',
                     'link-home': 'Home',
                     'link-youtube': 'YouTube',
                     'link-snapchat': 'Snapchat',
                     'link-ads': 'Contact',
+                    'link-feedback': 'Feedback',
                     'footer-signoff': '— Your presence means everything, we hope you always enjoy —',
                     'footer-credit': '© 2025 Hoscribe · هوسكرايب — Karim Mohamed Ismail',
                 }
@@ -576,13 +595,13 @@
                 i18nElements.forEach(el => {
                     const key = el.getAttribute('data-i18n');
                     if (dict[key] !== undefined) {
-                        // for the quick-links container we skip setting innerHTML because it has child links
+                        // quick-links container is handled separately
                         if (key === 'quick-links') return;
                         el.innerHTML = dict[key];
                     }
                 });
 
-                // Manually update quick-links children
+                // Update quick-links children
                 document.querySelectorAll('.quick-links .links a').forEach(link => {
                     const key = link.getAttribute('data-i18n');
                     if (key && dict[key] !== undefined) {

@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="title">الشكاوى والاقتراحات | هوسكرايب</title>
+    <meta name="description" data-i18n="meta-description" content="أرسل شكواك أو اقتراحك لتحسين محتوى هوسكرايب — نرحب بملاحظاتك.">
+    <link rel="canonical" href="https://hoscribe.netlify.app/excretion.html">
+    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="logo.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ——————————————————————————————
+           Reset & Base – مطابق للرئيسية
+           —————————————————————————————— */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #fafafa;
+            --surface: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #6e6e73;
+            --text-tertiary: #8e8e93;
+            --gold: #b8953a;
+            --border: #e5e5ea;
+            --radius: 16px;
+            --transition: 0.25s cubic-bezier(0.25, 0.1, 0.15, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+            padding: 2.8rem 1.8rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 640px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* ——————————————————————————————
+           Lang Switcher
+           —————————————————————————————— */
+        .lang-switcher {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.2rem;
+            margin-bottom: 2.4rem;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            padding: 0.2rem 0.9rem;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            border-radius: 30px;
+            transition: var(--transition);
+            letter-spacing: 0.03em;
+        }
+
+        .lang-btn:hover {
+            color: var(--text-primary);
+            background: var(--border);
+        }
+
+        .lang-btn.active {
+            color: var(--text-primary);
+            background: var(--surface);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+            font-weight: 600;
+        }
+
+        /* ——————————————————————————————
+           Hero
+           —————————————————————————————— */
+        .hero {
+            text-align: center;
+            padding: 1.6rem 0 2.4rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo-wrap {
+            display: inline-block;
+            margin-bottom: 1.4rem;
+        }
+
+        .logo-wrap img {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            background: #f0efe8;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+        }
+
+        .hero h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            color: var(--text-primary);
+            margin-bottom: 0.1rem;
+        }
+
+        .hero .sub {
+            font-size: 0.9rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            margin-top: 0.1rem;
+        }
+
+        .hero .sub .real {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .hero .tagline {
+            font-size: 0.85rem;
+            font-weight: 300;
+            color: var(--text-tertiary);
+            margin-top: 0.6rem;
+            max-width: 440px;
+            margin-left: auto;
+            margin-right: auto;
+            letter-spacing: 0.02em;
+        }
+
+        /* ——————————————————————————————
+           Cards – بدون أيقونات، أنيقة
+           —————————————————————————————— */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            padding: 2.4rem 0 2rem;
+            border-top: 1px solid var(--border);
+            margin-top: 0.2rem;
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 1.6rem 1.2rem;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+        }
+
+        .card h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .card p {
+            font-size: 0.8rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ——————————————————————————————
+           Contact Section - New Form Style
+           —————————————————————————————— */
+        .contact-section {
+            padding: 2.4rem 0 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .contact-section h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .contact-section .sub-text {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 300;
+            max-width: 420px;
+            margin: 0 auto 1.8rem;
+            line-height: 1.8;
+        }
+
+        /* Form Styles */
+        .contact-form {
+            text-align: right;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            text-align: right;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.2rem;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: var(--transition);
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--text-primary);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.03);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 2.2rem;
+            border-radius: 40px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-decoration: none;
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+            line-height: 1.4;
+            letter-spacing: 0.02em;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: var(--text-primary);
+            color: #fff;
+            border-color: var(--text-primary);
+            transform: scale(0.97);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn--primary {
+            background: var(--text-primary);
+            color: #fff;
+            border-color: var(--text-primary);
+        }
+
+        .btn--primary:hover {
+            background: #2a2a2a;
+            border-color: #2a2a2a;
+        }
+
+        .btn--ghost {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn--ghost:hover {
+            background: var(--text-primary);
+            color: #fff;
+            border-color: var(--text-primary);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 1.2rem;
+            color: var(--text-tertiary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 300;
+            transition: color 0.2s ease;
+            letter-spacing: 0.02em;
+        }
+
+        .back-link:hover {
+            color: var(--text-primary);
+        }
+
+        /* Success Message */
+        .form-success {
+            display: none;
+            padding: 1.2rem;
+            background: #f0f7f0;
+            border: 1px solid #b8d9b8;
+            border-radius: var(--radius);
+            color: #2a5e2a;
+            font-size: 0.95rem;
+            margin-top: 1.2rem;
+            text-align: center;
+        }
+
+        .form-success.visible {
+            display: block;
+        }
+
+        /* ——————————————————————————————
+           Footer
+           —————————————————————————————— */
+        .footer {
+            padding: 2.4rem 0 1.2rem;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            margin-top: 0.2rem;
+        }
+
+        .footer .signoff {
+            font-size: 0.85rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            margin-bottom: 0.2rem;
+        }
+
+        .footer .credit {
+            font-size: 0.65rem;
+            font-weight: 300;
+            color: var(--text-tertiary);
+            margin-top: 0.4rem;
+            letter-spacing: 0.02em;
+        }
+
+        /* ——————————————————————————————
+           Reveal
+           —————————————————————————————— */
+        .reveal {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ——————————————————————————————
+           Responsive
+           —————————————————————————————— */
+        @media (max-width: 640px) {
+            body {
+                padding: 1.6rem 1.2rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero .sub {
+                font-size: 0.8rem;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+                padding: 1.6rem 0;
+            }
+
+            .card {
+                padding: 1.2rem 1rem;
+            }
+
+            .contact-section h2 {
+                font-size: 1.2rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .btn {
+                padding: 0.5rem 1.6rem;
+                font-size: 0.8rem;
+            }
+
+            .logo-wrap img {
+                width: 64px;
+                height: 64px;
+            }
+
+            .lang-switcher {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+            .contact-section .sub-text {
+                font-size: 0.8rem;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 3px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Language Switcher -->
+        <div class="lang-switcher">
+            <button class="lang-btn" data-lang="ar" aria-label="العربية">عربي</button>
+            <button class="lang-btn" data-lang="en" aria-label="English">English</button>
+        </div>
+
+        <!-- Hero -->
+        <header class="hero reveal">
+            <div class="logo-wrap">
+                <img src="logo.png" alt="هوسكرايب" loading="eager" fetchpriority="high" onerror="this.style.background='#f0efe8'; this.alt='Hoscribe';" />
+            </div>
+            <h1 data-i18n="hero-title">الشكاوى والاقتراحات</h1>
+            <p class="sub"><span class="real" data-i18n="brand-owner">كريم محمد إسماعيل</span> <span style="color:var(--text-tertiary);">·</span> <span data-i18n="brand-sub">Hoscribe</span></p>
+            <p class="tagline" data-i18n="hero-tagline">نحن نستمع إليك — شاركنا رأيك لنساعد في تحسين المحتوى وتطويره باستمرار.</p>
+        </header>
+
+        <!-- Cards – أنواع الملاحظات -->
+        <div class="cards reveal">
+            <div class="card">
+                <h3 data-i18n="card1-title">شكوى فنية</h3>
+                <p data-i18n="card1-desc">مشكلة في جودة الصوت أو الصورة، أو عطل تقني في الفيديو — نعمل على حلها بأسرع وقت.</p>
+            </div>
+            <div class="card">
+                <h3 data-i18n="card2-title">اقتراح محتوى</h3>
+                <p data-i18n="card2-desc">موضوع جديد ترغب في مشاهدته، أو فكرة لتطوير السرد الوثائقي — نقدر كل فكرة مبدعة.</p>
+            </div>
+            <div class="card">
+                <h3 data-i18n="card3-title">رأي عام</h3>
+                <p data-i18n="card3-desc">انطباعك عن القناة، أو أسلوب الطرح، أو أي ملاحظة تراها مناسبة لتقديم تجربة أفضل.</p>
+            </div>
+        </div>
+
+        <!-- Contact Section with Form -->
+        <section class="contact-section reveal">
+            <h2 data-i18n="contact-title">أرسل ملاحظتك</h2>
+            <p class="sub-text" data-i18n="contact-desc">نرحب بكل رسالة تصلنا — سنقرأها بعناية ونسعى للرد خلال 48 ساعة.</p>
+
+            <!-- START: Contact Form -->
+            <!-- IMPORTANT: Replace YOUR_FORM_ID with your actual Formspree form ID -->
+            <form id="feedbackForm" class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fullName" data-i18n="form-name">الاسم الكامل</label>
+                        <input type="text" id="fullName" name="name" required placeholder="أحمد محمد" data-i18n-placeholder="form-name-placeholder">
+                    </div>
+                    <div class="form-group">
+                        <label for="email" data-i18n="form-email">البريد الإلكتروني</label>
+                        <input type="email" id="email" name="email" required placeholder="example@mail.com" data-i18n-placeholder="form-email-placeholder">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="subject" data-i18n="form-subject">نوع الرسالة</label>
+                    <input type="text" id="subject" name="subject" required placeholder="شكوى فنية / اقتراح محتوى" data-i18n-placeholder="form-subject-placeholder">
+                </div>
+                <div class="form-group">
+                    <label for="message" data-i18n="form-message">الرسالة</label>
+                    <textarea id="message" name="message" required placeholder="اكتب تفاصيل ملاحظتك هنا..." data-i18n-placeholder="form-message-placeholder"></textarea>
+                </div>
+                <button type="submit" class="btn btn--primary" data-i18n="form-submit">إرسال الملاحظة</button>
+            </form>
+
+            <div id="formSuccess" class="form-success" data-i18n="form-success-msg">
+                ✓ تم استلام رسالتك بنجاح! نشكرك على تواصلك.
+            </div>
+            <!-- END: Contact Form -->
+
+            <br>
+            <a href="/" class="back-link" data-i18n="back-link">العودة إلى الرئيسية</a>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer reveal">
+            <p class="signoff" data-i18n="footer-signoff">— صوتك هو دليلنا للتطوير —</p>
+            <p class="credit" data-i18n="footer-credit">© 2026 هوسكرايب · Hoscribe — كريم محمد إسماعيل</p>
+        </footer>
+
+    </div>
+
+    <!-- ==========================================================
+    Script – i18n + reveal + Form Handler
+    ========================================================== -->
+    <script>
+        (function() {
+            'use strict';
+
+            const translations = {
+                ar: {
+                    'title': 'الشكاوى والاقتراحات | هوسكرايب',
+                    'meta-description': 'أرسل شكواك أو اقتراحك لتحسين محتوى هوسكرايب — نرحب بملاحظاتك.',
+                    'hero-title': 'الشكاوى والاقتراحات',
+                    'brand-owner': 'كريم محمد إسماعيل',
+                    'brand-sub': 'Hoscribe',
+                    'hero-tagline': 'نحن نستمع إليك — شاركنا رأيك لنساعد في تحسين المحتوى وتطويره باستمرار.',
+                    'card1-title': 'شكوى فنية',
+                    'card1-desc': 'مشكلة في جودة الصوت أو الصورة، أو عطل تقني في الفيديو — نعمل على حلها بأسرع وقت.',
+                    'card2-title': 'اقتراح محتوى',
+                    'card2-desc': 'موضوع جديد ترغب في مشاهدته، أو فكرة لتطوير السرد الوثائقي — نقدر كل فكرة مبدعة.',
+                    'card3-title': 'رأي عام',
+                    'card3-desc': 'انطباعك عن القناة، أو أسلوب الطرح، أو أي ملاحظة تراها مناسبة لتقديم تجربة أفضل.',
+                    'contact-title': 'أرسل ملاحظتك',
+                    'contact-desc': 'نرحب بكل رسالة تصلنا — سنقرأها بعناية ونسعى للرد خلال 48 ساعة.',
+                    'form-name': 'الاسم الكامل',
+                    'form-name-placeholder': 'أحمد محمد',
+                    'form-email': 'البريد الإلكتروني',
+                    'form-email-placeholder': 'example@mail.com',
+                    'form-subject': 'نوع الرسالة',
+                    'form-subject-placeholder': 'شكوى فنية / اقتراح محتوى',
+                    'form-message': 'الرسالة',
+                    'form-message-placeholder': 'اكتب تفاصيل ملاحظتك هنا...',
+                    'form-submit': 'إرسال الملاحظة',
+                    'form-success-msg': '✓ تم استلام رسالتك بنجاح! نشكرك على تواصلك.',
+                    'back-link': 'العودة إلى الرئيسية',
+                    'footer-signoff': '— صوتك هو دليلنا للتطوير —',
+                    'footer-credit': '© 2026 هوسكرايب · Hoscribe — كريم محمد إسماعيل',
+                },
+                en: {
+                    'title': 'Feedback & Suggestions | Hoscribe',
+                    'meta-description': 'Send your complaint or suggestion to improve Hoscribe content — we welcome your feedback.',
+                    'hero-title': 'Feedback & Suggestions',
+                    'brand-owner': 'Karim Mohamed Ismail',
+                    'brand-sub': 'Hoscribe',
+                    'hero-tagline': 'We listen to you — share your opinion to help us continuously improve and develop the content.',
+                    'card1-title': 'Technical Complaint',
+                    'card1-desc': 'Issue with audio or video quality, or a technical glitch in the video — we work to resolve it as quickly as possible.',
+                    'card2-title': 'Content Suggestion',
+                    'card2-desc': 'A new topic you would like to see, or an idea to develop the documentary narrative — we appreciate every creative idea.',
+                    'card3-title': 'General Opinion',
+                    'card3-desc': 'Your impression of the channel, the presentation style, or any other feedback you find relevant to provide a better experience.',
+                    'contact-title': 'Send Your Feedback',
+                    'contact-desc': 'We welcome every message we receive — we will read it carefully and aim to respond within 48 hours.',
+                    'form-name': 'Full Name',
+                    'form-name-placeholder': 'Ahmed Mohamed',
+                    'form-email': 'Email Address',
+                    'form-email-placeholder': 'example@mail.com',
+                    'form-subject': 'Message Type',
+                    'form-subject-placeholder': 'Technical complaint / Content suggestion',
+                    'form-message': 'Message',
+                    'form-message-placeholder': 'Write your feedback details here...',
+                    'form-submit': 'Send Feedback',
+                    'form-success-msg': '✓ Your message has been received successfully! Thank you for contacting us.',
+                    'back-link': 'Back to home',
+                    'footer-signoff': '— Your voice is our guide to improvement —',
+                    'footer-credit': '© 2026 Hoscribe · هوسكرايب — Karim Mohamed Ismail',
+                }
+            };
+
+            const i18nElements = document.querySelectorAll('[data-i18n]');
+            const metaDescription = document.querySelector('meta[name="description"]');
+            const htmlEl = document.documentElement;
+            const langBtns = document.querySelectorAll('.lang-btn');
+            const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
+
+            function setLanguage(lang) {
+                const dict = translations[lang];
+                if (!dict) return;
+
+                i18nElements.forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (dict[key] !== undefined) {
+                        el.innerHTML = dict[key];
+                    }
+                });
+
+                placeholderElements.forEach(el => {
+                    const key = el.getAttribute('data-i18n-placeholder');
+                    if (dict[key] !== undefined) {
+                        el.setAttribute('placeholder', dict[key]);
+                    }
+                });
+
+                if (metaDescription && dict['meta-description'] !== undefined) {
+                    metaDescription.setAttribute('content', dict['meta-description']);
+                }
+
+                htmlEl.setAttribute('lang', lang);
+                htmlEl.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+
+                langBtns.forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+                });
+
+                localStorage.setItem('hoscribe-lang', lang);
+            }
+
+            function getPreferredLanguage() {
+                const stored = localStorage.getItem('hoscribe-lang');
+                if (stored === 'ar' || stored === 'en') return stored;
+                const browserLang = navigator.language || navigator.languages?.[0] || '';
+                if (browserLang.startsWith('ar')) return 'ar';
+                if (browserLang.startsWith('en')) return 'en';
+                return 'ar';
+            }
+
+            langBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+                    if (lang) setLanguage(lang);
+                });
+            });
+
+            const initialLang = getPreferredLanguage();
+            setLanguage(initialLang);
+
+            // Reveal on scroll
+            const revealEls = document.querySelectorAll('.reveal');
+            if (revealEls.length) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.12, rootMargin: '0px 0px -20px 0px' });
+                revealEls.forEach(el => observer.observe(el));
+            }
+
+            // Form handler
+            const form = document.getElementById('feedbackForm');
+            const successDiv = document.getElementById('formSuccess');
+
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(form);
+
+                    fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            form.reset();
+                            successDiv.classList.add('visible');
+                            setTimeout(() => {
+                                successDiv.classList.remove('visible');
+                            }, 6000);
+                        } else {
+                            alert('حدث خطأ. يرجى المحاولة مرة أخرى.');
+                        }
+                    }).catch(error => {
+                        alert('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.');
+                    });
+                });
+            }
+
+        })();
+    </script>
+
+</body>
+</html>
