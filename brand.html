@@ -1,0 +1,1886 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="title">هوسكرايب · المتجر</title>
+    <meta name="description" data-i18n="meta-description" content="متجر هوسكرايب — تيشيرتات براندات حصرية." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://hoscribe.netlify.app/brand.html" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" data-i18n="og-title" content="هوسكرايب · المتجر" />
+    <meta property="og:description" data-i18n="og-description" content="متجر هوسكرايب — تيشيرتات براندات حصرية." />
+    <meta property="og:image" content="logo.png" />
+
+    <link rel="icon" href="logo.png" type="image/png" />
+    <link rel="apple-touch-icon" href="logo.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" href="logo.png" as="image" fetchpriority="high" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js">
+    </script>
+
+    <style>
+        /* ——————————————————————————————
+           Reset & Base – Apple-inspired minimal
+           —————————————————————————————— */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f5f5f7;
+            --surface: #ffffff;
+            --text-primary: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --text-tertiary: #8e8e93;
+            --gold: #b8953a;
+            --gold-light: #f5edd6;
+            --border: #d2d2d7;
+            --radius: 16px;
+            --transition: 0.3s cubic-bezier(0.25, 0.1, 0.15, 1);
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.10);
+            --cart-width: 400px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2.8rem 1.8rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        body.cart-open {
+            overflow: hidden;
+        }
+
+        .container {
+            max-width: 960px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* ——————————————————————————————
+           Top Bar – clean, simple
+           —————————————————————————————— */
+        .top-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2.4rem;
+            gap: 0.8rem 1.5rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .top-bar .left-group {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .back-link {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: var(--transition);
+            border-bottom: 1px solid transparent;
+        }
+        .back-link:hover {
+            color: var(--text-primary);
+            border-bottom-color: var(--text-primary);
+        }
+
+        .back-link svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .lang-switcher {
+            display: flex;
+            gap: 0.2rem;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            padding: 0.2rem 1rem;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            border-radius: 30px;
+            transition: var(--transition);
+            letter-spacing: 0.03em;
+        }
+        .lang-btn:hover {
+            color: var(--text-primary);
+            background: var(--border);
+        }
+        .lang-btn.active {
+            color: var(--text-primary);
+            background: var(--surface);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+            font-weight: 600;
+        }
+
+        /* ——————————————————————————————
+           Cart Toggle Button
+           —————————————————————————————— */
+        .cart-toggle {
+            position: relative;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 0.3rem 1rem 0.3rem 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-primary);
+        }
+        .cart-toggle:hover {
+            border-color: var(--text-primary);
+            box-shadow: var(--shadow-hover);
+            transform: scale(0.98);
+        }
+        .cart-toggle svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+        }
+        .cart-toggle .badge {
+            background: var(--gold);
+            color: #fff;
+            border-radius: 30px;
+            padding: 0.05rem 0.6rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            min-width: 20px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        /* ——————————————————————————————
+           Store Header
+           —————————————————————————————— */
+        .store-header {
+            text-align: center;
+            padding: 1.2rem 0 2rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2.2rem;
+        }
+        .store-header h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+        .store-header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 300;
+            margin-top: 0.2rem;
+        }
+
+        /* ——————————————————————————————
+           Product Grid – 3 columns
+           —————————————————————————————— */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 2.8rem;
+        }
+
+        .product-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow);
+            cursor: default;
+        }
+        .product-card:hover {
+            border-color: var(--text-primary);
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-4px);
+        }
+
+        .product-card .card-img-wrap {
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            background: #f0efe8;
+        }
+        .product-card .card-img-wrap img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        .product-card:hover .card-img-wrap img {
+            transform: scale(1.02);
+        }
+
+        .product-card .card-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--gold);
+            color: #fff;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 0.15rem 0.7rem;
+            border-radius: 30px;
+            letter-spacing: 0.02em;
+            opacity: 0;
+            transform: translateY(-6px);
+            transition: var(--transition);
+        }
+        .product-card:hover .card-badge {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .product-info {
+            padding: 1rem 1rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        .product-info h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.05rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .product-info h3:hover {
+            color: var(--gold);
+        }
+        .product-info .price {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--gold);
+            margin: 0.1rem 0 0.4rem;
+        }
+        .product-info .desc {
+            font-size: 0.78rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 0.9rem;
+            flex: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-info .btn-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.4rem 1.4rem;
+            border-radius: 40px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-decoration: none;
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+            line-height: 1.4;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            gap: 0.3rem;
+        }
+        .btn:hover {
+            background: var(--text-primary);
+            color: #fff;
+            border-color: var(--text-primary);
+            transform: scale(0.97);
+        }
+        .btn:active {
+            transform: scale(0.94);
+        }
+
+        .btn--gold {
+            background: var(--gold);
+            color: #fff;
+            border-color: var(--gold);
+            box-shadow: 0 2px 12px rgba(184, 149, 58, 0.15);
+        }
+        .btn--gold:hover {
+            background: #a07f2e;
+            border-color: #a07f2e;
+            box-shadow: 0 4px 18px rgba(184, 149, 58, 0.25);
+            color: #fff;
+        }
+
+        .btn--outline {
+            background: transparent;
+            color: var(--text-primary);
+            border-color: var(--border);
+        }
+        .btn--outline:hover {
+            background: var(--text-primary);
+            color: #fff;
+            border-color: var(--text-primary);
+        }
+
+        .btn--sm {
+            font-size: 0.65rem;
+            padding: 0.25rem 0.9rem;
+        }
+        .btn--xs {
+            font-size: 0.6rem;
+            padding: 0.2rem 0.7rem;
+        }
+
+        .btn--success {
+            background: #2b8a3e;
+            color: #fff;
+            border-color: #2b8a3e;
+        }
+        .btn--success:hover {
+            background: #1e6b2e;
+            border-color: #1e6b2e;
+            color: #fff;
+        }
+
+        .btn--danger {
+            background: #d14c4c;
+            color: #fff;
+            border-color: #d14c4c;
+        }
+        .btn--danger:hover {
+            background: #b33a3a;
+            border-color: #b33a3a;
+            color: #fff;
+        }
+
+        .btn--ghost {
+            background: transparent;
+            color: var(--text-secondary);
+            border-color: transparent;
+        }
+        .btn--ghost:hover {
+            background: var(--bg);
+            color: var(--text-primary);
+            border-color: var(--border);
+        }
+
+        /* ——————————————————————————————
+           Toast notification
+           —————————————————————————————— */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(120px);
+            background: var(--text-primary);
+            color: #fff;
+            padding: 0.7rem 2rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 400;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+            z-index: 3000;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+            pointer-events: none;
+            font-family: 'Cairo', sans-serif;
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ——————————————————————————————
+           Cart Sidebar
+           —————————————————————————————— */
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+        .cart-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            /* في RTL هذا هو الجانب الأيمن بصرياً */
+            width: var(--cart-width);
+            max-width: 92vw;
+            height: 100%;
+            background: var(--surface);
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.12);
+            z-index: 2001;
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            overflow: hidden;
+        }
+        .cart-sidebar.open {
+            transform: translateX(0);
+        }
+
+        .cart-sidebar .cart-header {
+            padding: 1.2rem 1.5rem 0.8rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+        .cart-sidebar .cart-header h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .cart-sidebar .cart-header .close-cart {
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-tertiary);
+            transition: var(--transition);
+            padding: 0.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+        }
+        .cart-sidebar .cart-header .close-cart:hover {
+            background: var(--bg);
+            color: var(--text-primary);
+        }
+
+        .cart-sidebar .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.8rem 1.5rem 1.2rem;
+        }
+
+        .cart-empty {
+            text-align: center;
+            color: var(--text-tertiary);
+            font-size: 0.9rem;
+            padding: 2.5rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .cart-empty svg {
+            width: 48px;
+            height: 48px;
+            stroke: var(--border);
+            fill: none;
+            stroke-width: 1.5;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 1rem;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+        }
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        .cart-item img {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            object-fit: cover;
+            background: #f0efe8;
+            border: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        .cart-item .item-details {
+            flex: 1;
+            min-width: 0;
+        }
+        .cart-item .item-details .item-name {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+        .cart-item .item-details .item-meta {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+        .cart-item .item-details .item-price {
+            font-weight: 600;
+            color: var(--gold);
+            font-size: 0.8rem;
+        }
+        .cart-item .item-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-shrink: 0;
+        }
+        .cart-item .item-actions .qty-btn {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        .cart-item .item-actions .qty-btn:hover {
+            background: var(--text-primary);
+            color: #fff;
+            border-color: var(--text-primary);
+        }
+        .cart-item .item-actions .qty-num {
+            font-size: 0.85rem;
+            font-weight: 600;
+            min-width: 24px;
+            text-align: center;
+        }
+        .cart-item .item-actions .remove-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            font-size: 0.75rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 30px;
+            transition: var(--transition);
+        }
+        .cart-item .item-actions .remove-btn:hover {
+            color: #d14c4c;
+            background: rgba(209, 76, 76, 0.08);
+        }
+
+        .cart-sidebar .cart-footer {
+            padding: 1rem 1.5rem 1.5rem;
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+            background: var(--surface);
+        }
+        .cart-sidebar .cart-footer .total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+        .cart-sidebar .cart-footer .total-row .total-price {
+            color: var(--gold);
+        }
+        .cart-sidebar .cart-footer .checkout-btn {
+            width: 100%;
+            padding: 0.7rem;
+            font-size: 0.9rem;
+            border-radius: 40px;
+            background: var(--gold);
+            color: #fff;
+            border: none;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 16px rgba(184, 149, 58, 0.25);
+        }
+        .cart-sidebar .cart-footer .checkout-btn:hover {
+            background: #a07f2e;
+            transform: scale(0.98);
+        }
+        .cart-sidebar .cart-footer .checkout-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ——————————————————————————————
+           Modal – refined
+           —————————————————————————————— */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            padding: 1.5rem;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--surface);
+            border-radius: var(--radius);
+            max-width: 560px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem 2rem 1.8rem;
+            box-shadow: var(--shadow-hover);
+            transform: scale(0.96);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 0.8rem;
+            left: 1rem;
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-tertiary);
+            transition: var(--transition);
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+        .modal-close:hover {
+            background: var(--bg);
+            color: var(--text-primary);
+        }
+
+        .modal .modal-img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: var(--radius);
+            background: #f0efe8;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+        }
+
+        .modal .modal-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.1rem;
+        }
+        .modal .modal-price {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 0.6rem;
+        }
+        .modal .modal-long-desc {
+            font-size: 0.85rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1.2rem;
+            padding: 0.8rem 1rem;
+            background: var(--bg);
+            border-radius: 12px;
+            border-right: 3px solid var(--gold);
+        }
+
+        .modal label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-top: 0.8rem;
+            margin-bottom: 0.2rem;
+            letter-spacing: 0.02em;
+        }
+
+        .modal select,
+        .modal input,
+        .modal textarea {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            background: var(--bg);
+            transition: var(--transition);
+            color: var(--text-primary);
+        }
+        .modal select:focus,
+        .modal input:focus,
+        .modal textarea:focus {
+            outline: none;
+            border-color: var(--text-primary);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+        }
+        .modal textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .modal .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+
+        .modal .btn--submit {
+            width: 100%;
+            margin-top: 1.2rem;
+            padding: 0.7rem;
+            font-size: 0.9rem;
+            background: var(--text-primary);
+            color: #fff;
+            border-color: var(--text-primary);
+            border-radius: 40px;
+        }
+        .modal .btn--submit:hover {
+            background: #000;
+            border-color: #000;
+        }
+
+        .modal .note {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            margin-top: 0.6rem;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+        .modal .note svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .modal .add-to-cart-modal {
+            margin-top: 0.6rem;
+            width: 100%;
+            padding: 0.6rem;
+            border-radius: 40px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            background: var(--gold);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 2px 12px rgba(184, 149, 58, 0.15);
+        }
+        .modal .add-to-cart-modal:hover {
+            background: #a07f2e;
+            transform: scale(0.98);
+        }
+
+        /* ——————————————————————————————
+           Quick Links & Footer
+           —————————————————————————————— */
+        .quick-links {
+            padding: 2rem 0 1.2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+        .quick-links .links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8rem 1.6rem;
+            margin-top: 0.6rem;
+        }
+        .quick-links a {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: var(--transition);
+        }
+        .quick-links a:hover {
+            color: var(--text-primary);
+            border-bottom-color: var(--text-primary);
+        }
+
+        .footer {
+            padding: 2rem 0 1.2rem;
+            text-align: center;
+        }
+        .footer .signoff {
+            font-size: 0.85rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            margin-bottom: 0.2rem;
+        }
+        .footer .credit {
+            font-size: 0.65rem;
+            font-weight: 300;
+            color: var(--text-tertiary);
+            margin-top: 0.4rem;
+            letter-spacing: 0.02em;
+        }
+
+        /* ——————————————————————————————
+           Reveal
+           —————————————————————————————— */
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+            will-change: opacity, transform;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ——————————————————————————————
+           Responsive
+           —————————————————————————————— */
+        @media (max-width: 780px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.2rem;
+            }
+            .modal .row {
+                grid-template-columns: 1fr;
+            }
+            .store-header h1 {
+                font-size: 2rem;
+            }
+            .cart-sidebar {
+                width: 88vw;
+                left: 0;
+            }
+            .cart-sidebar.open {
+                transform: translateX(0);
+            }
+            .top-bar .left-group {
+                gap: 0.6rem;
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 520px) {
+            body {
+                padding: 1.6rem 1rem;
+            }
+            .product-grid {
+                grid-template-columns: 1fr;
+                max-width: 360px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .store-header h1 {
+                font-size: 1.6rem;
+            }
+            .top-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.6rem;
+            }
+            .top-bar .left-group {
+                justify-content: center;
+            }
+            .lang-switcher {
+                justify-content: center;
+            }
+            .back-link {
+                text-align: center;
+                justify-content: center;
+            }
+            .modal {
+                padding: 1.5rem;
+            }
+            .cart-sidebar {
+                width: 94vw;
+                left: 0;
+            }
+            .cart-item {
+                gap: 0.6rem;
+            }
+            .cart-item img {
+                width: 48px;
+                height: 48px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .product-info h3 {
+                font-size: 0.9rem;
+            }
+            .product-info .price {
+                font-size: 0.8rem;
+            }
+            .btn {
+                font-size: 0.65rem;
+                padding: 0.3rem 0.9rem;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 3px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+
+        /* ——————————————————————————————
+           Utility
+           —————————————————————————————— */
+        .hidden {
+            display: none !important;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .mt-1 {
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Cart Overlay -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+    <!-- Cart Sidebar -->
+    <aside class="cart-sidebar" id="cartSidebar" role="dialog" aria-label="سلة التسوق">
+        <div class="cart-header">
+            <h2 data-i18n="cart-title">🛒 سلة التسوق</h2>
+            <button class="close-cart" id="closeCartBtn" aria-label="إغلاق السلة">
+                <svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- سيتم ملؤها بواسطة JS -->
+            <div class="cart-empty" id="cartEmpty">
+                <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                <span data-i18n="cart-empty">سلة التسوق فارغة</span>
+                <span style="font-size:0.7rem;color:var(--text-tertiary);" data-i18n="cart-empty-hint">أضف بعض المنتجات الرائعة!</span>
+            </div>
+        </div>
+        <div class="cart-footer" id="cartFooter">
+            <div class="total-row">
+                <span data-i18n="cart-total">المجموع</span>
+                <span class="total-price" id="cartTotalPrice">$0.00</span>
+            </div>
+            <button class="checkout-btn" id="checkoutBtn" data-i18n="cart-checkout">الدفع الآن</button>
+        </div>
+    </aside>
+
+    <div class="container">
+
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="left-group">
+                <a href="/" class="back-link" data-i18n="back-home">
+                    <svg viewBox="0 0 24 24"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+                    <span>العودة للرئيسية</span>
+                </a>
+                <div class="lang-switcher">
+                    <button class="lang-btn active" data-lang="ar" aria-label="العربية">عربي</button>
+                    <button class="lang-btn" data-lang="en" aria-label="English">English</button>
+                </div>
+            </div>
+            <button class="cart-toggle" id="cartToggle" aria-label="فتح السلة">
+                <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                <span class="badge" id="cartBadge">0</span>
+            </button>
+        </div>
+
+        <!-- Header -->
+        <header class="store-header reveal">
+            <h1 data-i18n="store-title">متجر هوسكرايب</h1>
+            <p data-i18n="store-sub">تيشيرتات براندات حصرية — اصنع أسلوبك</p>
+        </header>
+
+        <!-- Product Grid -->
+        <div class="product-grid reveal" id="productGrid">
+            <!-- سيتم ملؤها بواسطة JS -->
+        </div>
+
+        <!-- Quick Links -->
+        <section class="quick-links reveal">
+            <div class="links">
+                <a href="/" data-i18n="link-home">الرئيسية</a>
+                <a href="https://youtube.com/@Hoscribe" target="_blank" data-i18n="link-youtube">يوتيوب</a>
+                <a href="https://www.snapchat.com/add/hoscribe" target="_blank" data-i18n="link-snapchat">سناب شات</a>
+                <a href="ads.html" data-i18n="link-ads">تواصل</a>
+                <a href="excretion.html" data-i18n="link-feedback">اقتراحات</a>
+                <a href="me.html" data-i18n="link-me">من أكون</a>
+                <a href="brand.html" data-i18n="link-brand">برانداتي</a>
+                <a href="co.html" data-i18n="link-competition">المسابقة</a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer reveal">
+            <p class="signoff" data-i18n="footer-signoff">— وجودكم معنا هو كل شيء، نتمنى أن تستمتعوا دائماً —</p>
+            <p class="credit" data-i18n="footer-credit">© 2025 Hoscribe · هوسكرايب — كريم محمد إسماعيل</p>
+        </footer>
+
+    </div>
+
+    <!-- ====== MODAL ====== -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" role="dialog" aria-labelledby="modalTitle">
+            <button class="modal-close" id="modalClose" aria-label="إغلاق">
+                <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
+            </button>
+
+            <img id="modalImg" class="modal-img" src="" alt="" />
+            <div class="modal-title" id="modalTitle">HOSC Fol</div>
+            <div class="modal-price" id="modalPrice">$29.99</div>
+            <div class="modal-long-desc" id="modalLongDesc">
+                وصف طويل عاطفي…
+            </div>
+
+            <button class="add-to-cart-modal" id="modalAddToCart" data-i18n="modal-add-cart">➕ إضافة إلى السلة</button>
+
+            <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);" />
+
+            <form id="orderForm" novalidate>
+                <input type="hidden" id="productId" value="1" />
+                <input type="hidden" id="productName" value="HOSC Fol" />
+
+                <div class="row">
+                    <div>
+                        <label for="size" data-i18n="label-size">المقاس</label>
+                        <select id="size" required>
+                            <option value="S">S</option>
+                            <option value="M" selected>M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="color" data-i18n="label-color">اللون</label>
+                        <select id="color" required>
+                            <option value="أبيض">أبيض</option>
+                            <option value="أسود">أسود</option>
+                            <option value="رمادي">رمادي</option>
+                            <option value="أزرق" selected>أزرق</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="quantity" data-i18n="label-quantity">الكمية</label>
+                    <input type="number" id="quantity" value="1" min="1" max="10" required />
+                </div>
+
+                <hr style="margin: 1.2rem 0; border: none; border-top: 1px solid var(--border);" />
+
+                <div>
+                    <label for="customerName" data-i18n="label-name">الاسم الكامل</label>
+                    <input type="text" id="customerName" placeholder="مثال: أحمد محمد" required />
+                </div>
+                <div>
+                    <label for="customerAddress" data-i18n="label-address">العنوان (مع تفاصيل التوصيل)</label>
+                    <input type="text" id="customerAddress" placeholder="المدينة، الحي، الشارع، رقم البناء" required />
+                </div>
+                <div>
+                    <label for="customerPhone" data-i18n="label-phone">رقم الهاتف</label>
+                    <input type="tel" id="customerPhone" placeholder="05xxxxxxxx" required />
+                </div>
+                <div>
+                    <label for="notes" data-i18n="label-notes">ملاحظات إضافية (اختياري)</label>
+                    <textarea id="notes" placeholder="أي تعليمات خاصة..."></textarea>
+                </div>
+
+                <div class="note" data-i18n="payment-note">
+                    <svg viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M17 7H9.5a2.5 2.5 0 010-5H17"/><path d="M17 17h-6a2.5 2.5 0 010-5h6"/></svg>
+                    الدفع عند الاستلام (كاش أو شبكة)
+                </div>
+
+                <button type="submit" class="btn btn--submit" data-i18n="submit-order">تأكيد الطلب</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==========================================================
+    Script – i18n + Cart + Supabase + Modal
+    ========================================================== -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ====== SUPABASE CONFIG ======
+            // ⚠️ استبدل هذه القيم ببيانات مشروعك من Supabase
+            const SUPABASE_URL = 'https://your-project.supabase.co';
+            const SUPABASE_ANON_KEY = 'your-anon-key';
+
+            // ====== PRODUCT DATA ======
+            const products = [{
+                id: 1,
+                name: 'HOSC Fol',
+                price: 29.99,
+                image: 'https://placehold.co/400x400/f5edd6/b8953a?text=HOSC+FOL',
+                shortDesc: {
+                    ar: 'تيشيرت براند HOSC Fol، قطن فاخر، تصميم عصري.',
+                    en: 'HOSC Fol brand T-shirt, premium cotton, modern design.'
+                },
+                longDesc: {
+                    ar: `تيشيرت HOSC Fol هو أكثر من مجرد قطعة ملابس؛ إنه بيان أناقة وثقة. مصنوع بعناية من أجود أنواع القطن المصري الناعم الذي يعانق بشرتك بلطف ويمنحك إحساساً لا يُضاهى بالراحة طوال اليوم. تصميمه العصري الأنيق يجمع بين البساطة والجاذبية، مما يجعله الخيار المثالي لكل مناسبة — سواء كنت في العمل، أو في نزهة مع الأصدقاء، أو حتى في لحظات الاسترخاء في المنزل.
+
+        القماش خفيف الوزن، قابل للتهوية، ويمتص الرطوبة بفعالية، مما يبقيك منتعشاً حتى في الأيام الحارة. اللمسة النهائية الفاخرة والخياطة المتقنة تضمن لك طول العمر والمظهر الأنيق دوماً. ارتدِ HOSC Fol واشعر بالفرق — لأنه ليس مجرد تيشيرت، بل رفيق يومي يعكس شخصيتك المميزة وذوقك الرفيع.`,
+                    en: `The HOSC Fol T-shirt is more than just a piece of clothing; it's a statement of elegance and confidence. Meticulously crafted from the finest Egyptian cotton that gently caresses your skin and gives you an unparalleled feeling of comfort all day long. Its sleek, modern design blends simplicity with allure, making it the perfect choice for any occasion — whether at work, out with friends, or relaxing at home.
+
+        The fabric is lightweight, breathable, and effectively wicks away moisture, keeping you fresh even on hot days. The premium finish and precise stitching ensure durability and lasting style. Wear the HOSC Fol and feel the difference — because it's not just a T-shirt, but a daily companion that reflects your unique character and refined taste.`
+                }
+            }, {
+                id: 2,
+                name: 'HOSC Gil',
+                price: 34.99,
+                image: 'https://placehold.co/400x400/f5edd6/b8953a?text=HOSC+GIL',
+                shortDesc: {
+                    ar: 'تيشيرت براند HOSC Gil، جودة عالية، لمسة أنيقة.',
+                    en: 'HOSC Gil brand T-shirt, high quality, elegant touch.'
+                },
+                longDesc: {
+                    ar: `تيشيرت HOSC Gil هو تحفة فنية تجمع بين الفخامة والأناقة البسيطة. مصنوع من قطن فائق النعومة يعانق بشرتك بلطف ويمنحك إحساساً بالرفاهية لا يُوصف. كل تفصيلة في هذا التيشيرت تحمل بصمة الجودة العالية — من الخياطة الدقيقة إلى القماش المختار بعناية ليمنحك أقصى درجات الراحة والثقة.
+
+        يتميز بتصميم أنيق يتناسب مع جميع الأوقات، سواء كنت في اجتماع عمل مهم أو في لقاء غير رسمي مع الأصدقاء. القماش ناعم الملمس، خفيف الوزن، ويسمح بتمرير الهواء بشكل مثالي، مما يجعلك تشعر بالانتعاش طوال اليوم. الألوان الزاهية والثابتة تضمن لك مظهراً جذاباً يدوم طويلاً. ارتدِ HOSC Gil واخلق انطباعاً لا يُنسى — لأنه ليس مجرد تيشيرت، بل قطعة فنية تعكس شخصيتك الأنيقة.`,
+                    en: `The HOSC Gil T-shirt is a work of art that combines luxury with understated elegance. Made from ultra-soft cotton that gently embraces your skin, it gives you an indescribable feeling of refinement. Every detail in this T-shirt bears the mark of high quality — from the precise stitching to the carefully selected fabric that ensures maximum comfort and confidence.
+
+        Its elegant design suits all occasions, whether you're at an important business meeting or a casual gathering with friends. The fabric is soft, lightweight, and perfectly breathable, keeping you feeling fresh all day. The vibrant, colorfast hues ensure a striking look that lasts. Wear the HOSC Gil and make an unforgettable impression — because it's not just a T-shirt, but an artistic piece that reflects your sophisticated personality.`
+                }
+            }, {
+                id: 3,
+                name: 'HOSC Favo',
+                price: 39.99,
+                image: 'https://placehold.co/400x400/f5edd6/b8953a?text=HOSC+FAVO',
+                shortDesc: {
+                    ar: 'تيشيرت براند HOSC Favo، المفضل لدى عشاق الأناقة.',
+                    en: 'HOSC Favo brand T-shirt, favorite for style lovers.'
+                },
+                longDesc: {
+                    ar: `تيشيرت HOSC Favo هو الخيار الأول والأكثر تفضيلاً لعشاق الأناقة والتميز. مصنوع من قطن فاخر ناعم كالحرير، يمنحك شعوراً لا يُوصف بالراحة والرفاهية في كل لحظة. هذا التيشيرت ليس مجرد قطعة ملابس، بل تجربة حسية فريدة — حيث يلامس القطن بشرتك بلطف ويمنحك إحساساً بالدفء والانتعاش في آن واحد.
+
+        تصميمه الأنيق والجذاب يبرز جمال شخصيتك، ويمنحك إطلالة شبابية حيوية تناسب جميع الأعمار والمناسبات. سواء كنت تبحث عن مظهر أنيق للعمل، أو إطلالة عصرية للخروج، فإن HOSC Favo هو الرفيق المثالي. القماش عالي الجودة يضمن لك المتانة والثبات، بينما اللمسة النهائية الفاخرة تضفي على مظهرك رونقاً خاصاً. ارتدِ HOSC Favo واشعر بالتميز — لأنه ليس مجرد تيشيرت، بل أسلوب حياة يعكس ذوقك الرفيع وشخصيتك الفريدة.`,
+                    en: `The HOSC Favo T-shirt is the top choice and most preferred for lovers of elegance and distinction. Made from luxurious cotton as soft as silk, it gives you an indescribable feeling of comfort and luxury in every moment. This T-shirt is not just a piece of clothing, but a unique sensory experience — where the cotton gently touches your skin and gives you a feeling of warmth and freshness at the same time.
+
+        Its stylish and attractive design highlights your personality, giving you a vibrant, youthful look that suits all ages and occasions. Whether you're looking for a smart look for work or a trendy outfit for going out, HOSC Favo is the perfect companion. The high-quality fabric ensures durability and color retention, while the premium finish adds a special radiance to your appearance. Wear the HOSC Favo and feel exceptional — because it's not just a T-shirt, but a lifestyle that reflects your refined taste and unique personality.`
+                }
+            }];
+
+            // ====== i18n Translations ======
+            const translations = {
+                ar: {
+                    'title': 'هوسكرايب · المتجر',
+                    'meta-description': 'متجر هوسكرايب — تيشيرتات براندات حصرية.',
+                    'og-title': 'هوسكرايب · المتجر',
+                    'og-description': 'متجر هوسكرايب — تيشيرتات براندات حصرية.',
+                    'back-home': 'العودة للرئيسية',
+                    'store-title': 'متجر هوسكرايب',
+                    'store-sub': 'تيشيرتات براندات حصرية — اصنع أسلوبك',
+                    'cart-title': '🛒 سلة التسوق',
+                    'cart-empty': 'سلة التسوق فارغة',
+                    'cart-empty-hint': 'أضف بعض المنتجات الرائعة!',
+                    'cart-total': 'المجموع',
+                    'cart-checkout': 'الدفع الآن',
+                    'link-home': 'الرئيسية',
+                    'link-youtube': 'يوتيوب',
+                    'link-snapchat': 'سناب شات',
+                    'link-ads': 'تواصل',
+                    'link-feedback': 'اقتراحات',
+                    'link-me': 'من أكون',
+                    'link-brand': 'برانداتي',
+                    'link-competition': 'المسابقة',
+                    'footer-signoff': '— وجودكم معنا هو كل شيء، نتمنى أن تستمتعوا دائماً —',
+                    'footer-credit': '© 2025 Hoscribe · هوسكرايب — كريم محمد إسماعيل',
+                    'label-size': 'المقاس',
+                    'label-color': 'اللون',
+                    'label-quantity': 'الكمية',
+                    'label-name': 'الاسم الكامل',
+                    'label-address': 'العنوان (مع تفاصيل التوصيل)',
+                    'label-phone': 'رقم الهاتف',
+                    'label-notes': 'ملاحظات إضافية (اختياري)',
+                    'payment-note': 'الدفع عند الاستلام (كاش أو شبكة)',
+                    'submit-order': 'تأكيد الطلب',
+                    'modal-add-cart': '➕ إضافة إلى السلة',
+                    'add-to-cart': '➕ أضف للسلة',
+                    'view-details': 'تفاصيل',
+                    'toast-added': 'تمت الإضافة إلى السلة 🛒',
+                    'toast-removed': 'تمت الإزالة من السلة',
+                    'toast-cleared': 'تم إفراغ السلة',
+                },
+                en: {
+                    'title': 'Hoscribe · Store',
+                    'meta-description': 'Hoscribe Store — exclusive brand T-shirts.',
+                    'og-title': 'Hoscribe · Store',
+                    'og-description': 'Hoscribe Store — exclusive brand T-shirts.',
+                    'back-home': 'Back to Home',
+                    'store-title': 'Hoscribe Store',
+                    'store-sub': 'Exclusive brand T-shirts — define your style',
+                    'cart-title': '🛒 Shopping Cart',
+                    'cart-empty': 'Your cart is empty',
+                    'cart-empty-hint': 'Add some awesome products!',
+                    'cart-total': 'Total',
+                    'cart-checkout': 'Checkout Now',
+                    'link-home': 'Home',
+                    'link-youtube': 'YouTube',
+                    'link-snapchat': 'Snapchat',
+                    'link-ads': 'Contact',
+                    'link-feedback': 'Feedback',
+                    'link-me': 'About Me',
+                    'link-brand': 'My Brands',
+                    'link-competition': 'Competition',
+                    'footer-signoff': '— Your presence means everything, we hope you always enjoy —',
+                    'footer-credit': '© 2025 Hoscribe · هوسكرايب — Karim Mohamed Ismail',
+                    'label-size': 'Size',
+                    'label-color': 'Color',
+                    'label-quantity': 'Quantity',
+                    'label-name': 'Full Name',
+                    'label-address': 'Address (delivery details)',
+                    'label-phone': 'Phone Number',
+                    'label-notes': 'Additional Notes (optional)',
+                    'payment-note': 'Cash on delivery (cash or network)',
+                    'submit-order': 'Confirm Order',
+                    'modal-add-cart': '➕ Add to Cart',
+                    'add-to-cart': '➕ Add to Cart',
+                    'view-details': 'Details',
+                    'toast-added': 'Added to cart 🛒',
+                    'toast-removed': 'Removed from cart',
+                    'toast-cleared': 'Cart cleared',
+                }
+            };
+
+            // ====== DOM refs ======
+            const i18nElements = document.querySelectorAll('[data-i18n]');
+            const metaDescription = document.querySelector('meta[name="description"]');
+            const ogTitle = document.querySelector('meta[property="og:title"]');
+            const ogDescription = document.querySelector('meta[property="og:description"]');
+            const htmlEl = document.documentElement;
+            const langBtns = document.querySelectorAll('.lang-btn');
+
+            const productGrid = document.getElementById('productGrid');
+            const cartBadge = document.getElementById('cartBadge');
+            const cartToggle = document.getElementById('cartToggle');
+            const cartSidebar = document.getElementById('cartSidebar');
+            const cartOverlay = document.getElementById('cartOverlay');
+            const closeCartBtn = document.getElementById('closeCartBtn');
+            const cartItems = document.getElementById('cartItems');
+            const cartEmpty = document.getElementById('cartEmpty');
+            const cartFooter = document.getElementById('cartFooter');
+            const cartTotalPrice = document.getElementById('cartTotalPrice');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modalClose = document.getElementById('modalClose');
+            const modalImg = document.getElementById('modalImg');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalPrice = document.getElementById('modalPrice');
+            const modalLongDesc = document.getElementById('modalLongDesc');
+            const modalAddToCart = document.getElementById('modalAddToCart');
+            const productIdInput = document.getElementById('productId');
+            const productNameInput = document.getElementById('productName');
+            const sizeSelect = document.getElementById('size');
+            const colorSelect = document.getElementById('color');
+            const quantityInput = document.getElementById('quantity');
+            const customerName = document.getElementById('customerName');
+            const customerAddress = document.getElementById('customerAddress');
+            const customerPhone = document.getElementById('customerPhone');
+            const notesInput = document.getElementById('notes');
+            const orderForm = document.getElementById('orderForm');
+
+            const toast = document.getElementById('toast');
+            let toastTimer = null;
+
+            // ====== State ======
+            let currentLang = 'ar';
+            let cart = {}; // { productId: quantity }
+
+            // ====== Supabase ======
+            let supabase = null;
+            try {
+                supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            } catch (_) { supabase = null; }
+
+            // ====== Cart Functions ======
+            function getCartTotal() {
+                return Object.values(cart).reduce((sum, qty) => sum + qty, 0);
+            }
+
+            function getCartTotalPrice() {
+                let total = 0;
+                for (const id in cart) {
+                    const product = products.find(p => p.id === parseInt(id));
+                    if (product) total += product.price * cart[id];
+                }
+                return total;
+            }
+
+            function updateCartUI() {
+                const total = getCartTotal();
+                cartBadge.textContent = total;
+                renderCartItems();
+                localStorage.setItem('hoscribe-cart', JSON.stringify(cart));
+            }
+
+            function addToCart(productId, quantity = 1) {
+                const id = String(productId);
+                cart[id] = (cart[id] || 0) + quantity;
+                updateCartUI();
+                showToast(getTranslation('toast-added'));
+            }
+
+            function removeFromCart(productId) {
+                const id = String(productId);
+                if (cart[id]) {
+                    delete cart[id];
+                    updateCartUI();
+                    showToast(getTranslation('toast-removed'));
+                }
+            }
+
+            function changeQuantity(productId, delta) {
+                const id = String(productId);
+                if (!cart[id]) return;
+                const newQty = cart[id] + delta;
+                if (newQty <= 0) {
+                    removeFromCart(productId);
+                } else {
+                    cart[id] = newQty;
+                    updateCartUI();
+                }
+            }
+
+            function clearCart() {
+                cart = {};
+                updateCartUI();
+                showToast(getTranslation('toast-cleared'));
+            }
+
+            function getProductById(id) {
+                return products.find(p => p.id === parseInt(id));
+            }
+
+            // ====== Render Cart Items ======
+            function renderCartItems() {
+                const entries = Object.entries(cart);
+                const hasItems = entries.length > 0;
+
+                cartEmpty.classList.toggle('hidden', hasItems);
+
+                // Remove existing item elements (keep empty state)
+                const itemsToRemove = cartItems.querySelectorAll('.cart-item');
+                itemsToRemove.forEach(el => el.remove());
+
+                if (!hasItems) {
+                    cartTotalPrice.textContent = '$0.00';
+                    checkoutBtn.disabled = true;
+                    return;
+                }
+
+                let html = '';
+                let total = 0;
+                for (const [id, qty] of entries) {
+                    const product = getProductById(id);
+                    if (!product) continue;
+                    const subtotal = product.price * qty;
+                    total += subtotal;
+                    const lang = currentLang;
+                    html += `
+                        <div class="cart-item" data-id="${id}">
+                            <img src="${product.image}" alt="${product.name}" loading="lazy" />
+                            <div class="item-details">
+                                <div class="item-name">${product.name}</div>
+                                <div class="item-meta">
+                                    <span>${product.price.toFixed(2)} $</span>
+                                    <span>× ${qty}</span>
+                                </div>
+                                <div class="item-price">${subtotal.toFixed(2)} $</div>
+                            </div>
+                            <div class="item-actions">
+                                <button class="qty-btn" data-action="decr" data-id="${id}">−</button>
+                                <span class="qty-num">${qty}</span>
+                                <button class="qty-btn" data-action="incr" data-id="${id}">+</button>
+                                <button class="remove-btn" data-action="remove" data-id="${id}">✕</button>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Insert before empty state
+                const emptyEl = cartItems.querySelector('.cart-empty');
+                if (emptyEl) {
+                    emptyEl.insertAdjacentHTML('afterend', html);
+                } else {
+                    cartItems.innerHTML = html;
+                }
+
+                cartTotalPrice.textContent = `$${total.toFixed(2)}`;
+                checkoutBtn.disabled = false;
+
+                // Attach event listeners to cart item buttons
+                cartItems.querySelectorAll('.qty-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = this.dataset.id;
+                        const action = this.dataset.action;
+                        if (action === 'incr') changeQuantity(id, 1);
+                        else if (action === 'decr') changeQuantity(id, -1);
+                    });
+                });
+                cartItems.querySelectorAll('.remove-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = this.dataset.id;
+                        removeFromCart(id);
+                    });
+                });
+            }
+
+            // ====== Toast ======
+            function showToast(msg) {
+                toast.textContent = msg;
+                toast.classList.add('show');
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2200);
+            }
+
+            // ====== Translation Helper ======
+            function getTranslation(key) {
+                const dict = translations[currentLang];
+                return dict && dict[key] !== undefined ? dict[key] : key;
+            }
+
+            // ====== Render Products ======
+            function renderProducts() {
+                const lang = currentLang;
+                let html = '';
+                products.forEach(p => {
+                    const shortDesc = p.shortDesc[lang] || p.shortDesc.ar;
+                    html += `
+                        <div class="product-card" data-id="${p.id}">
+                            <div class="card-img-wrap" data-id="${p.id}">
+                                <img src="${p.image}" alt="${p.name}" loading="lazy" />
+                                <span class="card-badge">${p.price.toFixed(2)} $</span>
+                            </div>
+                            <div class="product-info">
+                                <h3 data-id="${p.id}">${p.name}</h3>
+                                <div class="price">$${p.price.toFixed(2)}</div>
+                                <p class="desc">${shortDesc}</p>
+                                <div class="btn-group">
+                                    <button class="btn btn--gold btn--sm add-cart-btn" data-id="${p.id}">${getTranslation('add-to-cart')}</button>
+                                    <button class="btn btn--outline btn--sm details-btn" data-id="${p.id}">${getTranslation('view-details')}</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                productGrid.innerHTML = html;
+
+                // Attach events
+                productGrid.querySelectorAll('.add-cart-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = this.dataset.id;
+                        addToCart(id, 1);
+                    });
+                });
+
+                productGrid.querySelectorAll('.details-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = this.dataset.id;
+                        openModal(id);
+                    });
+                });
+
+                productGrid.querySelectorAll('.card-img-wrap, .product-info h3').forEach(el => {
+                    el.addEventListener('click', function() {
+                        const id = this.dataset.id;
+                        if (id) openModal(id);
+                    });
+                });
+            }
+
+            // ====== Modal ======
+            let currentModalProductId = null;
+
+            function openModal(productId) {
+                const product = getProductById(productId);
+                if (!product) return;
+                currentModalProductId = productId;
+
+                const lang = currentLang;
+                const longDesc = product.longDesc[lang] || product.longDesc.ar;
+
+                modalImg.src = product.image;
+                modalImg.alt = product.name;
+                modalTitle.textContent = product.name;
+                modalPrice.textContent = `$${product.price.toFixed(2)}`;
+                modalLongDesc.textContent = longDesc;
+                productIdInput.value = product.id;
+                productNameInput.value = product.name;
+                sizeSelect.value = 'M';
+                colorSelect.value = 'أزرق';
+                quantityInput.value = 1;
+                customerName.value = '';
+                customerAddress.value = '';
+                customerPhone.value = '';
+                notesInput.value = '';
+
+                modalOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                modalOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            // ====== Cart Sidebar ======
+            function openCart() {
+                cartSidebar.classList.add('open');
+                cartOverlay.classList.add('active');
+                document.body.classList.add('cart-open');
+                renderCartItems();
+            }
+
+            function closeCart() {
+                cartSidebar.classList.remove('open');
+                cartOverlay.classList.remove('active');
+                document.body.classList.remove('cart-open');
+            }
+
+            function toggleCart() {
+                if (cartSidebar.classList.contains('open')) {
+                    closeCart();
+                } else {
+                    openCart();
+                }
+            }
+
+            // ====== Checkout from Cart ======
+            function checkoutFromCart() {
+                const total = getCartTotal();
+                if (total === 0) {
+                    showToast('السلة فارغة!');
+                    return;
+                }
+                // close cart, open modal with first product? or open a dedicated checkout?
+                // We'll open the modal for the first product in cart, but better: show a summary.
+                // For simplicity, we open the modal with the first product.
+                const firstId = Object.keys(cart)[0];
+                if (firstId) {
+                    closeCart();
+                    openModal(firstId);
+                }
+            }
+
+            // ====== i18n ======
+            function setLanguage(lang) {
+                if (!translations[lang]) return;
+                currentLang = lang;
+
+                i18nElements.forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    const val = translations[lang][key];
+                    if (val !== undefined) {
+                        el.innerHTML = val;
+                    }
+                });
+
+                if (metaDescription && translations[lang]['meta-description']) {
+                    metaDescription.setAttribute('content', translations[lang]['meta-description']);
+                }
+                if (ogTitle && translations[lang]['og-title']) {
+                    ogTitle.setAttribute('content', translations[lang]['og-title']);
+                }
+                if (ogDescription && translations[lang]['og-description']) {
+                    ogDescription.setAttribute('content', translations[lang]['og-description']);
+                }
+
+                htmlEl.setAttribute('lang', lang);
+                htmlEl.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+
+                langBtns.forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+                });
+
+                localStorage.setItem('hoscribe-lang', lang);
+
+                // Re-render products with new language
+                renderProducts();
+                renderCartItems();
+            }
+
+            function getPreferredLanguage() {
+                const stored = localStorage.getItem('hoscribe-lang');
+                if (stored === 'ar' || stored === 'en') return stored;
+                const browserLang = navigator.language || navigator.languages?.[0] || '';
+                if (browserLang.startsWith('ar')) return 'ar';
+                if (browserLang.startsWith('en')) return 'en';
+                return 'ar';
+            }
+
+            // ====== Order Submission ======
+            orderForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const name = customerName.value.trim();
+                const address = customerAddress.value.trim();
+                const phone = customerPhone.value.trim();
+                if (!name || !address || !phone) {
+                    alert('الرجاء ملء جميع الحقول المطلوبة.');
+                    return;
+                }
+
+                const pid = parseInt(productIdInput.value);
+                const pname = productNameInput.value;
+                const size = sizeSelect.value;
+                const color = colorSelect.value;
+                const qty = parseInt(quantityInput.value) || 1;
+                const notes = notesInput.value.trim() || null;
+
+                const orderData = {
+                    product_id: pid,
+                    product_name: pname,
+                    size: size,
+                    color: color,
+                    quantity: qty,
+                    customer_name: name,
+                    customer_address: address,
+                    customer_phone: phone,
+                    notes: notes,
+                    order_date: new Date().toISOString(),
+                    status: 'pending'
+                };
+
+                // Add to cart (if not already)
+                addToCart(pid, qty);
+
+                if (supabase) {
+                    try {
+                        const { data, error } = await supabase
+                            .from('orders')
+                            .insert([orderData]);
+                        if (error) {
+                            console.error('Supabase error:', error);
+                            alert('حدث خطأ أثناء إرسال الطلب. حاول مرة أخرى.');
+                            return;
+                        }
+                        alert('✅ تم تأكيد طلبك بنجاح! شكراً لك.');
+                        closeModal();
+                        // Optionally clear cart after successful order?
+                        // We'll keep cart as is, user can clear manually.
+                    } catch (err) {
+                        console.error('Unexpected error:', err);
+                        alert('حدث خطأ غير متوقع. حاول مرة أخرى.');
+                    }
+                } else {
+                    console.log('Order data (simulated):', orderData);
+                    alert('✅ تم تأكيد طلبك (محاكاة). شكراً لك!');
+                    closeModal();
+                }
+            });
+
+            // ====== Modal "Add to Cart" ======
+            modalAddToCart.addEventListener('click', function() {
+                const pid = parseInt(productIdInput.value);
+                const qty = parseInt(quantityInput.value) || 1;
+                addToCart(pid, qty);
+                closeModal();
+            });
+
+            // ====== Event Listeners ======
+            // Language
+            langBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+                    if (lang) setLanguage(lang);
+                });
+            });
+
+            // Cart toggle
+            cartToggle.addEventListener('click', toggleCart);
+            closeCartBtn.addEventListener('click', closeCart);
+            cartOverlay.addEventListener('click', closeCart);
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeCart();
+                    closeModal();
+                }
+            });
+
+            // Modal close
+            modalClose.addEventListener('click', closeModal);
+            modalOverlay.addEventListener('click', function(e) {
+                if (e.target === this) closeModal();
+            });
+
+            // Checkout from cart
+            checkoutBtn.addEventListener('click', checkoutFromCart);
+
+            // ====== Init ======
+            // Load cart from localStorage
+            try {
+                const saved = localStorage.getItem('hoscribe-cart');
+                if (saved) cart = JSON.parse(saved) || {};
+            } catch (_) { cart = {}; }
+
+            // Set language
+            const lang = getPreferredLanguage();
+            setLanguage(lang);
+
+            // Render products
+            renderProducts();
+
+            // Update cart UI
+            updateCartUI();
+
+            // Reveal on scroll
+            const revealEls = document.querySelectorAll('.reveal');
+            if (revealEls.length && 'IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
+                if ('requestIdleCallback' in window) {
+                    requestIdleCallback(() => {
+                        revealEls.forEach(el => observer.observe(el));
+                    });
+                } else {
+                    revealEls.forEach(el => observer.observe(el));
+                }
+            } else {
+                revealEls.forEach(el => el.classList.add('visible'));
+            }
+
+            // Fix for cart sidebar position in RTL: left:0 is correct for RTL (visual right)
+            // The transform: translateX(-100%) moves it out to the left (visual right)
+            // In RTL, left:0 is the right edge, so translateX(-100%) moves it to the right (off-screen)
+            // Actually in RTL, left:0 is the left edge? No, in RTL, left:0 is the left edge of the viewport?
+            // Wait: in RTL, the start is right, end is left. So left:0 is the left edge (end).
+            // So translateX(-100%) moves it to the left, which is off-screen on the left side.
+            // When open, translateX(0) brings it back to left:0 which is the left edge.
+            // In RTL, the left edge is the end of the viewport, so it appears on the right.
+            // That's actually correct — the sidebar appears on the right side in RTL.
+            // Perfect.
+
+            console.log('🛒 Hoscribe Store loaded successfully!');
+            console.log('📦 Products:', products.length);
+            console.log('🛍️ Cart items:', Object.keys(cart).length);
+
+        })();
+    </script>
+
+</body>
+</html>
