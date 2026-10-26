@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة التحكم · هوسكرايب</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="logo.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#f5f5f7;--surface:#fff;--text-primary:#1d1d1f;--text-secondary:#6e6e73;
+      --text-tertiary:#8e8e93;--gold:#b8953a;--border:#d2d2d7;--radius:14px;
+      --transition:.25s cubic-bezier(.25,.1,.15,1);--shadow:0 8px 30px rgba(0,0,0,.06);
+      --green:#2b8a3e;--danger:#d14c4c;--warning:#d68910;
+    }
+    html{-webkit-font-smoothing:antialiased}
+    body{font-family:'Cairo',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text-primary);line-height:1.6;min-height:100vh;padding:2rem 1.4rem}
+    .container{max-width:1200px;margin:0 auto}
+
+    /* Buttons */
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:.5rem 1.2rem;border-radius:40px;font-family:'Cairo',sans-serif;font-weight:600;font-size:.8rem;text-decoration:none;background:transparent;color:var(--text-primary);border:1px solid var(--border);cursor:pointer;transition:var(--transition);gap:.35rem;white-space:nowrap;line-height:1.4}
+    .btn:hover{background:var(--text-primary);color:#fff;border-color:var(--text-primary)}
+    .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .btn--gold{background:var(--gold);color:#fff;border-color:var(--gold);box-shadow:0 2px 12px rgba(184,149,58,.2)}
+    .btn--gold:hover{background:#a07f2e;border-color:#a07f2e;color:#fff}
+    .btn--green{background:var(--green);color:#fff;border-color:var(--green)}
+    .btn--green:hover{background:#1e6b2e;border-color:#1e6b2e;color:#fff}
+    .btn--danger{background:var(--danger);color:#fff;border-color:var(--danger)}
+    .btn--danger:hover{background:#b33a3a;border-color:#b33a3a;color:#fff}
+    .btn--sm{padding:.32rem .85rem;font-size:.72rem}
+    .btn--block{width:100%}
+
+    /* Inputs */
+    label{display:block;font-size:.78rem;font-weight:600;color:var(--text-secondary);margin-top:.9rem;margin-bottom:.25rem}
+    input,textarea{width:100%;padding:.6rem .8rem;border:1px solid var(--border);border-radius:10px;font-family:'Cairo',sans-serif;font-size:.9rem;background:var(--bg);color:var(--text-primary);transition:var(--transition)}
+    input:focus,textarea:focus{outline:none;border-color:var(--text-primary);box-shadow:0 0 0 3px rgba(0,0,0,.05)}
+
+    /* Auth */
+    .auth-screen{min-height:calc(100vh - 4rem);display:flex;align-items:center;justify-content:center}
+    .auth-card{background:var(--surface);border-radius:var(--radius);padding:2rem 1.8rem;box-shadow:var(--shadow);max-width:400px;width:100%;border:1px solid var(--border)}
+    .auth-card h1{font-size:1.4rem;font-weight:700;margin-bottom:.3rem;text-align:center}
+    .auth-card>p{text-align:center;color:var(--text-secondary);font-size:.82rem;margin-bottom:1.2rem}
+    .auth-tabs{display:flex;background:var(--bg);border-radius:40px;padding:.25rem;margin-bottom:1.2rem;border:1px solid var(--border)}
+    .auth-tabs button{flex:1;border:none;background:transparent;padding:.5rem;font-family:'Cairo',sans-serif;font-size:.8rem;font-weight:600;color:var(--text-secondary);cursor:pointer;border-radius:40px;transition:var(--transition)}
+    .auth-tabs button.active{background:var(--surface);color:var(--text-primary);box-shadow:0 1px 4px rgba(0,0,0,.06)}
+    .auth-back{text-align:center;margin-top:1rem;font-size:.78rem}
+    .auth-back a{color:var(--text-secondary);text-decoration:none}
+    .auth-back a:hover{color:var(--text-primary)}
+    .unauthorized-box{text-align:center;padding:1.2rem 0}
+    .unauthorized-box p{color:var(--danger);font-weight:600;margin-bottom:.5rem}
+
+    /* Dashboard */
+    .dashboard{max-width:1200px;margin:0 auto}
+    .dash-header{display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between;margin-bottom:1.6rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+    .dash-header h1{font-size:1.4rem;font-weight:700}
+    .dash-header .user-info{font-size:.78rem;color:var(--text-secondary)}
+    .header-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+
+    /* Tabs */
+    .tabs{display:flex;gap:.4rem;margin-bottom:1.6rem;overflow-x:auto;padding-bottom:.4rem;border-bottom:1px solid var(--border)}
+    .tab-btn{padding:.5rem 1.1rem;border-radius:40px;font-family:'Cairo',sans-serif;font-size:.8rem;font-weight:600;border:1px solid var(--border);background:transparent;color:var(--text-secondary);cursor:pointer;transition:var(--transition);white-space:nowrap}
+    .tab-btn:hover{color:var(--text-primary)}
+    .tab-btn.active{background:var(--text-primary);color:#fff;border-color:var(--text-primary)}
+    .tab-btn .count{display:inline-block;background:rgba(255,255,255,.2);padding:.02rem .4rem;border-radius:20px;font-size:.7rem;margin-right:.3rem}
+    .tab-btn:not(.active) .count{background:var(--bg);color:var(--text-tertiary)}
+
+    /* Content */
+    .products-wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.2rem}
+    .p-card{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:var(--transition)}
+    .p-card:hover{box-shadow:0 12px 40px rgba(0,0,0,.08);transform:translateY(-2px)}
+    .p-card .p-img{width:100%;aspect-ratio:1/1;object-fit:cover;background:#f0efe8;border-bottom:1px solid var(--border)}
+    .p-card .p-body{padding:1rem 1.1rem 1.1rem;display:flex;flex-direction:column;flex:1}
+    .p-card h3{font-size:1rem;font-weight:700;margin-bottom:.1rem}
+    .p-card .p-price{color:var(--gold);font-weight:700;font-size:.95rem;margin-bottom:.35rem}
+    .p-card .p-cat{display:inline-block;font-size:.68rem;font-weight:600;background:var(--bg);color:var(--text-secondary);padding:.1rem .55rem;border-radius:30px;margin-bottom:.5rem;align-self:flex-start}
+    .p-card .p-desc{font-size:.78rem;color:var(--text-secondary);line-height:1.5;margin-bottom:.7rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+    .p-card .p-seller{font-size:.75rem;color:var(--text-tertiary);margin-bottom:.7rem;padding:.5rem .7rem;background:var(--bg);border-radius:8px;line-height:1.5}
+    .p-card .p-seller strong{color:var(--text-primary);display:block;font-weight:600;font-size:.8rem;margin-bottom:.1rem}
+    .p-card .p-actions{margin-top:auto;display:flex;gap:.35rem;flex-wrap:wrap}
+
+    /* Status pills */
+    .pill{display:inline-block;font-size:.65rem;font-weight:700;padding:.15rem .6rem;border-radius:30px;letter-spacing:.03em}
+    .pill--pending{background:rgba(214,137,16,.15);color:var(--warning)}
+    .pill--approved{background:rgba(43,138,62,.12);color:var(--green)}
+    .pill--rejected{background:rgba(209,76,76,.12);color:var(--danger)}
+
+    /* Empty */
+    .empty-box{text-align:center;padding:3rem 1.5rem;background:var(--surface);border-radius:var(--radius);border:1px dashed var(--border);color:var(--text-tertiary);font-size:.85rem}
+
+    /* Orders */
+    .order-card{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);padding:1.2rem 1.3rem;margin-bottom:1rem}
+    .order-head{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.5rem;margin-bottom:.7rem;padding-bottom:.7rem;border-bottom:1px solid var(--border)}
+    .order-head .order-id{font-weight:700;font-size:.9rem}
+    .order-head .order-date{font-size:.72rem;color:var(--text-tertiary)}
+    .order-customer{font-size:.82rem;line-height:1.7;color:var(--text-secondary);margin-bottom:.7rem}
+    .order-customer strong{color:var(--text-primary)}
+    .order-items{background:var(--bg);padding:.7rem .9rem;border-radius:10px;margin-bottom:.7rem}
+    .order-item-row{padding:.4rem 0;border-bottom:1px dashed var(--border);font-size:.8rem}
+    .order-item-row:last-child{border-bottom:none}
+    .order-item-row .oi-head{display:flex;justify-content:space-between;font-weight:600;margin-bottom:.15rem}
+    .order-item-row .oi-seller{font-size:.72rem;color:var(--text-tertiary);line-height:1.5}
+    .order-total{font-weight:700;text-align:left;font-size:.9rem;color:var(--gold);padding-top:.4rem}
+    .order-actions{display:flex;gap:.4rem;flex-wrap:wrap}
+
+    /* Toast */
+    .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(120px);background:var(--text-primary);color:#fff;padding:.7rem 2rem;border-radius:40px;font-size:.85rem;font-weight:500;box-shadow:0 12px 40px rgba(0,0,0,.2);z-index:4000;opacity:0;transition:all .45s cubic-bezier(.22,.61,.36,1);pointer-events:none;max-width:90%;text-align:center}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .toast.success{background:var(--green)}
+    .toast.error{background:var(--danger)}
+
+    .hidden{display:none!important}
+
+    @media(max-width:520px){
+      body{padding:1.2rem .9rem}
+      .auth-card{padding:1.5rem 1.3rem}
+      .products-wrap{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- AUTH -->
+  <div class="auth-screen" id="authScreen">
+    <div class="auth-card">
+      <h1>لوحة تحكم المتجر</h1>
+      <p>دخول المسؤول فقط</p>
+
+      <div class="auth-tabs">
+        <button type="button" class="active" data-tab="signin">دخول</button>
+        <button type="button" data-tab="signup">تسجيل جديد</button>
+      </div>
+
+      <form id="authForm">
+        <label for="authEmail">البريد الإلكتروني</label>
+        <input type="email" id="authEmail" required autocomplete="email" />
+
+        <label for="authPassword">كلمة المرور</label>
+        <input type="password" id="authPassword" required minlength="6" autocomplete="current-password" />
+
+        <button type="submit" class="btn btn--gold btn--block" id="authSubmitBtn" style="margin-top:1.3rem">دخول</button>
+      </form>
+
+      <div class="auth-back"><a href="brand.html">← العودة إلى المتجر</a></div>
+    </div>
+  </div>
+
+  <!-- UNAUTHORIZED -->
+  <div class="auth-screen hidden" id="unauthorizedScreen">
+    <div class="auth-card">
+      <h1>غير مصرّح</h1>
+      <p style="color:var(--text-secondary)">هذه اللوحة مخصصة لمسؤول المتجر فقط.</p>
+      <p id="unauthEmail" style="font-size:.75rem;color:var(--text-tertiary);margin-bottom:1rem;word-break:break-all"></p>
+      <button class="btn btn--danger btn--block" id="unauthSignOut">تسجيل الخروج</button>
+      <div class="auth-back"><a href="brand.html">← العودة إلى المتجر</a></div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="dashboard hidden" id="dashboard">
+    <div class="dash-header">
+      <div>
+        <h1>🛡️ لوحة التحكم</h1>
+        <div class="user-info" id="userEmail"></div>
+      </div>
+      <div class="header-actions">
+        <a href="brand.html" class="btn btn--sm">← المتجر</a>
+        <button class="btn btn--danger btn--sm" id="signOutBtn">خروج</button>
+      </div>
+    </div>
+
+    <div class="tabs" id="tabs">
+      <button class="tab-btn active" data-tab="pending">معلّقة <span class="count" id="cntPending">0</span></button>
+      <button class="tab-btn" data-tab="approved">معتمدة <span class="count" id="cntApproved">0</span></button>
+      <button class="tab-btn" data-tab="rejected">مرفوضة <span class="count" id="cntRejected">0</span></button>
+      <button class="tab-btn" data-tab="orders">الطلبات <span class="count" id="cntOrders">0</span></button>
+    </div>
+
+    <div id="content"></div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // ==================== CONFIG ====================
+      const SUPABASE_URL = 'https://YOUR-PROJECT.supabase.co';
+      const SUPABASE_ANON_KEY = 'YOUR-ANON-KEY';
+      const ADMIN_EMAIL = 'YOUR-ADMIN-EMAIL@example.com'; // ← بريدك
+      const CURRENCY = '$';
+
+      const supabase = window.supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      // ==================== DOM ====================
+      const $ = (id) => document.getElementById(id);
+      const toast = $('toast');
+      const authScreen = $('authScreen');
+      const unauthorizedScreen = $('unauthorizedScreen');
+      const dashboard = $('dashboard');
+      const authForm = $('authForm');
+      const authEmail = $('authEmail');
+      const authPassword = $('authPassword');
+      const authSubmitBtn = $('authSubmitBtn');
+      const authTabs = document.querySelectorAll('.auth-tabs button');
+      const userEmail = $('userEmail');
+      const signOutBtn = $('signOutBtn');
+      const unauthSignOut = $('unauthSignOut');
+      const unauthEmail = $('unauthEmail');
+      const tabs = $('tabs');
+      const content = $('content');
+      const cntPending = $('cntPending');
+      const cntApproved = $('cntApproved');
+      const cntRejected = $('cntRejected');
+      const cntOrders = $('cntOrders');
+
+      // ==================== STATE ====================
+      let currentUser = null;
+      let authMode = 'signin';
+      let activeTab = 'pending';
+      let products = [];   // all products (admin can read all)
+      let orders = [];
+
+      // ==================== HELPERS ====================
+      let toastTimer = null;
+      function showToast(msg, type) {
+        toast.textContent = msg;
+        toast.className = 'toast show' + (type ? ' ' + type : '');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+      }
+      function escapeHtml(s) {
+        if (s == null) return '';
+        return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      }
+      function formatPrice(n) { return `${CURRENCY}${(Number(n) || 0).toFixed(2)}`; }
+      function placeholderImg() {
+        return 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect fill="%23e5e4dd" width="200" height="200"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="%238e8e93" font-family="sans-serif" font-size="12">لا صورة</text></svg>';
+      }
+      function fmtDate(iso) {
+        if (!iso) return '—';
+        try { return new Date(iso).toLocaleString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+        catch (_) { return iso; }
+      }
+
+      // ==================== AUTH ====================
+      authTabs.forEach(t => t.addEventListener('click', () => {
+        authTabs.forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+        authMode = t.dataset.tab;
+        authSubmitBtn.textContent = authMode === 'signin' ? 'دخول' : 'إنشاء حساب';
+      }));
+
+      authForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = authEmail.value.trim();
+        const password = authPassword.value;
+        if (!email || password.length < 6) { showToast('كلمة المرور 6 أحرف على الأقل', 'error'); return; }
+
+        authSubmitBtn.disabled = true;
+        authSubmitBtn.textContent = 'جاري...';
+
+        try {
+          if (authMode === 'signup') {
+            const { error } = await supabase.auth.signUp({ email, password });
+            if (error) throw error;
+            showToast('تم إنشاء الحساب', 'success');
+          } else {
+            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) throw error;
+          }
+        } catch (err) {
+          const m = (err.message || '').toLowerCase();
+          if (m.includes('invalid login')) showToast('البريد أو كلمة المرور غير صحيحة', 'error');
+          else if (m.includes('already registered')) showToast('البريد مسجل بالفعل', 'error');
+          else showToast(err.message || 'حدث خطأ', 'error');
+        } finally {
+          authSubmitBtn.disabled = false;
+          authSubmitBtn.textContent = authMode === 'signin' ? 'دخول' : 'إنشاء حساب';
+        }
+      });
+
+      signOutBtn.addEventListener('click', () => supabase.auth.signOut());
+      unauthSignOut.addEventListener('click', () => supabase.auth.signOut());
+
+      supabase.auth.onAuthStateChange((event, session) => {
+        if (session && session.user) {
+          const isAdmin = (session.user.email || '').toLowerCase() === ADMIN_EMAIL.toLowerCase();
+          if (isAdmin) {
+            currentUser = session.user;
+            showDashboard();
+          } else {
+            currentUser = null;
+            authScreen.classList.add('hidden');
+            dashboard.classList.add('hidden');
+            unauthorizedScreen.classList.remove('hidden');
+            unauthEmail.textContent = session.user.email || '';
+          }
+        } else {
+          currentUser = null;
+          unauthorizedScreen.classList.add('hidden');
+          dashboard.classList.add('hidden');
+          authScreen.classList.remove('hidden');
+        }
+      });
+
+      // ==================== DASHBOARD ====================
+      function showDashboard() {
+        userEmail.textContent = currentUser.email;
+        authScreen.classList.add('hidden');
+        unauthorizedScreen.classList.add('hidden');
+        dashboard.classList.remove('hidden');
+        loadAll();
+      }
+
+      tabs.addEventListener('click', (e) => {
+        const btn = e.target.closest('.tab-btn');
+        if (!btn) return;
+        activeTab = btn.dataset.tab;
+        tabs.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+        renderTab();
+      });
+
+      async function loadAll() {
+        content.innerHTML = '<div class="empty-box">جاري التحميل...</div>';
+        try {
+          const [pRes, oRes] = await Promise.all([
+            supabase.from('products').select('*').order('created_at', { ascending: false }),
+            supabase.from('orders').select('*').order('created_at', { ascending: false })
+          ]);
+          if (pRes.error) throw pRes.error;
+          if (oRes.error) throw oRes.error;
+          products = pRes.data || [];
+          orders = oRes.data || [];
+          updateCounts();
+          renderTab();
+        } catch (err) {
+          console.error(err);
+          content.innerHTML = '<div class="empty-box">⚠️ تعذّر تحميل البيانات</div>';
+        }
+      }
+
+      function updateCounts() {
+        cntPending.textContent = products.filter(p => p.status === 'pending').length;
+        cntApproved.textContent = products.filter(p => p.status === 'approved').length;
+        cntRejected.textContent = products.filter(p => p.status === 'rejected').length;
+        cntOrders.textContent = orders.length;
+      }
+
+      function renderTab() {
+        if (activeTab === 'orders') return renderOrders();
+        const list = products.filter(p => p.status === activeTab);
+        renderProducts(list);
+      }
+
+      function renderProducts(list) {
+        if (list.length === 0) {
+          const labels = { pending: 'لا توجد منتجات معلقة', approved: 'لا توجد منتجات معتمدة', rejected: 'لا توجد منتجات مرفوضة' };
+          content.innerHTML = `<div class="empty-box">${labels[activeTab] || 'لا توجد منتجات'}</div>`;
+          return;
+        }
+        content.innerHTML = `<div class="products-wrap">${list.map(p => productCard(p)).join('')}</div>`;
+        bindProductActions();
+      }
+
+      function productCard(p) {
+        const img = p.image_url || placeholderImg();
+        const pillMap = { pending: '⏳ معلق', approved: '✅ معتمد', rejected: '❌ مرفوض' };
+        const pillClass = 'pill--' + p.status;
+        const actions = {
+          pending: `<button class="btn btn--green btn--sm" data-action="approve" data-id="${p.id}">✅ اعتماد</button>
+                    <button class="btn btn--danger btn--sm" data-action="reject" data-id="${p.id}">❌ رفض</button>`,
+          approved: `<button class="btn btn--sm" data-action="reject" data-id="${p.id}">↩️ إخفاء</button>
+                     <button class="btn btn--danger btn--sm" data-action="delete" data-id="${p.id}">🗑️ حذف</button>`,
+          rejected: `<button class="btn btn--green btn--sm" data-action="approve" data-id="${p.id}">✅ اعتماد</button>
+                     <button class="btn btn--danger btn--sm" data-action="delete" data-id="${p.id}">🗑️ حذف</button>`
+        };
+        return `
+          <div class="p-card" data-id="${p.id}">
+            <img class="p-img" src="${escapeHtml(img)}" alt="" loading="lazy" onerror="this.src='${placeholderImg()}'" />
+            <div class="p-body">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;margin-bottom:.2rem">
+                <h3>${escapeHtml(p.name)}</h3>
+                <span class="pill ${pillClass}">${pillMap[p.status]}</span>
+              </div>
+              <div class="p-price">${formatPrice(p.price)}</div>
+              ${p.category ? `<span class="p-cat">${escapeHtml(p.category)}</span>` : ''}
+              <div class="p-desc">${escapeHtml(p.description || '')}</div>
+              <div class="p-seller">
+                <strong>👤 ${escapeHtml(p.seller_name || '—')}</strong>
+                📞 ${escapeHtml(p.seller_phone || '—')}${p.seller_whatsapp && p.seller_whatsapp !== p.seller_phone ? ` · 💬 ${escapeHtml(p.seller_whatsapp)}` : ''}
+                ${p.seller_email ? `<br>✉️ ${escapeHtml(p.seller_email)}` : ''}
+                <br><span style="font-size:.68rem;color:var(--text-tertiary)">أُرسل: ${fmtDate(p.created_at)}</span>
+              </div>
+              <div class="p-actions">${actions[p.status] || ''}</div>
+            </div>
+          </div>
+        `;
+      }
+
+      function bindProductActions() {
+        content.querySelectorAll('[data-action]').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const id = Number(btn.dataset.id);
+            const action = btn.dataset.action;
+            if (action === 'delete') return deleteProduct(id);
+            if (action === 'approve') return setStatus(id, 'approved');
+            if (action === 'reject') return setStatus(id, 'rejected');
+          });
+        });
+      }
+
+      async function setStatus(id, status) {
+        try {
+          const { error } = await supabase
+            .from('products')
+            .update({ status, reviewed_at: new Date().toISOString() })
+            .eq('id', id);
+          if (error) throw error;
+          showToast(status === 'approved' ? '✅ تم الاعتماد والنشر' : '❌ تم الرفض', 'success');
+          await loadAll();
+        } catch (err) {
+          console.error(err);
+          showToast(err.message || 'تعذّر التحديث', 'error');
+        }
+      }
+
+      async function deleteProduct(id) {
+        if (!confirm('تأكيد حذف المنتج نهائياً؟')) return;
+        try {
+          const { error } = await supabase.from('products').delete().eq('id', id);
+          if (error) throw error;
+          showToast('تم الحذف', 'success');
+          await loadAll();
+        } catch (err) {
+          console.error(err);
+          showToast(err.message || 'تعذّر الحذف', 'error');
+        }
+      }
+
+      // ==================== ORDERS ====================
+      function renderOrders() {
+        if (orders.length === 0) {
+          content.innerHTML = '<div class="empty-box">لا توجد طلبات بعد</div>';
+          return;
+        }
+        content.innerHTML = orders.map(o => orderCard(o)).join('');
+        content.querySelectorAll('[data-action="delete-order"]').forEach(b => {
+          b.addEventListener('click', () => deleteOrder(Number(b.dataset.id)));
+        });
+      }
+
+      function orderCard(o) {
+        const items = Array.isArray(o.items) ? o.items : [];
+        const itemsHtml = items.map(it => `
+          <div class="order-item-row">
+            <div class="oi-head">
+              <span>${escapeHtml(it.name)} × ${it.quantity}</span>
+              <span>${formatPrice(it.subtotal)}</span>
+            </div>
+            <div class="oi-seller">
+              البائع: <strong>${escapeHtml(it.seller_name || '—')}</strong>
+              · 📞 ${escapeHtml(it.seller_phone || '—')}
+              ${it.seller_whatsapp ? ` · 💬 ${escapeHtml(it.seller_whatsapp)}` : ''}
+              ${it.seller_email ? ` · ✉️ ${escapeHtml(it.seller_email)}` : ''}
+            </div>
+          </div>
+        `).join('');
+
+        return `
+          <div class="order-card">
+            <div class="order-head">
+              <div>
+                <div class="order-id">طلب #${o.id}</div>
+                <div class="order-date">${fmtDate(o.created_at)}</div>
+              </div>
+              <button class="btn btn--danger btn--sm" data-action="delete-order" data-id="${o.id}">🗑️ حذف</button>
+            </div>
+            <div class="order-customer">
+              <strong>${escapeHtml(o.customer_name)}</strong><br>
+              📞 ${escapeHtml(o.customer_phone)}<br>
+              📍 ${escapeHtml(o.customer_address)}
+              ${o.notes ? `<br>📝 ${escapeHtml(o.notes)}` : ''}
+            </div>
+            <div class="order-items">${itemsHtml}</div>
+            <div class="order-total">المجموع: ${formatPrice(o.total)}</div>
+          </div>
+        `;
+      }
+
+      async function deleteOrder(id) {
+        if (!confirm('تأكيد حذف هذا الطلب؟')) return;
+        try {
+          const { error } = await supabase.from('orders').delete().eq('id', id);
+          if (error) throw error;
+          showToast('تم حذف الطلب', 'success');
+          await loadAll();
+        } catch (err) {
+          showToast(err.message || 'تعذّر الحذف', 'error');
+        }
+      }
+
+      // ==================== INIT ====================
+      (async () => {
+        const { data } = await supabase.auth.getSession();
+        if (data.session && data.session.user) {
+          const isAdmin = (data.session.user.email || '').toLowerCase() === ADMIN_EMAIL.toLowerCase();
+          if (isAdmin) { currentUser = data.session.user; showDashboard(); }
+          else {
+            unauthorizedScreen.classList.remove('hidden');
+            authScreen.classList.add('hidden');
+            unauthEmail.textContent = data.session.user.email || '';
+          }
+        } else {
+          authScreen.classList.remove('hidden');
+        }
+      })();
+
+    })();
+  </script>
+
+</body>
+</html>
