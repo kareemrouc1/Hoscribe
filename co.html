@@ -449,7 +449,10 @@
 
     <!-- Winner Info & Countdown -->
     <section class="winner-info reveal" id="winnerInfo">
-      <div class="leader" data-i18n="leader-label">🏆 المتصدر حالياً: <span id="currentLeader">—</span></div>
+      <div class="leader">
+        <span data-i18n="leader-label">🏆 المتصدر حالياً:</span>
+        <span id="currentLeader">—</span>
+      </div>
       <div class="announce" data-i18n="announce-label">يُعلن الفائز في 1 يناير من كل عام</div>
       <div class="countdown" id="countdown">-- : -- : -- : --</div>
     </section>
@@ -923,15 +926,19 @@
           if (!data || data.length === 0) {
             grid.innerHTML = `<div class="participants-empty">${getTranslation('participants-empty')}</div>`;
             countEl.textContent = '0';
-            leaderEl.textContent = '—';
+            if (leaderEl) leaderEl.textContent = '—';
             return;
           }
 
           countEl.textContent = data.length;
-          if (data[0] && data[0].likes > 0) {
-            leaderEl.textContent = `${data[0].name} (❤️ ${data[0].likes})`;
-          } else {
-            leaderEl.textContent = '—';
+          
+          // تأمين التحديث لتجنب خطأ null
+          if (leaderEl) {
+            if (data[0] && data[0].likes > 0) {
+              leaderEl.textContent = `${data[0].name} (❤️ ${data[0].likes})`;
+            } else {
+              leaderEl.textContent = '—';
+            }
           }
 
           grid.innerHTML = data.map((p, index) => {
@@ -1239,14 +1246,6 @@
   ALTER TABLE votes ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id);
   CREATE INDEX IF NOT EXISTS idx_competitors_user ON competitors(user_id);
   CREATE INDEX IF NOT EXISTS idx_votes_user ON votes(user_id);
-
-  -- (اختياري) حذف الأعمدة القديمة المرتبطة بالـ IP
-  -- ALTER TABLE competitors DROP COLUMN IF EXISTS ip_address;
-  -- ALTER TABLE competitors DROP COLUMN IF EXISTS fingerprint;
-  -- ALTER TABLE competitors DROP COLUMN IF EXISTS is_vpn;
-  -- ALTER TABLE votes DROP COLUMN IF EXISTS voter_id;
-  -- ALTER TABLE votes DROP COLUMN IF EXISTS ip_address;
-  -- ALTER TABLE votes DROP COLUMN IF EXISTS fingerprint;
 
   -- 2) تفعيل RLS
   ALTER TABLE competitors ENABLE ROW LEVEL SECURITY;
