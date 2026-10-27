@@ -164,6 +164,94 @@
     }
     .stat-label { font-size: 0.72rem; color: var(--text-secondary); font-weight: 400; }
 
+    /* Contact / Info Card */
+    .info-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.2rem 1.2rem;
+      margin-bottom: 1.2rem; box-shadow: var(--shadow);
+    }
+    .info-card-title {
+      font-size: 0.85rem; font-weight: 700; color: var(--gold);
+      margin-bottom: 0.8rem;
+    }
+    .info-rows { display: flex; flex-direction: column; }
+    .info-row {
+      display: flex; align-items: center; gap: 0.8rem;
+      padding: 0.65rem 0;
+      border-bottom: 1px dashed var(--border);
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-row:first-child { padding-top: 0; }
+    .info-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 38px; height: 38px; flex-shrink: 0;
+      border-radius: 10px;
+      background: var(--gold-light);
+      color: var(--gold);
+    }
+    .info-icon > .ico { width: 1.15rem; height: 1.15rem; }
+    .info-text { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+    .info-label {
+      font-size: 0.68rem; color: var(--text-tertiary);
+      font-weight: 500; margin-bottom: 0.1rem;
+    }
+    .info-value {
+      font-size: 0.9rem; font-weight: 500; color: var(--text-primary);
+      text-decoration: none; word-break: break-word;
+      direction: ltr; text-align: right;
+      unicode-bidi: plaintext;
+      transition: color var(--transition);
+    }
+    .info-value:hover { color: var(--gold); }
+    html[dir="ltr"] .info-value { text-align: left; }
+    a.info-value { cursor: pointer; }
+
+    /* Creative Answer Card */
+    .creative-card {
+      position: relative;
+      background: linear-gradient(135deg, #fffcf2 0%, var(--gold-light) 100%);
+      border: 1px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 1.4rem 1.2rem;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 4px 18px rgba(184, 149, 58, 0.12);
+    }
+    .creative-icon {
+      width: 1.8rem; height: 1.8rem;
+      color: var(--gold);
+      margin-bottom: 0.4rem;
+    }
+    .creative-icon > .ico { width: 100%; height: 100%; }
+    .creative-icon.ico { width: 1.8rem; height: 1.8rem; }
+    .creative-label {
+      display: block;
+      font-size: 0.72rem; font-weight: 700; color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+    .creative-text {
+      font-size: 0.88rem; line-height: 1.8;
+      color: var(--text-primary);
+      white-space: pre-wrap; word-break: break-word;
+    }
+
+    /* Conditions Card */
+    .conditions-card {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 0.9rem 1rem;
+      margin-bottom: 1.2rem; box-shadow: var(--shadow);
+    }
+    .condition-badge {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 30px;
+      background: var(--success-bg);
+      color: var(--success);
+      font-size: 0.72rem; font-weight: 600;
+      border: 1px solid #a5d6a7;
+    }
+    .condition-badge .ico { width: 0.85em; height: 0.85em; }
+
     /* Owner Encouragement Card */
     .owner-card {
       background: linear-gradient(135deg, #fff9e6 0%, var(--gold-light) 100%);
@@ -258,6 +346,7 @@
       .lang-switcher { justify-content: center; }
       .back-link { font-size: 0.72rem; }
       .btn-primary, .btn-secondary { font-size: 0.85rem; padding: 0.8rem 1.2rem; }
+      .info-icon { width: 34px; height: 34px; }
     }
 
     ::-webkit-scrollbar { width: 3px; }
@@ -312,6 +401,50 @@
         </div>
       </div>
 
+      <!-- ===== NEW: Contact Info ===== -->
+      <div id="contact-card" class="info-card reveal hidden">
+        <h3 class="info-card-title" data-i18n="contact-title">معلومات التواصل</h3>
+        <div class="info-rows">
+          <div class="info-row hidden" id="rowPhone">
+            <span class="info-icon"><span data-icon="phone"></span></span>
+            <div class="info-text">
+              <span class="info-label" data-i18n="label-phone">الهاتف</span>
+              <a class="info-value" id="profilePhone" href="#"></a>
+            </div>
+          </div>
+          <div class="info-row hidden" id="rowEmail">
+            <span class="info-icon"><span data-icon="mail"></span></span>
+            <div class="info-text">
+              <span class="info-label" data-i18n="label-email">البريد الإلكتروني</span>
+              <a class="info-value" id="profileEmail" href="#"></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== NEW: Creative Answer ===== -->
+      <div id="creative-card" class="creative-card reveal hidden">
+        <div class="creative-icon" data-icon="quote"></div>
+        <span class="creative-label" data-i18n="creative-label">لماذا يستحق الفوز</span>
+        <p class="creative-text" id="profileCreative"></p>
+      </div>
+
+      <!-- ===== NEW: Confirmed Conditions ===== -->
+      <div id="conditions-card" class="conditions-card reveal hidden">
+        <span class="condition-badge hidden" id="badgeYoutube">
+          <span data-icon="check"></span>
+          <span data-i18n="cond-youtube">مشترك في يوتيوب</span>
+        </span>
+        <span class="condition-badge hidden" id="badgeSnapchat">
+          <span data-icon="check"></span>
+          <span data-i18n="cond-snapchat">متابع سناب شات</span>
+        </span>
+        <span class="condition-badge hidden" id="badgeTerms">
+          <span data-icon="check"></span>
+          <span data-i18n="cond-terms">وافق على الشروط</span>
+        </span>
+      </div>
+
       <div id="owner-card" class="owner-card hidden reveal">
         <div class="owner-icon" data-icon="rocket"></div>
         <h2 data-i18n="owner-title">أنت متسابق في المسابقة! 🎯</h2>
@@ -348,7 +481,7 @@
         calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17"/><path d="M8 3v4"/><path d="M16 3v4"/></svg>',
         play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
         thumb: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 22V11l4.5-7c1.5 0 2.5 1 2.5 2.5V10h4.5c1.5 0 2.5 1 2 2.5l-1.5 8c-.3 1-1.2 1.5-2.2 1.5H7z"/><path d="M7 22H4a1 1 0 0 1-1-1V12a1 1 0 0 1 1-1h3"/></svg>',
-        check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 6"/></svg>',
+        check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 6"/></svg>',
         lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>',
         alert: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 21h20L12 3z"/><path d="M12 10v5"/><circle cx="12" cy="18" r="0.9" fill="currentColor" stroke="none"/></svg>',
         rocket: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5 3 21l4.5-1.5"/><path d="M12 15c-1-1-1.5-2-1.5-3C11 7 15 3 21 3c0 6-4 10-9 10.5-.5.5-1 1-1.5 1.5z"/><path d="M9 12H4"/><path d="M12 15v5"/><circle cx="15" cy="9" r="1.2"/></svg>',
@@ -356,6 +489,9 @@
         link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>',
         share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.59 13.51 6.83 3.98"/><path d="m15.41 6.51-6.82 3.98"/></svg>',
         trophy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M17 5h3v2a3 3 0 0 1-3 3"/><path d="M7 5H4v2a3 3 0 0 0 3 3"/><path d="M9.5 20h5"/><path d="M12 14v6"/></svg>',
+        phone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
+        mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+        quote: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/></svg>',
       };
 
       function icon(name) {
@@ -397,6 +533,13 @@
           'not-found': 'لم يتم العثور على هذا المتسابق',
           'stat-likes': 'إعجاب',
           'stat-rank': 'الترتيب',
+          'contact-title': 'معلومات التواصل',
+          'label-phone': 'الهاتف',
+          'label-email': 'البريد الإلكتروني',
+          'creative-label': 'لماذا يستحق الفوز',
+          'cond-youtube': 'مشترك في يوتيوب',
+          'cond-snapchat': 'متابع سناب شات',
+          'cond-terms': 'وافق على الشروط',
           'owner-title': 'أنت متسابق في المسابقة! 🎯',
           'owner-desc': 'أنت يوتيوبر — انسخ رابط صفحتك وشاركه مع جمهورك ليصوتوا لك وتفوز بالجائزة الكبرى!',
           'like-btn': 'أعجب بهذا المتسابق',
@@ -426,6 +569,13 @@
           'not-found': 'Contestant not found',
           'stat-likes': 'Likes',
           'stat-rank': 'Rank',
+          'contact-title': 'Contact Information',
+          'label-phone': 'Phone',
+          'label-email': 'Email',
+          'creative-label': 'Why they deserve to win',
+          'cond-youtube': 'Subscribed on YouTube',
+          'cond-snapchat': 'Follows on Snapchat',
+          'cond-terms': 'Accepted terms',
           'owner-title': 'You are a contestant! 🎯',
           'owner-desc': 'You\'re a YouTuber — copy your profile link and share it with your audience so they vote for you and you win the grand prize!',
           'like-btn': 'Like this contestant',
@@ -477,7 +627,12 @@
         htmlEl.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
         langBtns.forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-lang') === lang));
         localStorage.setItem('hoscribe-lang', lang);
-        renderActions();
+        // Re-render dynamic parts so that "member since" date etc. update
+        if (competitor) {
+          renderProfile();
+        } else {
+          renderActions();
+        }
       }
 
       langBtns.forEach(btn => {
@@ -589,6 +744,57 @@
 
         // Stats
         document.getElementById('statLikes').textContent = competitor.likes || 0;
+
+        // ===== NEW: Contact (phone + email) =====
+        const contactCard = document.getElementById('contact-card');
+        const rowPhone = document.getElementById('rowPhone');
+        const rowEmail = document.getElementById('rowEmail');
+        const profilePhone = document.getElementById('profilePhone');
+        const profileEmail = document.getElementById('profileEmail');
+
+        const hasPhone = !!competitor.phone;
+        const hasEmail = !!competitor.email;
+
+        if (hasPhone) {
+          profilePhone.textContent = competitor.phone;
+          profilePhone.href = 'tel:' + competitor.phone.replace(/\s+/g, '');
+          rowPhone.classList.remove('hidden');
+        } else {
+          rowPhone.classList.add('hidden');
+        }
+
+        if (hasEmail) {
+          profileEmail.textContent = competitor.email;
+          profileEmail.href = 'mailto:' + competitor.email;
+          rowEmail.classList.remove('hidden');
+        } else {
+          rowEmail.classList.add('hidden');
+        }
+
+        contactCard.classList.toggle('hidden', !(hasPhone || hasEmail));
+
+        // ===== NEW: Creative Answer =====
+        const creativeCard = document.getElementById('creative-card');
+        const profileCreative = document.getElementById('profileCreative');
+        if (competitor.creative_answer && competitor.creative_answer.trim()) {
+          profileCreative.textContent = competitor.creative_answer;
+          creativeCard.classList.remove('hidden');
+        } else {
+          creativeCard.classList.add('hidden');
+        }
+
+        // ===== NEW: Confirmed Conditions =====
+        const conditionsCard = document.getElementById('conditions-card');
+        const badgeYoutube = document.getElementById('badgeYoutube');
+        const badgeSnapchat = document.getElementById('badgeSnapchat');
+        const badgeTerms = document.getElementById('badgeTerms');
+
+        badgeYoutube.classList.toggle('hidden', !competitor.cond_youtube);
+        badgeSnapchat.classList.toggle('hidden', !competitor.cond_snapchat);
+        badgeTerms.classList.toggle('hidden', !competitor.cond_terms);
+
+        const hasAnyCond = !!(competitor.cond_youtube || competitor.cond_snapchat || competitor.cond_terms);
+        conditionsCard.classList.toggle('hidden', !hasAnyCond);
 
         // URL display
         const profileUrl = window.location.origin + window.location.pathname + '?id=' + competitorId;
