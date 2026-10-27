@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title data-i18n="page-title">المسابقة السنوية — هوسكرايب</title>
-  <meta name="description" data-i18n="meta-description" content="سجل في المسابقة السنوية لهوسكرايب واربح أحدث إيفون! شروط بسيطة وفرصة للجميع." />
+  <meta name="description" data-i18n="meta-description" content="سجل في المسابقة السنوية لهوسكرايب واربح أحدث إيفون!" />
   <link rel="canonical" href="https://hoscribe.netlify.app/co.html" />
 
   <meta property="og:type" content="website" />
@@ -18,7 +18,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" />
 
-  <!-- Supabase JS Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
 
   <style>
@@ -101,23 +100,15 @@
     }
     .hero-comp .prize-badge .icon { font-size: 1.2rem; line-height: 1; }
 
-    /* ===== Auth Section ===== */
+    /* Auth Section */
     .auth-section {
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 1.6rem;
-      margin: 1.6rem 0;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      text-align: center;
+      background: var(--surface); border-radius: var(--radius);
+      padding: 1.6rem; margin: 1.6rem 0;
+      border: 1px solid var(--border); box-shadow: var(--shadow); text-align: center;
     }
     .auth-section h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.3rem; }
-    .auth-section .auth-desc {
-      font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.2rem;
-    }
-    .auth-buttons {
-      display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap;
-    }
+    .auth-section .auth-desc { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.2rem; }
+    .auth-buttons { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
     .auth-btn {
       display: inline-flex; align-items: center; gap: 0.6rem;
       padding: 0.75rem 1.8rem; border-radius: 40px;
@@ -151,7 +142,7 @@
     }
     .logout-btn:hover { border-color: #c62828; color: #c62828; background: #ffebee; }
 
-    /* ===== Winner sections ===== */
+    /* Winner Rule */
     .winner-rule {
       background: var(--surface); border-radius: var(--radius);
       padding: 1rem 1.6rem; margin: 1.6rem 0 1.2rem;
@@ -162,6 +153,7 @@
     .winner-rule p span { color: var(--gold); font-size: 1.2rem; }
     .winner-rule .sub-note { font-size: 0.85rem; font-weight: 400; color: var(--text-secondary); margin-top: 0.2rem; }
 
+    /* Winner Info */
     .winner-info {
       background: var(--surface); border-radius: var(--radius);
       padding: 1.4rem 1.6rem; margin: 1.2rem 0;
@@ -177,6 +169,7 @@
     }
     .winner-info .announce { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.2rem; }
 
+    /* Conditions */
     .conditions {
       display: grid; grid-template-columns: repeat(3, 1fr);
       gap: 1.2rem; padding: 2.4rem 0 1.6rem;
@@ -196,63 +189,45 @@
     .condition-card h3 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.1rem; }
     .condition-card p { font-size: 0.75rem; font-weight: 300; color: var(--text-secondary); line-height: 1.6; max-width: 200px; margin: 0 auto; }
 
-    .form-section {
-      background: var(--surface); border-radius: var(--radius);
-      padding: 2rem 2.2rem; border: 1px solid var(--border);
-      margin: 1.6rem 0 2.4rem; box-shadow: var(--shadow);
+    /* 🆕 Participate CTA */
+    .participate-cta {
+      background: var(--surface);
+      border: 2px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 2.2rem 1.5rem;
+      margin: 1.8rem 0;
+      text-align: center;
+      box-shadow: 0 8px 36px rgba(184, 149, 58, 0.15);
+      position: relative; overflow: hidden;
     }
-    .form-section .form-title { font-size: 1.1rem; font-weight: 700; text-align: center; margin-bottom: 0.2rem; }
-    .form-section .form-sub { font-size: 0.8rem; font-weight: 300; color: var(--text-secondary); text-align: center; margin-bottom: 1.8rem; }
-    .form-group { margin-bottom: 1.2rem; }
-    .form-group label { display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.2rem; letter-spacing: 0.02em; }
-    .form-group label .req { color: #c0392b; font-weight: 700; }
-    .form-group input, .form-group select, .form-group textarea {
-      width: 100%; padding: 0.6rem 1rem; font-family: 'Cairo', sans-serif;
-      font-size: 0.9rem; border: 1px solid var(--border); border-radius: var(--radius-sm);
-      background: var(--bg); color: var(--text-primary); transition: var(--transition);
-      outline: none; -webkit-appearance: none; appearance: none;
+    .participate-cta::before {
+      content: '';
+      position: absolute; top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle at center, rgba(184,149,58,0.07) 0%, transparent 70%);
+      pointer-events: none;
     }
-    .form-group input:focus, .form-group textarea:focus {
-      border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184, 149, 58, 0.08); background: #fff;
+    .participate-cta .cta-icon { font-size: 2.6rem; margin-bottom: 0.5rem; line-height: 1; position: relative; z-index: 1; }
+    .participate-cta h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.3rem; position: relative; z-index: 1; }
+    .participate-cta p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.3rem; position: relative; z-index: 1; }
+    .btn-participate {
+      display: inline-flex; align-items: center; gap: 0.7rem;
+      padding: 0.95rem 2.6rem; border-radius: 50px;
+      background: var(--gold); color: #fff; text-decoration: none;
+      font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 1rem;
+      box-shadow: 0 6px 24px rgba(184, 149, 58, 0.35);
+      transition: var(--transition); position: relative; z-index: 1;
     }
-    .form-group textarea { resize: vertical; min-height: 70px; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .form-group-check { display: flex; align-items: flex-start; gap: 0.6rem; margin-bottom: 0.6rem; padding: 0.3rem 0; }
-    .form-group-check input[type="checkbox"] {
-      width: 18px; height: 18px; min-width: 18px; margin-top: 0.2rem;
-      accent-color: var(--gold); cursor: pointer;
+    .btn-participate:hover { background: #a07f2e; transform: translateY(-2px); box-shadow: 0 10px 32px rgba(184, 149, 58, 0.45); }
+    .btn-participate:active { transform: scale(0.97); }
+    .participate-cta .registered-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7;
+      padding: 0.5rem 1.4rem; border-radius: 40px; font-size: 0.85rem; font-weight: 600;
+      margin-top: 0.4rem;
     }
-    .form-group-check label { font-size: 0.8rem; font-weight: 400; color: var(--text-secondary); cursor: pointer; line-height: 1.5; }
-    .form-group-check label strong { color: var(--text-primary); font-weight: 600; }
 
-    .btn-submit {
-      display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
-      width: 100%; padding: 0.8rem 2rem; border-radius: 40px;
-      font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.95rem;
-      background: var(--gold); color: #fff; border: none; cursor: pointer;
-      transition: var(--transition); box-shadow: 0 4px 20px rgba(184, 149, 58, 0.2);
-      margin-top: 0.4rem; letter-spacing: 0.02em;
-    }
-    .btn-submit:hover:not(:disabled) { background: #a07f2e; transform: scale(0.98); box-shadow: 0 6px 28px rgba(184, 149, 58, 0.3); }
-    .btn-submit:active:not(:disabled) { transform: scale(0.96); }
-    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
-
-    .form-message {
-      margin-top: 1.2rem; padding: 0.8rem 1.2rem; border-radius: var(--radius-sm);
-      font-size: 0.85rem; font-weight: 500; text-align: center; display: none;
-    }
-    .form-message.success { display: block; background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
-    .form-message.error { display: block; background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
-    .form-message.info { display: block; background: var(--gold-light); color: #8a6d20; border: 1px solid var(--gold); }
-
-    .login-required-box {
-      text-align: center; padding: 2rem 1rem;
-    }
-    .login-required-box .icon { font-size: 2.4rem; margin-bottom: 0.6rem; }
-    .login-required-box h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
-    .login-required-box p { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem; }
-    .login-required-box .auth-buttons { margin-top: 0.4rem; }
-
+    /* Participants */
     .participants-section { padding: 1.6rem 0 2rem; border-top: 1px solid var(--border); }
     .participants-section .section-header {
       display: flex; align-items: center; justify-content: space-between;
@@ -336,8 +311,6 @@
     @media (max-width: 700px) {
       .conditions { grid-template-columns: 1fr 1fr; gap: 0.8rem; }
       .conditions .condition-card:last-child { grid-column: 1 / -1; max-width: 300px; margin: 0 auto; width: 100%; }
-      .form-row { grid-template-columns: 1fr; gap: 0.8rem; }
-      .form-section { padding: 1.6rem 1.2rem; }
       .hero-comp h1 { font-size: 2rem; }
       .participant-card { flex-direction: column; align-items: stretch; }
       .participant-card .p-vote { margin-left: 0; justify-content: flex-start; }
@@ -350,24 +323,19 @@
       .conditions .condition-card:last-child { grid-column: auto; max-width: 100%; }
       .hero-comp h1 { font-size: 1.6rem; }
       .hero-comp .prize-badge { font-size: 0.75rem; padding: 0.3rem 1.2rem 0.3rem 0.8rem; }
-      .form-section { padding: 1.2rem 0.8rem; }
       .back-link { font-size: 0.7rem; margin-bottom: 1.2rem; }
       .lang-switcher { justify-content: center; }
       .winner-info .countdown { font-size: 1rem; }
       .winner-rule p { font-size: 0.9rem; }
       .auth-btn { padding: 0.65rem 1.3rem; font-size: 0.82rem; }
+      .participate-cta { padding: 1.6rem 1rem; }
+      .participate-cta h2 { font-size: 1.1rem; }
+      .btn-participate { padding: 0.85rem 2rem; font-size: 0.9rem; }
     }
 
     ::-webkit-scrollbar { width: 3px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-
-    .spinner {
-      display: inline-block; width: 18px; height: 18px;
-      border: 2px solid rgba(255, 255, 255, 0.3); border-top: 2px solid #fff;
-      border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
     .hidden { display: none !important; }
   </style>
 </head>
@@ -398,14 +366,12 @@
       </div>
     </header>
 
-    <!-- ===== Auth Section (Login Required) ===== -->
+    <!-- Auth Section -->
     <section class="auth-section reveal" id="authSection">
-      <!-- Loading -->
       <div id="auth-loading">
         <p class="auth-desc">جاري التحقق من الجلسة...</p>
       </div>
 
-      <!-- Not logged in -->
       <div id="auth-not-logged" class="hidden">
         <h2 data-i18n="auth-title">سجل الدخول للمشاركة</h2>
         <p class="auth-desc" data-i18n="auth-desc">يجب تسجيل الدخول بحساب Google أو Apple للمشاركة في المسابقة والتصويت</p>
@@ -428,7 +394,6 @@
         </div>
       </div>
 
-      <!-- Logged in -->
       <div id="auth-logged-in" class="hidden">
         <div class="user-info">
           <div class="user-avatar" id="userAvatar">👤</div>
@@ -476,91 +441,28 @@
       </div>
     </section>
 
-    <!-- Registration Form -->
-    <section class="form-section reveal" id="registration">
-      <h2 class="form-title" data-i18n="form-title">سجل الآن</h2>
-      <p class="form-sub" data-i18n="form-sub">املأ البيانات أدناه وانضم لقائمة المتسابقين</p>
-
-      <!-- Login required placeholder -->
-      <div id="form-login-required" class="login-required-box hidden">
-        <div class="icon">🔒</div>
-        <h3 data-i18n="login-required-title">تسجيل الدخول مطلوب</h3>
-        <p data-i18n="login-required-desc">يرجى تسجيل الدخول بحساب Google أو Apple للمشاركة في المسابقة</p>
-        <div class="auth-buttons">
-          <button class="auth-btn google" onclick="loginWith('google')">
-            <svg viewBox="0 0 24 24" width="20" height="20">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-            </svg>
-            <span data-i18n="login-google">متابعة بـ Google</span>
-          </button>
-          <button class="auth-btn apple" onclick="loginWith('apple')">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-              <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
-            </svg>
-            <span data-i18n="login-apple">متابعة بـ Apple</span>
-          </button>
-        </div>
+    <!-- 🆕 Participate CTA (only visible when logged in) -->
+    <section class="participate-cta reveal hidden" id="participate-cta">
+      <!-- Ready to register -->
+      <div id="participate-ready" class="hidden">
+        <div class="cta-icon">🎯</div>
+        <h2 data-i18n="cta-title">هل أنت مستعد للمشاركة؟</h2>
+        <p data-i18n="cta-desc">سجل بياناتك الآن وانضم إلى قائمة المتسابقين</p>
+        <a href="register.html" class="btn-participate">
+          <span>🚀</span>
+          <span data-i18n="cta-button">شارك في المسابقة</span>
+        </a>
       </div>
-
       <!-- Already registered -->
-      <div id="form-already-registered" class="login-required-box hidden">
-        <div class="icon">✅</div>
-        <h3 data-i18n="already-registered-title">أنت مسجل بالفعل!</h3>
-        <p data-i18n="already-registered-desc">لقد قمت بالتسجيل في المسابقة هذا العام. حظ سعيد!</p>
+      <div id="participate-done" class="hidden">
+        <div class="cta-icon">✅</div>
+        <h2 data-i18n="cta-registered-title">أنت مسجل بالفعل!</h2>
+        <p data-i18n="cta-registered-desc">حظ سعيد في المسابقة! يمكنك متابعة ترتيبك في الأسفل.</p>
+        <span class="registered-badge">
+          <span>🏅</span>
+          <span data-i18n="cta-registered-badge">مشارك هذا العام</span>
+        </span>
       </div>
-
-      <!-- Form -->
-      <form id="competition-form" novalidate class="hidden">
-        <div class="form-group">
-          <label for="fullname" data-i18n="label-name">الاسم الكامل <span class="req">*</span></label>
-          <input type="text" id="fullname" name="fullname" placeholder="مثال: كريم محمد إسماعيل" required />
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="country" data-i18n="label-country">الدولة <span class="req">*</span></label>
-            <input type="text" id="country" name="country" placeholder="مصر" required />
-          </div>
-          <div class="form-group">
-            <label for="phone" data-i18n="label-phone">رقم الهاتف <span class="req">*</span></label>
-            <input type="tel" id="phone" name="phone" placeholder="+20 100 000 0000" required />
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="youtube_url" data-i18n="label-youtube">رابط قناتك على يوتيوب <span class="req">*</span></label>
-          <input type="url" id="youtube_url" name="youtube_url" placeholder="https://youtube.com/@..." required />
-        </div>
-        <div class="form-group">
-          <label for="email" data-i18n="label-email">البريد الإلكتروني <span style="color:var(--text-tertiary);font-weight:400;">(اختياري)</span></label>
-          <input type="email" id="email" name="email" placeholder="karim@example.com" />
-        </div>
-        <div class="form-group">
-          <label for="creative_answer" data-i18n="label-creative">لماذا تستحق الفوز؟ <span class="req">*</span></label>
-          <textarea id="creative_answer" name="creative_answer" rows="3" placeholder="اكتب في ٣ أسطر لماذا تستحق الفوز بالجائزة..." required></textarea>
-        </div>
-
-        <div class="form-group-check">
-          <input type="checkbox" id="cond_youtube" required />
-          <label for="cond_youtube" data-i18n="check-youtube">أؤكد أنني <strong>مشترك</strong> في قناة <strong>هوسكرايب</strong> على يوتيوب.</label>
-        </div>
-        <div class="form-group-check">
-          <input type="checkbox" id="cond_snapchat" required />
-          <label for="cond_snapchat" data-i18n="check-snapchat">أؤكد أنني <strong>متابع</strong> لحساب <strong>@hoscribe</strong> على سناب شات.</label>
-        </div>
-        <div class="form-group-check">
-          <input type="checkbox" id="cond_terms" required />
-          <label for="cond_terms" data-i18n="check-terms">أوافق على <strong>شروط المسابقة</strong> وأؤكد أنني <strong>أكبر من 10 سنوات</strong>.</label>
-        </div>
-
-        <button type="submit" class="btn-submit" id="submit-btn">
-          <span id="btn-text" data-i18n="submit-btn">سجل الآن</span>
-          <span id="btn-spinner" class="spinner hidden"></span>
-        </button>
-
-        <div id="form-message" class="form-message"></div>
-      </form>
     </section>
 
     <!-- Participants -->
@@ -588,17 +490,13 @@
 
       const currentYear = new Date().getFullYear();
 
-      // ——————————————————————————————
-      // 1. Supabase
-      // ——————————————————————————————
+      // Supabase
       const SUPABASE_URL = 'https://dygrssfqkiedrolhkpbi.supabase.co';
       const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5Z3Jzc2Zxa2llZHJvbGhrcGJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwODE0OTQsImV4cCI6MjEwODY1NzQ5NH0.MWT_m2ZE-6qV1g9uiddlcMQP_1d6EltXge0yKLmCkNU';
       const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
       const TABLE = 'competitors';
 
-      // ——————————————————————————————
-      // 2. i18n
-      // ——————————————————————————————
+      // i18n
       const translations = {
         ar: {
           'page-title': 'المسابقة السنوية — هوسكرايب',
@@ -625,31 +523,9 @@
           'cond2-desc': 'يجب أن تتابع حساب <strong>@hoscribe</strong> على سناب شات.',
           'cond3-num': '٣', 'cond3-title': 'إجابة إبداعية',
           'cond3-desc': 'أجب على السؤال الإبداعي: <strong>"لماذا تستحق الفوز؟"</strong> في ٣ أسطر.',
-          'form-title': 'سجل الآن',
-          'form-sub': 'املأ البيانات أدناه وانضم لقائمة المتسابقين',
-          'label-name': 'الاسم الكامل',
-          'label-country': 'الدولة',
-          'label-phone': 'رقم الهاتف',
-          'label-youtube': 'رابط قناتك على يوتيوب',
-          'label-email': 'البريد الإلكتروني (اختياري)',
-          'label-creative': 'لماذا تستحق الفوز؟',
-          'check-youtube': 'أؤكد أنني <strong>مشترك</strong> في قناة <strong>هوسكرايب</strong> على يوتيوب.',
-          'check-snapchat': 'أؤكد أنني <strong>متابع</strong> لحساب <strong>@hoscribe</strong> على سناب شات.',
-          'check-terms': 'أوافق على <strong>شروط المسابقة</strong> وأؤكد أنني <strong>أكبر من 10 سنوات</strong>.',
-          'submit-btn': 'سجل الآن',
-          'login-required-title': 'تسجيل الدخول مطلوب',
-          'login-required-desc': 'يرجى تسجيل الدخول بحساب Google أو Apple للمشاركة في المسابقة',
-          'already-registered-title': 'أنت مسجل بالفعل!',
-          'already-registered-desc': 'لقد قمت بالتسجيل في المسابقة هذا العام. حظ سعيد!',
           'participants-title': 'المتسابقون',
           'participants-empty': 'لا يوجد متسابقون حتى الآن. كن الأول!',
           'footer-credit': '© 2025 Hoscribe · هوسكرايب — كريم محمد إسماعيل',
-          'msg-fill-fields': '⚠️ يرجى ملء جميع الحقول المطلوبة.',
-          'msg-agree-terms': '⚠️ يرجى الموافقة على جميع الشروط للمشاركة.',
-          'msg-invalid-youtube': '⚠️ الرابط المدخل ليس رابط يوتيوب صحيحاً.',
-          'msg-success': '✅ تم التسجيل بنجاح! أنت الآن ضمن المتسابقين. حظ سعيد!',
-          'msg-error': '⚠️ حدث خطأ أثناء التسجيل. حاول مرة أخرى.',
-          'msg-duplicate': '⚠️ هذا الرقم أو البريد مسجل بالفعل.',
           'msg-load-error': '⚠️ تعذر تحميل المتسابقين. حاول تحديث الصفحة.',
           'msg-login-required': '🔒 يرجى تسجيل الدخول أولاً.',
           'msg-self-vote': '⚠️ لا يمكنك التصويت لنفسك.',
@@ -663,6 +539,14 @@
           'login-to-vote': '🔒 سجل الدخول للتصويت',
           'login-failed': '⚠️ فشل تسجيل الدخول. حاول مرة أخرى.',
           'login-canceled': 'تم إلغاء تسجيل الدخول.',
+          'signin-success': '✅ تم تسجيل الدخول بنجاح',
+          'you-badge': 'أنت',
+          'cta-title': 'هل أنت مستعد للمشاركة؟',
+          'cta-desc': 'سجل بياناتك الآن وانضم إلى قائمة المتسابقين',
+          'cta-button': 'شارك في المسابقة',
+          'cta-registered-title': 'أنت مسجل بالفعل!',
+          'cta-registered-desc': 'حظ سعيد في المسابقة! يمكنك متابعة ترتيبك في الأسفل.',
+          'cta-registered-badge': 'مشارك هذا العام',
         },
         en: {
           'page-title': 'Annual Competition — Hoscribe',
@@ -689,31 +573,9 @@
           'cond2-desc': 'You must follow <strong>@hoscribe</strong> on Snapchat.',
           'cond3-num': '3', 'cond3-title': 'Creative Answer',
           'cond3-desc': 'Answer: <strong>"Why do you deserve to win?"</strong> in 3 lines.',
-          'form-title': 'Register Now',
-          'form-sub': 'Fill in the details below and join the contestants.',
-          'label-name': 'Full Name',
-          'label-country': 'Country',
-          'label-phone': 'Phone Number',
-          'label-youtube': 'Your YouTube Channel URL',
-          'label-email': 'Email (optional)',
-          'label-creative': 'Why do you deserve to win?',
-          'check-youtube': 'I confirm I am <strong>subscribed</strong> to <strong>Hoscribe</strong> YouTube channel.',
-          'check-snapchat': 'I confirm I <strong>follow</strong> <strong>@hoscribe</strong> on Snapchat.',
-          'check-terms': 'I agree to <strong>competition terms</strong> and confirm I am <strong>over 10 years old</strong>.',
-          'submit-btn': 'Sign up now',
-          'login-required-title': 'Login Required',
-          'login-required-desc': 'Please sign in with Google or Apple to participate',
-          'already-registered-title': 'You are already registered!',
-          'already-registered-desc': 'You have registered for this year. Good luck!',
           'participants-title': 'Contestants',
           'participants-empty': 'No contestants yet. Be the first!',
           'footer-credit': '© 2025 Hoscribe · هوسكرايب — Karim Mohamed Ismail',
-          'msg-fill-fields': '⚠️ Please fill in all required fields.',
-          'msg-agree-terms': '⚠️ Please agree to all terms.',
-          'msg-invalid-youtube': '⚠️ Invalid YouTube URL.',
-          'msg-success': '✅ Registration successful! Good luck!',
-          'msg-error': '⚠️ Registration error. Please try again.',
-          'msg-duplicate': '⚠️ This phone or email is already registered.',
           'msg-load-error': '⚠️ Failed to load contestants.',
           'msg-login-required': '🔒 Please login first.',
           'msg-self-vote': '⚠️ You cannot vote for yourself.',
@@ -727,6 +589,14 @@
           'login-to-vote': '🔒 Login to vote',
           'login-failed': '⚠️ Login failed. Try again.',
           'login-canceled': 'Login canceled.',
+          'signin-success': '✅ Signed in successfully',
+          'you-badge': 'You',
+          'cta-title': 'Ready to participate?',
+          'cta-desc': 'Register your details now and join the contest',
+          'cta-button': 'Join the competition',
+          'cta-registered-title': 'You are already registered!',
+          'cta-registered-desc': 'Good luck! You can track your rank below.',
+          'cta-registered-badge': 'Participating this year',
         }
       };
 
@@ -747,28 +617,12 @@
         htmlEl.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
         langBtns.forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-lang') === lang));
         localStorage.setItem('hoscribe-lang', lang);
-        updatePlaceholders(lang);
         loadParticipants();
       }
 
       function getTranslation(key) {
         const dict = translations[currentLang];
         return dict && dict[key] !== undefined ? dict[key] : key;
-      }
-
-      function updatePlaceholders(lang) {
-        const placeholders = {
-          'fullname': { ar: 'مثال: كريم محمد إسماعيل', en: 'e.g. Karim Mohamed Ismail' },
-          'country': { ar: 'مصر', en: 'Egypt' },
-          'phone': { ar: '+20 100 000 0000', en: '+20 100 000 0000' },
-          'youtube_url': { ar: 'https://youtube.com/@...', en: 'https://youtube.com/@...' },
-          'email': { ar: 'karim@example.com', en: 'karim@example.com' },
-          'creative_answer': { ar: 'اكتب في ٣ أسطر لماذا تستحق الفوز...', en: 'Write in 3 lines why you deserve to win...' }
-        };
-        Object.keys(placeholders).forEach(id => {
-          const el = document.getElementById(id);
-          if (el) el.placeholder = placeholders[id][lang] || placeholders[id]['ar'];
-        });
       }
 
       langBtns.forEach(btn => {
@@ -782,9 +636,7 @@
         (navigator.language && navigator.language.startsWith('en') ? 'en' : 'ar');
       setLanguage(initialLang);
 
-      // ——————————————————————————————
-      // 3. Reveal
-      // ——————————————————————————————
+      // Reveal
       const revealEls = document.querySelectorAll('.reveal');
       if (revealEls.length && 'IntersectionObserver' in window) {
         const observer = new IntersectionObserver((entries) => {
@@ -800,9 +652,7 @@
         revealEls.forEach(el => el.classList.add('visible'));
       }
 
-      // ——————————————————————————————
-      // 4. Toast
-      // ——————————————————————————————
+      // Toast
       const toastEl = document.getElementById('toast');
       let toastTimeout;
       function showToast(message, type = 'success') {
@@ -812,9 +662,7 @@
         toastTimeout = setTimeout(() => toastEl.classList.remove('show'), 5000);
       }
 
-      // ——————————————————————————————
-      // 5. Auth State
-      // ——————————————————————————————
+      // Auth State
       let currentUser = null;
       let myVotedIds = new Set();
       let hasRegistered = false;
@@ -842,12 +690,11 @@
         const loadingEl = document.getElementById('auth-loading');
         const notLoggedEl = document.getElementById('auth-not-logged');
         const loggedInEl = document.getElementById('auth-logged-in');
-        const form = document.getElementById('competition-form');
-        const loginRequired = document.getElementById('form-login-required');
-        const alreadyReg = document.getElementById('form-already-registered');
+        const ctaSection = document.getElementById('participate-cta');
+        const ctaReady = document.getElementById('participate-ready');
+        const ctaDone = document.getElementById('participate-done');
 
         loadingEl.classList.add('hidden');
-
         if (!authReady) return;
 
         if (currentUser) {
@@ -868,21 +715,20 @@
             avatarEl.textContent = '👤';
           }
 
-          loginRequired.classList.add('hidden');
-
+          // 🆕 Show participate CTA
+          ctaSection.classList.remove('hidden');
           if (hasRegistered) {
-            form.classList.add('hidden');
-            alreadyReg.classList.remove('hidden');
+            ctaReady.classList.add('hidden');
+            ctaDone.classList.remove('hidden');
           } else {
-            form.classList.remove('hidden');
-            alreadyReg.classList.add('hidden');
+            ctaReady.classList.remove('hidden');
+            ctaDone.classList.add('hidden');
           }
         } else {
           notLoggedEl.classList.remove('hidden');
           loggedInEl.classList.add('hidden');
-          form.classList.add('hidden');
-          alreadyReg.classList.add('hidden');
-          loginRequired.classList.remove('hidden');
+          // 🆕 Hide participate CTA when not logged in
+          ctaSection.classList.add('hidden');
         }
       }
 
@@ -906,9 +752,7 @@
         }
       }
 
-      // ——————————————————————————————
-      // 6. Load participants
-      // ——————————————————————————————
+      // Load participants
       async function loadParticipants() {
         const grid = document.getElementById('participants-grid');
         const countEl = document.getElementById('participants-count');
@@ -931,8 +775,6 @@
           }
 
           countEl.textContent = data.length;
-          
-          // تأمين التحديث لتجنب خطأ null
           if (leaderEl) {
             if (data[0] && data[0].likes > 0) {
               leaderEl.textContent = `${data[0].name} (❤️ ${data[0].likes})`;
@@ -948,14 +790,13 @@
             const isTop = index === 0 && data.length > 1;
             const isMine = currentUser && p.user_id === currentUser.id;
             const userVoted = myVotedIds.has(p.id);
-            const canVote = !!currentUser && !userVoted && !isMine;
 
             let btnLabel, btnClass, btnDisabled;
             if (!currentUser) {
               btnLabel = getTranslation('login-to-vote');
               btnClass = ''; btnDisabled = true;
             } else if (isMine) {
-              btnLabel = currentLang === 'ar' ? 'أنت' : 'You';
+              btnLabel = getTranslation('you-badge');
               btnClass = ''; btnDisabled = true;
             } else if (userVoted) {
               btnLabel = getTranslation('already-voted');
@@ -971,7 +812,7 @@
                   <div class="p-name">
                     ${escapeHtml(p.name)}
                     ${isTop ? `<span class="top-badge">${getTranslation('top-contestant')}</span>` : ''}
-                    ${isMine ? `<span class="mine-badge">${currentLang === 'ar' ? 'أنت' : 'You'}</span>` : ''}
+                    ${isMine ? `<span class="mine-badge">${getTranslation('you-badge')}</span>` : ''}
                   </div>
                   <div class="p-country">📍 ${escapeHtml(p.country)}</div>
                   ${p.youtube_url ? `<a href="${escapeHtml(p.youtube_url)}" target="_blank" rel="noopener" class="p-youtube">▶ ${escapeHtml(youtubeDisplay)}</a>` : ''}
@@ -1001,9 +842,6 @@
         }
       }
 
-      // ——————————————————————————————
-      // 7. Handle Like (per-user)
-      // ——————————————————————————————
       async function handleLike(e) {
         const btn = e.currentTarget;
         const competitorId = parseInt(btn.getAttribute('data-id'), 10);
@@ -1047,7 +885,6 @@
           showToast(getTranslation('vote-success'), 'success');
           myVotedIds.add(competitorId);
 
-          // Update UI locally
           const card = btn.closest('.participant-card');
           if (card) {
             const likesSpan = card.querySelector('.p-likes span:nth-child(2)');
@@ -1061,7 +898,6 @@
           }
 
           setTimeout(() => loadParticipants(), 800);
-
         } catch (err) {
           console.error('❌ Vote error:', err);
           showToast(getTranslation('vote-error'), 'error');
@@ -1070,111 +906,7 @@
         }
       }
 
-      // ——————————————————————————————
-      // 8. Form submission
-      // ——————————————————————————————
-      const form = document.getElementById('competition-form');
-      const submitBtn = document.getElementById('submit-btn');
-      const btnText = document.getElementById('btn-text');
-      const btnSpinner = document.getElementById('btn-spinner');
-      const msgEl = document.getElementById('form-message');
-
-      form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-
-        if (!currentUser) {
-          showMessage(getTranslation('msg-login-required'), 'error');
-          return;
-        }
-
-        const name = document.getElementById('fullname').value.trim();
-        const country = document.getElementById('country').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const youtube_url = document.getElementById('youtube_url').value.trim();
-        const email = document.getElementById('email').value.trim() || null;
-        const creative_answer = document.getElementById('creative_answer').value.trim();
-        const condYt = document.getElementById('cond_youtube').checked;
-        const condSnap = document.getElementById('cond_snapchat').checked;
-        const condTerms = document.getElementById('cond_terms').checked;
-
-        if (!name || !country || !phone || !youtube_url || !creative_answer) {
-          showMessage(getTranslation('msg-fill-fields'), 'error');
-          return;
-        }
-        if (!condYt || !condSnap || !condTerms) {
-          showMessage(getTranslation('msg-agree-terms'), 'error');
-          return;
-        }
-        if (!youtube_url.includes('youtube.com') && !youtube_url.includes('youtu.be')) {
-          showMessage(getTranslation('msg-invalid-youtube'), 'error');
-          return;
-        }
-
-        submitBtn.disabled = true;
-        btnText.textContent = currentLang === 'ar' ? 'جاري التسجيل...' : 'Registering...';
-        btnSpinner.classList.remove('hidden');
-
-        try {
-          const { data, error } = await supabase.rpc('register_competitor', {
-            p_name: name,
-            p_country: country,
-            p_phone: phone,
-            p_youtube_url: youtube_url,
-            p_email: email,
-            p_creative_answer: creative_answer,
-            p_cond_youtube: condYt,
-            p_cond_snapchat: condSnap,
-            p_cond_terms: condTerms,
-          });
-
-          if (error) throw error;
-
-          if (!data.success) {
-            if (data.error === 'already_registered') {
-              showMessage(getTranslation('already-registered-title'), 'info');
-              hasRegistered = true;
-              updateAuthUI();
-            } else if (data.error === 'duplicate_phone') {
-              showMessage(getTranslation('msg-duplicate'), 'error');
-            } else if (data.error === 'not_authenticated') {
-              showMessage(getTranslation('msg-login-required'), 'error');
-            } else {
-              showMessage(getTranslation('msg-error'), 'error');
-            }
-            submitBtn.disabled = false;
-            btnText.textContent = getTranslation('submit-btn');
-            btnSpinner.classList.add('hidden');
-            return;
-          }
-
-          showMessage(getTranslation('msg-success'), 'success');
-          form.reset();
-          hasRegistered = true;
-          updateAuthUI();
-          loadParticipants();
-
-        } catch (err) {
-          console.error('❌ Submission error:', err);
-          showMessage(getTranslation('msg-error'), 'error');
-        } finally {
-          if (!hasRegistered) submitBtn.disabled = false;
-          btnText.textContent = getTranslation('submit-btn');
-          btnSpinner.classList.add('hidden');
-        }
-      });
-
-      function showMessage(text, type) {
-        msgEl.textContent = text;
-        msgEl.className = 'form-message ' + type;
-        msgEl.style.display = 'block';
-        if (type === 'success') {
-          setTimeout(() => { msgEl.style.display = 'none'; }, 6000);
-        }
-      }
-
-      // ——————————————————————————————
-      // 9. Countdown
-      // ——————————————————————————————
+      // Countdown
       function updateCountdown() {
         const now = new Date();
         const target = new Date(now.getFullYear() + 1, 0, 1);
@@ -1193,9 +925,6 @@
       updateCountdown();
       setInterval(updateCountdown, 1000);
 
-      // ——————————————————————————————
-      // 10. Helpers
-      // ——————————————————————————————
       function escapeHtml(text) {
         if (!text) return '';
         const div = document.createElement('div');
@@ -1203,11 +932,7 @@
         return div.innerHTML;
       }
 
-      // ——————————————————————————————
-      // 11. Init
-      // ——————————————————————————————
       async function init() {
-        // Get initial session
         const { data: { session } } = await supabase.auth.getSession();
         currentUser = session?.user || null;
         authReady = true;
@@ -1216,7 +941,6 @@
         updateAuthUI();
         await loadParticipants();
 
-        // Listen for changes
         supabase.auth.onAuthStateChange(async (event, session) => {
           currentUser = session?.user || null;
           await refreshUserState();
@@ -1224,7 +948,7 @@
           await loadParticipants();
 
           if (event === 'SIGNED_IN') {
-            showToast(currentLang === 'ar' ? '✅ تم تسجيل الدخول بنجاح' : '✅ Signed in successfully', 'success');
+            showToast(getTranslation('signin-success'), 'success');
           } else if (event === 'SIGNED_OUT') {
             showToast(getTranslation('login-canceled'), 'error');
           }
@@ -1233,151 +957,8 @@
 
       init();
       setInterval(loadParticipants, 30000);
-
     })();
   </script>
 
-  <!-- ============================================================
-  📌 تعليمات إعداد قاعدة البيانات (Supabase SQL Editor)
-  ============================================================
-
-  -- 1) إضافة عمود user_id للجداول
-  ALTER TABLE competitors ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id);
-  ALTER TABLE votes ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id);
-  CREATE INDEX IF NOT EXISTS idx_competitors_user ON competitors(user_id);
-  CREATE INDEX IF NOT EXISTS idx_votes_user ON votes(user_id);
-
-  -- 2) تفعيل RLS
-  ALTER TABLE competitors ENABLE ROW LEVEL SECURITY;
-  ALTER TABLE votes ENABLE ROW LEVEL SECURITY;
-
-  -- قراءة المتسابقين للجميع (للعرض)
-  DROP POLICY IF EXISTS "Anyone can read competitors" ON competitors;
-  CREATE POLICY "Anyone can read competitors" ON competitors
-    FOR SELECT USING (true);
-
-  -- كل مستخدم يقرأ تصويتاته فقط
-  DROP POLICY IF EXISTS "Users read own votes" ON votes;
-  CREATE POLICY "Users read own votes" ON votes
-    FOR SELECT USING (auth.uid() = user_id);
-
-  -- 3) دالة التسجيل
-  CREATE OR REPLACE FUNCTION register_competitor(
-    p_name TEXT,
-    p_country TEXT,
-    p_phone TEXT,
-    p_youtube_url TEXT,
-    p_email TEXT,
-    p_creative_answer TEXT,
-    p_cond_youtube BOOLEAN,
-    p_cond_snapchat BOOLEAN,
-    p_cond_terms BOOLEAN
-  )
-  RETURNS JSON
-  LANGUAGE plpgsql
-  SECURITY DEFINER
-  SET search_path = public
-  AS $$
-  DECLARE
-    v_uid UUID := auth.uid();
-  BEGIN
-    IF v_uid IS NULL THEN
-      RETURN json_build_object('success', false, 'error', 'not_authenticated');
-    END IF;
-
-    IF NOT p_cond_youtube OR NOT p_cond_snapchat OR NOT p_cond_terms THEN
-      RETURN json_build_object('success', false, 'error', 'terms_not_accepted');
-    END IF;
-
-    -- تسجيل واحد لكل مستخدم كل سنة
-    IF EXISTS (
-      SELECT 1 FROM competitors
-      WHERE user_id = v_uid
-        AND EXTRACT(YEAR FROM created_at) = EXTRACT(YEAR FROM NOW())
-    ) THEN
-      RETURN json_build_object('success', false, 'error', 'already_registered');
-    END IF;
-
-    -- منع تكرار الهاتف/البريد
-    IF EXISTS (
-      SELECT 1 FROM competitors
-      WHERE phone = p_phone
-         OR (p_email IS NOT NULL AND email = p_email)
-    ) THEN
-      RETURN json_build_object('success', false, 'error', 'duplicate_phone');
-    END IF;
-
-    INSERT INTO competitors (
-      name, country, phone, youtube_url, email, creative_answer,
-      cond_youtube, cond_snapchat, cond_terms,
-      user_id, likes, created_at
-    ) VALUES (
-      p_name, p_country, p_phone, p_youtube_url, p_email, p_creative_answer,
-      p_cond_youtube, p_cond_snapchat, p_cond_terms,
-      v_uid, 0, NOW()
-    );
-
-    RETURN json_build_object('success', true);
-  END;
-  $$;
-
-  -- 4) دالة التصويت
-  CREATE OR REPLACE FUNCTION add_vote(p_competitor_id INT)
-  RETURNS JSON
-  LANGUAGE plpgsql
-  SECURITY DEFINER
-  SET search_path = public
-  AS $$
-  DECLARE
-    v_uid UUID := auth.uid();
-    v_today DATE := CURRENT_DATE;
-    v_vote_count INT;
-    v_owner UUID;
-  BEGIN
-    IF v_uid IS NULL THEN
-      RETURN json_build_object('success', false, 'error', 'not_authenticated');
-    END IF;
-
-    -- منع التصويت الذاتي
-    SELECT user_id INTO v_owner FROM competitors WHERE id = p_competitor_id;
-    IF v_owner IS NULL THEN
-      RETURN json_build_object('success', false, 'error', 'not_found');
-    END IF;
-    IF v_owner = v_uid THEN
-      RETURN json_build_object('success', false, 'error', 'self_vote');
-    END IF;
-
-    -- تصويت واحد لكل مستخدم لكل متسابق
-    IF EXISTS (
-      SELECT 1 FROM votes
-      WHERE user_id = v_uid AND competitor_id = p_competitor_id
-    ) THEN
-      RETURN json_build_object('success', false, 'error', 'already_voted');
-    END IF;
-
-    -- حد يومي 10 تصويتات لكل حساب
-    SELECT COUNT(*) INTO v_vote_count
-    FROM votes
-    WHERE user_id = v_uid AND DATE(created_at) = v_today;
-
-    IF v_vote_count >= 10 THEN
-      RETURN json_build_object('success', false, 'error', 'rate_limit');
-    END IF;
-
-    INSERT INTO votes (competitor_id, user_id, created_at)
-    VALUES (p_competitor_id, v_uid, NOW());
-
-    UPDATE competitors
-    SET likes = COALESCE(likes, 0) + 1
-    WHERE id = p_competitor_id;
-
-    RETURN json_build_object('success', true);
-  END;
-  $$;
-
-  -- 5) منح تنفيذ الدوال للمستخدمين
-  GRANT EXECUTE ON FUNCTION register_competitor(TEXT,TEXT,TEXT,TEXT,TEXT,TEXT,BOOLEAN,BOOLEAN,BOOLEAN) TO authenticated;
-  GRANT EXECUTE ON FUNCTION add_vote(INT) TO authenticated;
-  -->
 </body>
 </html>
