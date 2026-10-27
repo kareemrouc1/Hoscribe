@@ -19,21 +19,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" />
 
   <!-- Supabase JS Client -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js">
-  </script>
-
-  <!-- Turnstile -->
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
 
   <style>
-    /* ===== نفس الأنماط السابقة مع إضافة نمط لملاحظة الفائز ===== */
-    *,
-    *::before,
-    *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
       --bg: #fafafa;
@@ -53,11 +42,7 @@
       --like-bg: #fde8e8;
     }
 
-    html {
-      scroll-behavior: smooth;
-      -webkit-font-smoothing: antialiased;
-      contain: layout style paint;
-    }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
 
     body {
       font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -71,719 +56,319 @@
       align-items: center;
     }
 
-    .container {
-      max-width: 820px;
-      width: 100%;
-      margin: 0 auto;
-    }
+    .container { max-width: 820px; width: 100%; margin: 0 auto; }
 
-    /* ===== باقي الأنماط كما هي ===== */
-    .lang-switcher {
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.2rem;
-      margin-bottom: 1.5rem;
-    }
+    .lang-switcher { display: flex; justify-content: flex-end; gap: 0.2rem; margin-bottom: 1.5rem; }
     .lang-btn {
-      background: transparent;
-      border: none;
-      padding: 0.2rem 0.9rem;
-      font-family: 'Cairo', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 400;
-      color: var(--text-tertiary);
-      cursor: pointer;
-      border-radius: 30px;
+      background: transparent; border: none; padding: 0.2rem 0.9rem;
+      font-family: 'Cairo', sans-serif; font-size: 0.75rem; font-weight: 400;
+      color: var(--text-tertiary); cursor: pointer; border-radius: 30px;
       transition: var(--transition);
-      will-change: background, color;
     }
-    .lang-btn:hover {
-      color: var(--text-primary);
-      background: var(--border);
-    }
+    .lang-btn:hover { color: var(--text-primary); background: var(--border); }
     .lang-btn.active {
-      color: var(--text-primary);
-      background: var(--surface);
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
-      font-weight: 600;
-    }
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.8rem;
-      font-weight: 400;
-      color: var(--text-tertiary);
-      text-decoration: none;
-      margin-bottom: 1.5rem;
-      transition: var(--transition);
-      padding: 0.3rem 0.8rem;
-      border-radius: 30px;
-      background: transparent;
-      border: 1px solid transparent;
-    }
-    .back-link:hover {
-      color: var(--text-primary);
-      background: var(--surface);
-      border-color: var(--border);
-    }
-    .back-link svg {
-      width: 18px;
-      height: 18px;
-      stroke: currentColor;
-      stroke-width: 2;
-      fill: none;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+      color: var(--text-primary); background: var(--surface);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02); font-weight: 600;
     }
 
-    .hero-comp {
-      text-align: center;
-      padding: 1.2rem 0 2.4rem;
-      border-bottom: 1px solid var(--border);
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.8rem; font-weight: 400; color: var(--text-tertiary);
+      text-decoration: none; margin-bottom: 1.5rem; transition: var(--transition);
+      padding: 0.3rem 0.8rem; border-radius: 30px;
+      background: transparent; border: 1px solid transparent;
     }
+    .back-link:hover { color: var(--text-primary); background: var(--surface); border-color: var(--border); }
+    .back-link svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+    .hero-comp { text-align: center; padding: 1.2rem 0 2.4rem; border-bottom: 1px solid var(--border); }
     .hero-comp .badge {
-      display: inline-block;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--gold);
-      background: var(--gold-light);
-      padding: 0.2rem 1.2rem;
-      border-radius: 40px;
-      margin-bottom: 0.8rem;
+      display: inline-block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--gold); background: var(--gold-light);
+      padding: 0.2rem 1.2rem; border-radius: 40px; margin-bottom: 0.8rem;
     }
-    .hero-comp h1 {
-      font-size: 2.6rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.15;
-      color: var(--text-primary);
-    }
-    .hero-comp h1 .highlight {
-      color: var(--gold);
-    }
+    .hero-comp h1 { font-size: 2.6rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+    .hero-comp h1 .highlight { color: var(--gold); }
     .hero-comp .sub {
-      font-size: 0.95rem;
-      font-weight: 300;
-      color: var(--text-secondary);
-      margin-top: 0.2rem;
-      max-width: 460px;
-      margin-left: auto;
-      margin-right: auto;
+      font-size: 0.95rem; font-weight: 300; color: var(--text-secondary);
+      margin-top: 0.2rem; max-width: 460px; margin-left: auto; margin-right: auto;
     }
     .hero-comp .prize-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      margin-top: 1rem;
-      background: var(--surface);
-      border: 1px solid var(--gold);
-      border-radius: 60px;
-      padding: 0.4rem 1.6rem 0.4rem 1.2rem;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      box-shadow: 0 2px 12px rgba(184, 149, 58, 0.08);
+      display: inline-flex; align-items: center; gap: 0.6rem; margin-top: 1rem;
+      background: var(--surface); border: 1px solid var(--gold); border-radius: 60px;
+      padding: 0.4rem 1.6rem 0.4rem 1.2rem; font-size: 0.85rem; font-weight: 600;
+      color: var(--text-primary); box-shadow: 0 2px 12px rgba(184, 149, 58, 0.08);
     }
-    .hero-comp .prize-badge .icon {
-      font-size: 1.2rem;
-      line-height: 1;
-    }
+    .hero-comp .prize-badge .icon { font-size: 1.2rem; line-height: 1; }
 
-    /* ===== قسم الفائز بالإعجابات ===== */
-    .winner-rule {
+    /* ===== Auth Section ===== */
+    .auth-section {
       background: var(--surface);
       border-radius: var(--radius);
-      padding: 1rem 1.6rem;
-      margin: 1.6rem 0 1.2rem;
-      border: 2px solid var(--gold);
+      padding: 1.6rem;
+      margin: 1.6rem 0;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
       text-align: center;
+    }
+    .auth-section h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .auth-section .auth-desc {
+      font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.2rem;
+    }
+    .auth-buttons {
+      display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap;
+    }
+    .auth-btn {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      padding: 0.75rem 1.8rem; border-radius: 40px;
+      border: 1px solid var(--border); background: var(--surface);
+      font-family: 'Cairo', sans-serif; font-size: 0.9rem; font-weight: 600;
+      color: var(--text-primary); cursor: pointer; transition: var(--transition);
+    }
+    .auth-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-hover); }
+    .auth-btn.google:hover { border-color: #4285F4; }
+    .auth-btn.apple:hover { background: #000; color: #fff; border-color: #000; }
+
+    .user-info {
+      display: flex; align-items: center; justify-content: center; gap: 1rem;
+      margin-bottom: 1rem; flex-wrap: wrap;
+    }
+    .user-avatar {
+      width: 52px; height: 52px; border-radius: 50%; background: var(--gold-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; overflow: hidden; flex-shrink: 0;
+    }
+    .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .user-meta { text-align: right; }
+    html[dir="ltr"] .user-meta { text-align: left; }
+    .user-name { font-size: 0.95rem; font-weight: 700; }
+    .user-email { font-size: 0.75rem; color: var(--text-secondary); }
+    .logout-btn {
+      padding: 0.5rem 1.4rem; border-radius: 30px; background: transparent;
+      border: 1px solid var(--border); font-family: 'Cairo', sans-serif;
+      font-size: 0.75rem; color: var(--text-secondary); cursor: pointer;
+      transition: var(--transition);
+    }
+    .logout-btn:hover { border-color: #c62828; color: #c62828; background: #ffebee; }
+
+    /* ===== Winner sections ===== */
+    .winner-rule {
+      background: var(--surface); border-radius: var(--radius);
+      padding: 1rem 1.6rem; margin: 1.6rem 0 1.2rem;
+      border: 2px solid var(--gold); text-align: center;
       box-shadow: 0 4px 20px rgba(184, 149, 58, 0.12);
     }
-    .winner-rule p {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-    .winner-rule p span {
-      color: var(--gold);
-      font-size: 1.2rem;
-    }
-    .winner-rule .sub-note {
-      font-size: 0.85rem;
-      font-weight: 400;
-      color: var(--text-secondary);
-      margin-top: 0.2rem;
-    }
+    .winner-rule p { font-size: 1.1rem; font-weight: 700; }
+    .winner-rule p span { color: var(--gold); font-size: 1.2rem; }
+    .winner-rule .sub-note { font-size: 0.85rem; font-weight: 400; color: var(--text-secondary); margin-top: 0.2rem; }
 
     .winner-info {
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 1.4rem 1.6rem;
-      margin: 1.2rem 0 1.2rem;
-      border: 1px solid var(--gold);
-      box-shadow: 0 2px 20px rgba(184, 149, 58, 0.06);
+      background: var(--surface); border-radius: var(--radius);
+      padding: 1.4rem 1.6rem; margin: 1.2rem 0;
+      border: 1px solid var(--gold); box-shadow: 0 2px 20px rgba(184, 149, 58, 0.06);
       text-align: center;
     }
-    .winner-info .leader {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 0.2rem;
-    }
-    .winner-info .leader span {
-      color: var(--gold);
-    }
+    .winner-info .leader { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .winner-info .leader span { color: var(--gold); }
     .winner-info .countdown {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--gold);
-      direction: ltr;
-      display: inline-block;
-      background: var(--gold-light);
-      padding: 0.2rem 1.2rem;
-      border-radius: 40px;
-      margin-top: 0.4rem;
+      font-size: 1.4rem; font-weight: 700; color: var(--gold); direction: ltr;
+      display: inline-block; background: var(--gold-light);
+      padding: 0.2rem 1.2rem; border-radius: 40px; margin-top: 0.4rem;
     }
-    .winner-info .announce {
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-      margin-top: 0.2rem;
-    }
+    .winner-info .announce { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.2rem; }
 
     .conditions {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.2rem;
-      padding: 2.4rem 0 1.6rem;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem; padding: 2.4rem 0 1.6rem;
     }
     .condition-card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 1.4rem 1rem;
-      text-align: center;
-      border: 1px solid var(--border);
+      background: var(--surface); border-radius: var(--radius);
+      padding: 1.4rem 1rem; text-align: center; border: 1px solid var(--border);
       transition: var(--transition);
-      position: relative;
-      contain: layout style;
     }
-    .condition-card:hover {
-      border-color: var(--gold);
-      box-shadow: var(--shadow-hover);
-      transform: translateY(-2px);
-    }
+    .condition-card:hover { border-color: var(--gold); box-shadow: var(--shadow-hover); transform: translateY(-2px); }
     .condition-card .num {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: var(--gold-light);
-      color: var(--gold);
-      font-weight: 700;
-      font-size: 0.8rem;
-      margin-bottom: 0.4rem;
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--gold-light); color: var(--gold);
+      font-weight: 700; font-size: 0.8rem; margin-bottom: 0.4rem;
     }
-    .condition-card h3 {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 0.1rem;
-    }
-    .condition-card p {
-      font-size: 0.75rem;
-      font-weight: 300;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      max-width: 200px;
-      margin: 0 auto;
-    }
+    .condition-card h3 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.1rem; }
+    .condition-card p { font-size: 0.75rem; font-weight: 300; color: var(--text-secondary); line-height: 1.6; max-width: 200px; margin: 0 auto; }
 
     .form-section {
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 2rem 2.2rem;
-      border: 1px solid var(--border);
-      margin: 1.6rem 0 2.4rem;
-      box-shadow: var(--shadow);
+      background: var(--surface); border-radius: var(--radius);
+      padding: 2rem 2.2rem; border: 1px solid var(--border);
+      margin: 1.6rem 0 2.4rem; box-shadow: var(--shadow);
     }
-    .form-section .form-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      text-align: center;
-      margin-bottom: 0.2rem;
+    .form-section .form-title { font-size: 1.1rem; font-weight: 700; text-align: center; margin-bottom: 0.2rem; }
+    .form-section .form-sub { font-size: 0.8rem; font-weight: 300; color: var(--text-secondary); text-align: center; margin-bottom: 1.8rem; }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label { display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.2rem; letter-spacing: 0.02em; }
+    .form-group label .req { color: #c0392b; font-weight: 700; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 0.6rem 1rem; font-family: 'Cairo', sans-serif;
+      font-size: 0.9rem; border: 1px solid var(--border); border-radius: var(--radius-sm);
+      background: var(--bg); color: var(--text-primary); transition: var(--transition);
+      outline: none; -webkit-appearance: none; appearance: none;
     }
-    .form-section .form-sub {
-      font-size: 0.8rem;
-      font-weight: 300;
-      color: var(--text-secondary);
-      text-align: center;
-      margin-bottom: 1.8rem;
+    .form-group input:focus, .form-group textarea:focus {
+      border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184, 149, 58, 0.08); background: #fff;
     }
-    .form-group {
-      margin-bottom: 1.2rem;
-    }
-    .form-group label {
-      display: block;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 0.2rem;
-      letter-spacing: 0.02em;
-    }
-    .form-group label .req {
-      color: #c0392b;
-      font-weight: 700;
-    }
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      width: 100%;
-      padding: 0.6rem 1rem;
-      font-family: 'Cairo', sans-serif;
-      font-size: 0.9rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      background: var(--bg);
-      color: var(--text-primary);
-      transition: var(--transition);
-      outline: none;
-      -webkit-appearance: none;
-      appearance: none;
-    }
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(184, 149, 58, 0.08);
-      background: #fff;
-    }
-    .form-group textarea {
-      resize: vertical;
-      min-height: 70px;
-    }
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-    .form-group-check {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.6rem;
-      margin-bottom: 0.6rem;
-      padding: 0.3rem 0;
-    }
+    .form-group textarea { resize: vertical; min-height: 70px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group-check { display: flex; align-items: flex-start; gap: 0.6rem; margin-bottom: 0.6rem; padding: 0.3rem 0; }
     .form-group-check input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      min-width: 18px;
-      margin-top: 0.2rem;
-      accent-color: var(--gold);
-      cursor: pointer;
+      width: 18px; height: 18px; min-width: 18px; margin-top: 0.2rem;
+      accent-color: var(--gold); cursor: pointer;
     }
-    .form-group-check label {
-      font-size: 0.8rem;
-      font-weight: 400;
-      color: var(--text-secondary);
-      cursor: pointer;
-      line-height: 1.5;
-    }
-    .form-group-check label strong {
-      color: var(--text-primary);
-      font-weight: 600;
-    }
-    .cf-turnstile {
-      display: flex;
-      justify-content: center;
-      margin: 0.8rem 0 1rem;
-    }
+    .form-group-check label { font-size: 0.8rem; font-weight: 400; color: var(--text-secondary); cursor: pointer; line-height: 1.5; }
+    .form-group-check label strong { color: var(--text-primary); font-weight: 600; }
+
     .btn-submit {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-      width: 100%;
-      padding: 0.8rem 2rem;
-      border-radius: 40px;
-      font-family: 'Cairo', sans-serif;
-      font-weight: 700;
-      font-size: 0.95rem;
-      background: var(--gold);
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      transition: var(--transition);
-      box-shadow: 0 4px 20px rgba(184, 149, 58, 0.2);
-      margin-top: 0.4rem;
-      letter-spacing: 0.02em;
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
+      width: 100%; padding: 0.8rem 2rem; border-radius: 40px;
+      font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.95rem;
+      background: var(--gold); color: #fff; border: none; cursor: pointer;
+      transition: var(--transition); box-shadow: 0 4px 20px rgba(184, 149, 58, 0.2);
+      margin-top: 0.4rem; letter-spacing: 0.02em;
     }
-    .btn-submit:hover:not(:disabled) {
-      background: #a07f2e;
-      transform: scale(0.98);
-      box-shadow: 0 6px 28px rgba(184, 149, 58, 0.3);
-    }
-    .btn-submit:active:not(:disabled) {
-      transform: scale(0.96);
-    }
-    .btn-submit:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
+    .btn-submit:hover:not(:disabled) { background: #a07f2e; transform: scale(0.98); box-shadow: 0 6px 28px rgba(184, 149, 58, 0.3); }
+    .btn-submit:active:not(:disabled) { transform: scale(0.96); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
 
     .form-message {
-      margin-top: 1.2rem;
-      padding: 0.8rem 1.2rem;
-      border-radius: var(--radius-sm);
-      font-size: 0.85rem;
-      font-weight: 500;
-      text-align: center;
-      display: none;
+      margin-top: 1.2rem; padding: 0.8rem 1.2rem; border-radius: var(--radius-sm);
+      font-size: 0.85rem; font-weight: 500; text-align: center; display: none;
     }
-    .form-message.success {
-      display: block;
-      background: #e8f5e9;
-      color: #2e7d32;
-      border: 1px solid #a5d6a7;
-    }
-    .form-message.error {
-      display: block;
-      background: #ffebee;
-      color: #c62828;
-      border: 1px solid #ef9a9a;
-    }
+    .form-message.success { display: block; background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+    .form-message.error { display: block; background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+    .form-message.info { display: block; background: var(--gold-light); color: #8a6d20; border: 1px solid var(--gold); }
 
-    .participants-section {
-      padding: 1.6rem 0 2rem;
-      border-top: 1px solid var(--border);
+    .login-required-box {
+      text-align: center; padding: 2rem 1rem;
     }
+    .login-required-box .icon { font-size: 2.4rem; margin-bottom: 0.6rem; }
+    .login-required-box h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .login-required-box p { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem; }
+    .login-required-box .auth-buttons { margin-top: 0.4rem; }
+
+    .participants-section { padding: 1.6rem 0 2rem; border-top: 1px solid var(--border); }
     .participants-section .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 0.8rem;
-      margin-bottom: 1.4rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 0.8rem; margin-bottom: 1.4rem;
     }
-    .participants-section .section-header h2 {
-      font-size: 1.1rem;
-      font-weight: 700;
-    }
+    .participants-section .section-header h2 { font-size: 1.1rem; font-weight: 700; }
     .participants-section .section-header .count {
-      font-size: 0.75rem;
-      font-weight: 400;
-      color: var(--text-tertiary);
-      background: var(--bg);
-      padding: 0.2rem 1rem;
-      border-radius: 30px;
+      font-size: 0.75rem; font-weight: 400; color: var(--text-tertiary);
+      background: var(--bg); padding: 0.2rem 1rem; border-radius: 30px;
     }
-    .participants-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0.8rem;
-    }
+    .participants-grid { display: grid; grid-template-columns: 1fr; gap: 0.8rem; }
     .participant-card {
-      background: var(--surface);
-      border-radius: var(--radius-sm);
-      padding: 0.8rem 1.2rem;
-      border: 1px solid var(--border);
-      transition: var(--transition);
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.6rem 1rem;
-      contain: layout style;
+      background: var(--surface); border-radius: var(--radius-sm);
+      padding: 0.8rem 1.2rem; border: 1px solid var(--border);
+      transition: var(--transition); display: flex; flex-wrap: wrap;
+      align-items: center; justify-content: space-between; gap: 0.6rem 1rem;
     }
-    .participant-card:hover {
-      border-color: var(--gold);
-      box-shadow: var(--shadow-hover);
-    }
-    .participant-card.top {
-      border-color: var(--gold);
-      background: var(--gold-light);
-    }
-    .participant-card .p-info {
-      display: flex;
-      flex-direction: column;
-      flex: 1 1 180px;
-      gap: 0.1rem;
-    }
-    .participant-card .p-name {
-      font-weight: 700;
-      font-size: 0.9rem;
-      color: var(--text-primary);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
+    .participant-card:hover { border-color: var(--gold); box-shadow: var(--shadow-hover); }
+    .participant-card.top { border-color: var(--gold); background: var(--gold-light); }
+    .participant-card.mine { border-color: #4285F4; background: #eef4ff; }
+    .participant-card .p-info { display: flex; flex-direction: column; flex: 1 1 180px; gap: 0.1rem; }
+    .participant-card .p-name { font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
     .participant-card .p-name .top-badge {
-      font-size: 0.75rem;
-      background: var(--gold);
-      color: #fff;
-      padding: 0 0.6rem;
-      border-radius: 20px;
-      font-weight: 700;
+      font-size: 0.75rem; background: var(--gold); color: #fff;
+      padding: 0 0.6rem; border-radius: 20px; font-weight: 700;
     }
-    .participant-card .p-country {
-      font-size: 0.7rem;
-      font-weight: 300;
-      color: var(--text-tertiary);
+    .participant-card .p-name .mine-badge {
+      font-size: 0.7rem; background: #4285F4; color: #fff;
+      padding: 0 0.6rem; border-radius: 20px; font-weight: 700;
     }
+    .participant-card .p-country { font-size: 0.7rem; font-weight: 300; color: var(--text-tertiary); }
     .participant-card .p-youtube {
-      font-size: 0.65rem;
-      font-weight: 400;
-      color: var(--text-secondary);
-      text-decoration: none;
-      border-bottom: 1px dotted transparent;
-      transition: var(--transition);
-      display: inline-block;
-      width: fit-content;
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      font-size: 0.65rem; font-weight: 400; color: var(--text-secondary);
+      text-decoration: none; border-bottom: 1px dotted transparent;
+      transition: var(--transition); display: inline-block; width: fit-content;
+      max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
-    .participant-card .p-youtube:hover {
-      color: var(--gold);
-      border-bottom-color: var(--gold);
-    }
-    .participant-card .p-date {
-      font-size: 0.55rem;
-      font-weight: 300;
-      color: var(--text-tertiary);
-    }
-    .participant-card .p-vote {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      flex-wrap: wrap;
-      margin-left: auto;
-    }
+    .participant-card .p-youtube:hover { color: var(--gold); border-bottom-color: var(--gold); }
+    .participant-card .p-date { font-size: 0.55rem; font-weight: 300; color: var(--text-tertiary); }
+    .participant-card .p-vote { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; margin-left: auto; }
     .participant-card .p-likes {
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-primary);
+      display: flex; align-items: center; gap: 0.3rem;
+      font-size: 0.85rem; font-weight: 600;
     }
-    .participant-card .p-likes .heart {
-      color: var(--like-color);
-      font-size: 1rem;
-    }
+    .participant-card .p-likes .heart { color: var(--like-color); font-size: 1rem; }
     .btn-like {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      padding: 0.3rem 1rem 0.3rem 0.8rem;
-      border-radius: 30px;
-      font-family: 'Cairo', sans-serif;
-      font-size: 0.7rem;
-      font-weight: 600;
-      border: 1px solid var(--border);
-      background: var(--bg);
-      color: var(--text-secondary);
-      cursor: pointer;
-      transition: var(--transition);
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      padding: 0.3rem 1rem 0.3rem 0.8rem; border-radius: 30px;
+      font-family: 'Cairo', sans-serif; font-size: 0.7rem; font-weight: 600;
+      border: 1px solid var(--border); background: var(--bg);
+      color: var(--text-secondary); cursor: pointer; transition: var(--transition);
       line-height: 1.4;
     }
-    .btn-like:hover:not(:disabled) {
-      background: var(--like-bg);
-      border-color: var(--like-color);
-      color: var(--like-color);
-    }
-    .btn-like:active:not(:disabled) {
-      transform: scale(0.95);
-    }
-    .btn-like:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      background: #f0f0f0;
-      color: var(--text-tertiary);
-    }
-    .btn-like.voted {
-      background: var(--like-bg);
-      border-color: var(--like-color);
-      color: var(--like-color);
-    }
+    .btn-like:hover:not(:disabled) { background: var(--like-bg); border-color: var(--like-color); color: var(--like-color); }
+    .btn-like:active:not(:disabled) { transform: scale(0.95); }
+    .btn-like:disabled { opacity: 0.5; cursor: not-allowed; background: #f0f0f0; color: var(--text-tertiary); }
+    .btn-like.voted { background: var(--like-bg); border-color: var(--like-color); color: var(--like-color); }
 
-    .participants-empty {
-      text-align: center;
-      padding: 2.4rem 1rem;
-      color: var(--text-tertiary);
-      font-weight: 300;
-      font-size: 0.9rem;
-    }
+    .participants-empty { text-align: center; padding: 2.4rem 1rem; color: var(--text-tertiary); font-weight: 300; font-size: 0.9rem; }
 
     .toast {
-      position: fixed;
-      bottom: 2rem;
-      left: 50%;
+      position: fixed; bottom: 2rem; left: 50%;
       transform: translateX(-50%) translateY(80px);
-      background: var(--surface);
-      padding: 0.8rem 2rem;
-      border-radius: 40px;
+      background: var(--surface); padding: 0.8rem 2rem; border-radius: 40px;
       box-shadow: 0 6px 30px rgba(0, 0, 0, 0.08);
-      border: 1px solid var(--border);
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: var(--text-primary);
-      opacity: 0;
-      visibility: hidden;
+      border: 1px solid var(--border); font-size: 0.85rem; font-weight: 500;
+      color: var(--text-primary); opacity: 0; visibility: hidden;
       transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
-      z-index: 999;
-      max-width: 90%;
-      text-align: center;
+      z-index: 999; max-width: 90%; text-align: center;
     }
-    .toast.show {
-      opacity: 1;
-      visibility: visible;
-      transform: translateX(-50%) translateY(0);
-    }
-    .toast.success {
-      border-color: #4caf50;
-      background: #e8f5e9;
-      color: #2e7d32;
-    }
-    .toast.error {
-      border-color: #ef5350;
-      background: #ffebee;
-      color: #c62828;
-    }
+    .toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+    .toast.success { border-color: #4caf50; background: #e8f5e9; color: #2e7d32; }
+    .toast.error { border-color: #ef5350; background: #ffebee; color: #c62828; }
 
-    .footer-comp {
-      padding: 2rem 0 1.2rem;
-      text-align: center;
-      border-top: 1px solid var(--border);
-      margin-top: 0.8rem;
-    }
-    .footer-comp .credit {
-      font-size: 0.65rem;
-      font-weight: 300;
-      color: var(--text-tertiary);
-      letter-spacing: 0.02em;
-    }
+    .footer-comp { padding: 2rem 0 1.2rem; text-align: center; border-top: 1px solid var(--border); margin-top: 0.8rem; }
+    .footer-comp .credit { font-size: 0.65rem; font-weight: 300; color: var(--text-tertiary); letter-spacing: 0.02em; }
 
-    .reveal {
-      opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
-        transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
-      will-change: opacity, transform;
-    }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1), transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
 
     @media (max-width: 700px) {
-      .conditions {
-        grid-template-columns: 1fr 1fr;
-        gap: 0.8rem;
-      }
-      .conditions .condition-card:last-child {
-        grid-column: 1 / -1;
-        max-width: 300px;
-        margin: 0 auto;
-        width: 100%;
-      }
-      .form-row {
-        grid-template-columns: 1fr;
-        gap: 0.8rem;
-      }
-      .form-section {
-        padding: 1.6rem 1.2rem;
-      }
-      .hero-comp h1 {
-        font-size: 2rem;
-      }
-      .participant-card {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .participant-card .p-vote {
-        margin-left: 0;
-        justify-content: flex-start;
-      }
-      .winner-info .countdown {
-        font-size: 1.1rem;
-      }
-      .winner-rule p {
-        font-size: 1rem;
-      }
+      .conditions { grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+      .conditions .condition-card:last-child { grid-column: 1 / -1; max-width: 300px; margin: 0 auto; width: 100%; }
+      .form-row { grid-template-columns: 1fr; gap: 0.8rem; }
+      .form-section { padding: 1.6rem 1.2rem; }
+      .hero-comp h1 { font-size: 2rem; }
+      .participant-card { flex-direction: column; align-items: stretch; }
+      .participant-card .p-vote { margin-left: 0; justify-content: flex-start; }
+      .winner-info .countdown { font-size: 1.1rem; }
+      .winner-rule p { font-size: 1rem; }
     }
     @media (max-width: 480px) {
-      body {
-        padding: 1.2rem 0.8rem;
-      }
-      .conditions {
-        grid-template-columns: 1fr;
-        gap: 0.8rem;
-      }
-      .conditions .condition-card:last-child {
-        grid-column: auto;
-        max-width: 100%;
-      }
-      .hero-comp h1 {
-        font-size: 1.6rem;
-      }
-      .hero-comp .prize-badge {
-        font-size: 0.75rem;
-        padding: 0.3rem 1.2rem 0.3rem 0.8rem;
-      }
-      .form-section {
-        padding: 1.2rem 0.8rem;
-      }
-      .back-link {
-        font-size: 0.7rem;
-        margin-bottom: 1.2rem;
-      }
-      .lang-switcher {
-        justify-content: center;
-      }
-      .winner-info .countdown {
-        font-size: 1rem;
-      }
-      .winner-rule p {
-        font-size: 0.9rem;
-      }
+      body { padding: 1.2rem 0.8rem; }
+      .conditions { grid-template-columns: 1fr; gap: 0.8rem; }
+      .conditions .condition-card:last-child { grid-column: auto; max-width: 100%; }
+      .hero-comp h1 { font-size: 1.6rem; }
+      .hero-comp .prize-badge { font-size: 0.75rem; padding: 0.3rem 1.2rem 0.3rem 0.8rem; }
+      .form-section { padding: 1.2rem 0.8rem; }
+      .back-link { font-size: 0.7rem; margin-bottom: 1.2rem; }
+      .lang-switcher { justify-content: center; }
+      .winner-info .countdown { font-size: 1rem; }
+      .winner-rule p { font-size: 0.9rem; }
+      .auth-btn { padding: 0.65rem 1.3rem; font-size: 0.82rem; }
     }
 
-    ::-webkit-scrollbar {
-      width: 3px;
-    }
-    ::-webkit-scrollbar-track {
-      background: var(--bg);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 10px;
-    }
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
     .spinner {
-      display: inline-block;
-      width: 18px;
-      height: 18px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-top: 2px solid #fff;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      vertical-align: middle;
+      display: inline-block; width: 18px; height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.3); border-top: 2px solid #fff;
+      border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle;
     }
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-    .hidden {
-      display: none !important;
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
@@ -813,7 +398,50 @@
       </div>
     </header>
 
-    <!-- ===== ملاحظة الفائز بالإعجابات ===== -->
+    <!-- ===== Auth Section (Login Required) ===== -->
+    <section class="auth-section reveal" id="authSection">
+      <!-- Loading -->
+      <div id="auth-loading">
+        <p class="auth-desc">جاري التحقق من الجلسة...</p>
+      </div>
+
+      <!-- Not logged in -->
+      <div id="auth-not-logged" class="hidden">
+        <h2 data-i18n="auth-title">سجل الدخول للمشاركة</h2>
+        <p class="auth-desc" data-i18n="auth-desc">يجب تسجيل الدخول بحساب Google أو Apple للمشاركة في المسابقة والتصويت</p>
+        <div class="auth-buttons">
+          <button class="auth-btn google" onclick="loginWith('google')">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            <span data-i18n="login-google">متابعة بـ Google</span>
+          </button>
+          <button class="auth-btn apple" onclick="loginWith('apple')">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+              <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+            </svg>
+            <span data-i18n="login-apple">متابعة بـ Apple</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Logged in -->
+      <div id="auth-logged-in" class="hidden">
+        <div class="user-info">
+          <div class="user-avatar" id="userAvatar">👤</div>
+          <div class="user-meta">
+            <div class="user-name" id="userName">—</div>
+            <div class="user-email" id="userEmail">—</div>
+          </div>
+        </div>
+        <button class="logout-btn" onclick="logout()" data-i18n="logout-btn">تسجيل الخروج</button>
+      </div>
+    </section>
+
+    <!-- Winner Rule -->
     <section class="winner-rule reveal">
       <p data-i18n="winner-rule-main">🏆 الفائز هو المتسابق <span>الأكثر إعجاباً</span> (❤️)!</p>
       <p class="sub-note" data-i18n="winner-rule-sub">كلما زادت إعجاباتك، زادت فرصتك في الفوز بالجائزة الكبرى.</p>
@@ -826,7 +454,7 @@
       <div class="countdown" id="countdown">-- : -- : -- : --</div>
     </section>
 
-    <!-- Conditions (3) -->
+    <!-- Conditions -->
     <section class="conditions reveal">
       <div class="condition-card">
         <div class="num" data-i18n="cond1-num">١</div>
@@ -850,7 +478,39 @@
       <h2 class="form-title" data-i18n="form-title">سجل الآن</h2>
       <p class="form-sub" data-i18n="form-sub">املأ البيانات أدناه وانضم لقائمة المتسابقين</p>
 
-      <form id="competition-form" novalidate>
+      <!-- Login required placeholder -->
+      <div id="form-login-required" class="login-required-box hidden">
+        <div class="icon">🔒</div>
+        <h3 data-i18n="login-required-title">تسجيل الدخول مطلوب</h3>
+        <p data-i18n="login-required-desc">يرجى تسجيل الدخول بحساب Google أو Apple للمشاركة في المسابقة</p>
+        <div class="auth-buttons">
+          <button class="auth-btn google" onclick="loginWith('google')">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            <span data-i18n="login-google">متابعة بـ Google</span>
+          </button>
+          <button class="auth-btn apple" onclick="loginWith('apple')">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+              <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+            </svg>
+            <span data-i18n="login-apple">متابعة بـ Apple</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Already registered -->
+      <div id="form-already-registered" class="login-required-box hidden">
+        <div class="icon">✅</div>
+        <h3 data-i18n="already-registered-title">أنت مسجل بالفعل!</h3>
+        <p data-i18n="already-registered-desc">لقد قمت بالتسجيل في المسابقة هذا العام. حظ سعيد!</p>
+      </div>
+
+      <!-- Form -->
+      <form id="competition-form" novalidate class="hidden">
         <div class="form-group">
           <label for="fullname" data-i18n="label-name">الاسم الكامل <span class="req">*</span></label>
           <input type="text" id="fullname" name="fullname" placeholder="مثال: كريم محمد إسماعيل" required />
@@ -891,9 +551,7 @@
           <label for="cond_terms" data-i18n="check-terms">أوافق على <strong>شروط المسابقة</strong> وأؤكد أنني <strong>أكبر من 10 سنوات</strong>.</label>
         </div>
 
-        <div class="cf-turnstile" data-sitekey="YOUR_TURNSTILE_SITEKEY" data-callback="onTurnstileSuccess"></div>
-
-        <button type="submit" class="btn-submit" id="submit-btn" disabled>
+        <button type="submit" class="btn-submit" id="submit-btn">
           <span id="btn-text" data-i18n="submit-btn">سجل الآن</span>
           <span id="btn-spinner" class="spinner hidden"></span>
         </button>
@@ -902,7 +560,7 @@
       </form>
     </section>
 
-    <!-- Participants List with Likes -->
+    <!-- Participants -->
     <section class="participants-section reveal">
       <div class="section-header">
         <h2 data-i18n="participants-title">المتسابقون</h2>
@@ -913,45 +571,35 @@
       </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer-comp">
       <p class="credit" data-i18n="footer-credit">© 2025 Hoscribe · هوسكرايب — كريم محمد إسماعيل</p>
     </footer>
 
   </div>
 
-  <!-- Toast notification -->
   <div id="toast" class="toast"></div>
 
-  <!-- ============================================================
-  SCRIPT – i18n + Supabase + Reveal + Form + Likes System + Security
-  ============================================================ -->
   <script>
     (function() {
       'use strict';
 
-      // ——————————————————————————————
-      // 0. Auto-update year
-      // ——————————————————————————————
       const currentYear = new Date().getFullYear();
 
       // ——————————————————————————————
-      // 1. Supabase Config
+      // 1. Supabase
       // ——————————————————————————————
-      const SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
-      const SUPABASE_KEY = 'YOUR_ANON_KEY';
-      // ⚠️ استبدل بـ URL و Key الخاصين بمشروعك
-
+      const SUPABASE_URL = 'https://dygrssfqkiedrolhkpbi.supabase.co';
+      const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5Z3Jzc2Zxa2llZHJvbGhrcGJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwODE0OTQsImV4cCI6MjEwODY1NzQ5NH0.MWT_m2ZE-6qV1g9uiddlcMQP_1d6EltXge0yKLmCkNU';
       const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
       const TABLE = 'competitors';
 
       // ——————————————————————————————
-      // 2. i18n Translations (مُوسَّع)
+      // 2. i18n
       // ——————————————————————————————
       const translations = {
         ar: {
           'page-title': 'المسابقة السنوية — هوسكرايب',
-          'meta-description': 'سجل في المسابقة السنوية لهوسكرايب واربح أحدث إيفون! شروط بسيطة وفرصة للجميع.',
+          'meta-description': 'سجل في المسابقة السنوية لهوسكرايب واربح أحدث إيفون!',
           'og-title': 'المسابقة السنوية — هوسكرايب',
           'og-description': 'سجل في المسابقة السنوية لهوسكرايب واربح أحدث إيفون!',
           'back-home': 'العودة للرئيسية',
@@ -959,18 +607,20 @@
           'comp-heading': 'سجل في <span class="highlight">المسابقة السنوية</span>',
           'comp-sub': 'فرصة لربح <strong>أحدث إيفون</strong>! اشترك الآن وكن من الفائزين.',
           'prize-label': 'الجائزة: أحدث إيفون',
+          'auth-title': 'سجل الدخول للمشاركة',
+          'auth-desc': 'يجب تسجيل الدخول بحساب Google أو Apple للمشاركة في المسابقة والتصويت',
+          'login-google': 'متابعة بـ Google',
+          'login-apple': 'متابعة بـ Apple',
+          'logout-btn': 'تسجيل الخروج',
           'winner-rule-main': '🏆 الفائز هو المتسابق <span>الأكثر إعجاباً</span> (❤️)!',
           'winner-rule-sub': 'كلما زادت إعجاباتك، زادت فرصتك في الفوز بالجائزة الكبرى.',
           'leader-label': '🏆 المتصدر حالياً:',
           'announce-label': 'يُعلن الفائز في 1 يناير من كل عام',
-          'cond1-num': '١',
-          'cond1-title': 'مشترك في يوتيوب',
+          'cond1-num': '١', 'cond1-title': 'مشترك في يوتيوب',
           'cond1-desc': 'يجب أن تكون مشتركاً في قناة <strong>هوسكرايب</strong> على يوتيوب.',
-          'cond2-num': '٢',
-          'cond2-title': 'متابع على سناب شات',
+          'cond2-num': '٢', 'cond2-title': 'متابع على سناب شات',
           'cond2-desc': 'يجب أن تتابع حساب <strong>@hoscribe</strong> على سناب شات.',
-          'cond3-num': '٣',
-          'cond3-title': 'إجابة إبداعية',
+          'cond3-num': '٣', 'cond3-title': 'إجابة إبداعية',
           'cond3-desc': 'أجب على السؤال الإبداعي: <strong>"لماذا تستحق الفوز؟"</strong> في ٣ أسطر.',
           'form-title': 'سجل الآن',
           'form-sub': 'املأ البيانات أدناه وانضم لقائمة المتسابقين',
@@ -984,6 +634,10 @@
           'check-snapchat': 'أؤكد أنني <strong>متابع</strong> لحساب <strong>@hoscribe</strong> على سناب شات.',
           'check-terms': 'أوافق على <strong>شروط المسابقة</strong> وأؤكد أنني <strong>أكبر من 10 سنوات</strong>.',
           'submit-btn': 'سجل الآن',
+          'login-required-title': 'تسجيل الدخول مطلوب',
+          'login-required-desc': 'يرجى تسجيل الدخول بحساب Google أو Apple للمشاركة في المسابقة',
+          'already-registered-title': 'أنت مسجل بالفعل!',
+          'already-registered-desc': 'لقد قمت بالتسجيل في المسابقة هذا العام. حظ سعيد!',
           'participants-title': 'المتسابقون',
           'participants-empty': 'لا يوجد متسابقون حتى الآن. كن الأول!',
           'footer-credit': '© 2025 Hoscribe · هوسكرايب — كريم محمد إسماعيل',
@@ -994,40 +648,44 @@
           'msg-error': '⚠️ حدث خطأ أثناء التسجيل. حاول مرة أخرى.',
           'msg-duplicate': '⚠️ هذا الرقم أو البريد مسجل بالفعل.',
           'msg-load-error': '⚠️ تعذر تحميل المتسابقين. حاول تحديث الصفحة.',
-          'msg-vpn-blocked': '⚠️ يبدو أنك تستخدم VPN أو Proxy، غير مسموح بالمشاركة أو التصويت.',
-          'msg-turnstile-error': '⚠️ يرجى إكمال تحدي التحقق (Turnstile).',
+          'msg-login-required': '🔒 يرجى تسجيل الدخول أولاً.',
+          'msg-self-vote': '⚠️ لا يمكنك التصويت لنفسك.',
           'like-btn': '👍 إعجاب',
-          'likes-count': 'عدد الإعجابات',
+          'likes-count': 'إعجاب',
           'already-voted': 'لقد صوّت بالفعل',
           'vote-success': '✅ تم التصويت بنجاح!',
           'vote-error': '⚠️ حدث خطأ أثناء التصويت.',
           'top-contestant': '🏆 المتصدر',
-          'rate-limit': '⚠️ لقد تجاوزت حد التصويت اليومي (10 تصويتات لكل جهاز).',
-          'vote-cooldown': '⚠️ يمكنك التصويت مرة واحدة كل 24 ساعة من نفس الجهاز.',
+          'rate-limit': '⚠️ لقد تجاوزت حد التصويت اليومي (10 تصويتات لكل حساب).',
+          'login-to-vote': '🔒 سجل الدخول للتصويت',
+          'login-failed': '⚠️ فشل تسجيل الدخول. حاول مرة أخرى.',
+          'login-canceled': 'تم إلغاء تسجيل الدخول.',
         },
         en: {
           'page-title': 'Annual Competition — Hoscribe',
-          'meta-description': 'Sign up for Hoscribe\'s annual competition and win the latest iPhone! Simple terms and a chance for everyone.',
+          'meta-description': 'Sign up for Hoscribe\'s annual competition and win the latest iPhone!',
           'og-title': 'Annual Competition — Hoscribe',
           'og-description': 'Sign up for Hoscribe\'s annual competition and win the latest iPhone!',
           'back-home': 'Back to Home',
           'badge': 'Competition ' + currentYear,
           'comp-heading': 'Register for the <span class="highlight">Annual Competition</span>',
-          'comp-sub': 'Chance to win the <strong>latest iPhone</strong>! Sign up now and be a winner.',
+          'comp-sub': 'Chance to win the <strong>latest iPhone</strong>! Sign up now.',
           'prize-label': 'Prize: latest iPhone',
+          'auth-title': 'Sign in to participate',
+          'auth-desc': 'You must sign in with Google or Apple to participate and vote',
+          'login-google': 'Continue with Google',
+          'login-apple': 'Continue with Apple',
+          'logout-btn': 'Sign out',
           'winner-rule-main': '🏆 The winner is the contestant with the <span>most likes</span> (❤️)!',
-          'winner-rule-sub': 'The more likes you get, the higher your chance to win the grand prize.',
+          'winner-rule-sub': 'The more likes you get, the higher your chance to win.',
           'leader-label': '🏆 Current Leader:',
           'announce-label': 'Winner announced on January 1st each year',
-          'cond1-num': '1',
-          'cond1-title': 'YouTube Subscriber',
+          'cond1-num': '1', 'cond1-title': 'YouTube Subscriber',
           'cond1-desc': 'You must be subscribed to the <strong>Hoscribe</strong> YouTube channel.',
-          'cond2-num': '2',
-          'cond2-title': 'Snapchat Follower',
+          'cond2-num': '2', 'cond2-title': 'Snapchat Follower',
           'cond2-desc': 'You must follow <strong>@hoscribe</strong> on Snapchat.',
-          'cond3-num': '3',
-          'cond3-title': 'Creative Answer',
-          'cond3-desc': 'Answer the creative question: <strong>"Why do you deserve to win?"</strong> in 3 lines.',
+          'cond3-num': '3', 'cond3-title': 'Creative Answer',
+          'cond3-desc': 'Answer: <strong>"Why do you deserve to win?"</strong> in 3 lines.',
           'form-title': 'Register Now',
           'form-sub': 'Fill in the details below and join the contestants.',
           'label-name': 'Full Name',
@@ -1036,30 +694,36 @@
           'label-youtube': 'Your YouTube Channel URL',
           'label-email': 'Email (optional)',
           'label-creative': 'Why do you deserve to win?',
-          'check-youtube': 'I confirm that I am <strong>subscribed</strong> to the <strong>Hoscribe</strong> YouTube channel.',
-          'check-snapchat': 'I confirm that I <strong>follow</strong> <strong>@hoscribe</strong> on Snapchat.',
-          'check-terms': 'I agree to the <strong>competition terms</strong> and confirm I am <strong>over 10 years old</strong>.',
+          'check-youtube': 'I confirm I am <strong>subscribed</strong> to <strong>Hoscribe</strong> YouTube channel.',
+          'check-snapchat': 'I confirm I <strong>follow</strong> <strong>@hoscribe</strong> on Snapchat.',
+          'check-terms': 'I agree to <strong>competition terms</strong> and confirm I am <strong>over 10 years old</strong>.',
           'submit-btn': 'Sign up now',
+          'login-required-title': 'Login Required',
+          'login-required-desc': 'Please sign in with Google or Apple to participate',
+          'already-registered-title': 'You are already registered!',
+          'already-registered-desc': 'You have registered for this year. Good luck!',
           'participants-title': 'Contestants',
           'participants-empty': 'No contestants yet. Be the first!',
           'footer-credit': '© 2025 Hoscribe · هوسكرايب — Karim Mohamed Ismail',
           'msg-fill-fields': '⚠️ Please fill in all required fields.',
-          'msg-agree-terms': '⚠️ Please agree to all terms to participate.',
-          'msg-invalid-youtube': '⚠️ The URL entered is not a valid YouTube link.',
-          'msg-success': '✅ Registration successful! You are now a contestant. Good luck!',
-          'msg-error': '⚠️ An error occurred during registration. Please try again.',
+          'msg-agree-terms': '⚠️ Please agree to all terms.',
+          'msg-invalid-youtube': '⚠️ Invalid YouTube URL.',
+          'msg-success': '✅ Registration successful! Good luck!',
+          'msg-error': '⚠️ Registration error. Please try again.',
           'msg-duplicate': '⚠️ This phone or email is already registered.',
-          'msg-load-error': '⚠️ Failed to load contestants. Please refresh the page.',
-          'msg-vpn-blocked': '⚠️ It seems you are using a VPN or Proxy, which is not allowed for voting or registration.',
-          'msg-turnstile-error': '⚠️ Please complete the Turnstile challenge.',
+          'msg-load-error': '⚠️ Failed to load contestants.',
+          'msg-login-required': '🔒 Please login first.',
+          'msg-self-vote': '⚠️ You cannot vote for yourself.',
           'like-btn': '👍 Like',
-          'likes-count': 'Likes',
+          'likes-count': 'likes',
           'already-voted': 'Already voted',
           'vote-success': '✅ Vote successful!',
           'vote-error': '⚠️ Error voting.',
           'top-contestant': '🏆 Top',
-          'rate-limit': '⚠️ You have exceeded the daily vote limit (10 votes per device).',
-          'vote-cooldown': '⚠️ You can vote only once every 24 hours from the same device.',
+          'rate-limit': '⚠️ You have exceeded the daily vote limit (10 votes per account).',
+          'login-to-vote': '🔒 Login to vote',
+          'login-failed': '⚠️ Login failed. Try again.',
+          'login-canceled': 'Login canceled.',
         }
       };
 
@@ -1074,15 +738,11 @@
         currentLang = lang;
         i18nElements.forEach(el => {
           const key = el.getAttribute('data-i18n');
-          if (dict[key] !== undefined) {
-            el.innerHTML = dict[key];
-          }
+          if (dict[key] !== undefined) el.innerHTML = dict[key];
         });
         htmlEl.setAttribute('lang', lang);
         htmlEl.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-        langBtns.forEach(btn => {
-          btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
-        });
+        langBtns.forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-lang') === lang));
         localStorage.setItem('hoscribe-lang', lang);
         updatePlaceholders(lang);
         loadParticipants();
@@ -1100,14 +760,11 @@
           'phone': { ar: '+20 100 000 0000', en: '+20 100 000 0000' },
           'youtube_url': { ar: 'https://youtube.com/@...', en: 'https://youtube.com/@...' },
           'email': { ar: 'karim@example.com', en: 'karim@example.com' },
-          'creative_answer': { ar: 'اكتب في ٣ أسطر لماذا تستحق الفوز بالجائزة...',
-          en: 'Write in 3 lines why you deserve to win the prize...' }
+          'creative_answer': { ar: 'اكتب في ٣ أسطر لماذا تستحق الفوز...', en: 'Write in 3 lines why you deserve to win...' }
         };
         Object.keys(placeholders).forEach(id => {
           const el = document.getElementById(id);
-          if (el) {
-            el.placeholder = placeholders[id][lang] || placeholders[id]['ar'];
-          }
+          if (el) el.placeholder = placeholders[id][lang] || placeholders[id]['ar'];
         });
       }
 
@@ -1123,7 +780,7 @@
       setLanguage(initialLang);
 
       // ——————————————————————————————
-      // 3. Reveal on scroll
+      // 3. Reveal
       // ——————————————————————————————
       const revealEls = document.querySelectorAll('.reveal');
       if (revealEls.length && 'IntersectionObserver' in window) {
@@ -1141,122 +798,113 @@
       }
 
       // ——————————————————————————————
-      // 4. Toast notification
+      // 4. Toast
       // ——————————————————————————————
       const toastEl = document.getElementById('toast');
       let toastTimeout;
-
       function showToast(message, type = 'success') {
         toastEl.textContent = message;
         toastEl.className = 'toast show ' + type;
         clearTimeout(toastTimeout);
-        toastTimeout = setTimeout(() => {
-          toastEl.classList.remove('show');
-        }, 5000);
+        toastTimeout = setTimeout(() => toastEl.classList.remove('show'), 5000);
       }
 
       // ——————————————————————————————
-      // 5. Voter ID & Fingerprint (أمان مُحسَّن)
+      // 5. Auth State
       // ——————————————————————————————
-      function getVoterId() {
-        let voterId = localStorage.getItem('hoscribe_voter_id');
-        if (!voterId) {
-          voterId = 'v_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
-          localStorage.setItem('hoscribe_voter_id', voterId);
-        }
-        return voterId;
-      }
+      let currentUser = null;
+      let myVotedIds = new Set();
+      let hasRegistered = false;
+      let authReady = false;
 
-      // توليد بصمة جهاز فريدة (User-Agent + اللغة + دقة الشاشة)
-      function getDeviceFingerprint() {
-        const ua = navigator.userAgent || '';
-        const lang = navigator.language || 'en';
-        const w = window.screen.width || 0;
-        const h = window.screen.height || 0;
-        return btoa(ua + '|' + lang + '|' + w + '|' + h).slice(0, 32);
-      }
-
-      // تخزين وقت التصويت مع انتهاء صلاحية 24 ساعة
-      function getVotedCompetitors() {
-        const data = localStorage.getItem('hoscribe_voted');
-        if (!data) return [];
+      async function loginWith(provider) {
         try {
-          const parsed = JSON.parse(data);
-          // حذف الإدخالات القديمة (أكثر من 24 ساعة)
-          const now = Date.now();
-          const filtered = parsed.filter(item => (now - item.timestamp) < 86400000);
-          if (filtered.length !== parsed.length) {
-            localStorage.setItem('hoscribe_voted', JSON.stringify(filtered));
-          }
-          return filtered.map(item => item.id);
-        } catch { return []; }
-      }
-
-      function addVotedCompetitor(competitorId) {
-        const data = localStorage.getItem('hoscribe_voted');
-        let list = [];
-        try { list = JSON.parse(data) || []; } catch { list = []; }
-        const now = Date.now();
-        // إزالة القديم
-        list = list.filter(item => (now - item.timestamp) < 86400000);
-        if (!list.some(item => item.id === competitorId)) {
-          list.push({ id: competitorId, timestamp: now });
-          localStorage.setItem('hoscribe_voted', JSON.stringify(list));
-        }
-      }
-
-      function hasVotedFor(competitorId) {
-        return getVotedCompetitors().includes(competitorId);
-      }
-
-      // ——————————————————————————————
-      // 6. كشف IP و VPN باستخدام ipapi.co (أكثر دقة)
-      // ——————————————————————————————
-      let clientIp = null;
-      let clientIsVpn = false;
-      let clientFingerprint = getDeviceFingerprint();
-
-      async function detectIpAndVpn() {
-        try {
-          // استخدام ipapi.co مع معامل security=1 للحصول على معلومات VPN/Proxy
-          const resp = await fetch('https://ipapi.co/json/security/');
-          if (!resp.ok) throw new Error('ipapi.co failed');
-          const data = await resp.json();
-          // الحقول المتوقعة: ip, is_vpn, is_proxy, is_tor, is_crawler
-          clientIp = data.ip;
-          clientIsVpn = data.is_vpn === true || data.is_proxy === true || data.is_tor === true;
-          return { ip: clientIp, isVpn: clientIsVpn };
+          const { error } = await supabase.auth.signInWithOAuth({
+            provider: provider,
+            options: { redirectTo: window.location.origin + window.location.pathname }
+          });
+          if (error) showToast(getTranslation('login-failed') + ' ' + error.message, 'error');
         } catch (e) {
-          console.warn('⚠️ ipapi.co فشل، نستخدم fallback ip-api.com');
-          // Fallback: ip-api.com
-          try {
-            const resp = await fetch('https://ip-api.com/json/');
-            const data = await resp.json();
-            if (data.status === 'success') {
-              clientIp = data.query;
-              // ip-api.com يعطينا proxy: true/false
-              clientIsVpn = data.proxy === true;
-              return { ip: clientIp, isVpn: clientIsVpn };
-            }
-          } catch (e2) {
-            console.warn('⚠️ فشل كشف IP، نستمر بدون منع VPN');
-          }
+          showToast(getTranslation('login-failed'), 'error');
         }
-        return null;
+      }
+      window.loginWith = loginWith;
+
+      async function logout() {
+        await supabase.auth.signOut();
+      }
+      window.logout = logout;
+
+      function updateAuthUI() {
+        const loadingEl = document.getElementById('auth-loading');
+        const notLoggedEl = document.getElementById('auth-not-logged');
+        const loggedInEl = document.getElementById('auth-logged-in');
+        const form = document.getElementById('competition-form');
+        const loginRequired = document.getElementById('form-login-required');
+        const alreadyReg = document.getElementById('form-already-registered');
+
+        loadingEl.classList.add('hidden');
+
+        if (!authReady) return;
+
+        if (currentUser) {
+          notLoggedEl.classList.add('hidden');
+          loggedInEl.classList.remove('hidden');
+
+          const meta = currentUser.user_metadata || {};
+          const displayName = meta.full_name || meta.name || meta.user_name || currentUser.email || '—';
+          const avatarUrl = meta.avatar_url || meta.picture || null;
+
+          document.getElementById('userName').textContent = displayName;
+          document.getElementById('userEmail').textContent = currentUser.email || '';
+
+          const avatarEl = document.getElementById('userAvatar');
+          if (avatarUrl) {
+            avatarEl.innerHTML = `<img src="${avatarUrl}" alt="avatar" />`;
+          } else {
+            avatarEl.textContent = '👤';
+          }
+
+          loginRequired.classList.add('hidden');
+
+          if (hasRegistered) {
+            form.classList.add('hidden');
+            alreadyReg.classList.remove('hidden');
+          } else {
+            form.classList.remove('hidden');
+            alreadyReg.classList.add('hidden');
+          }
+        } else {
+          notLoggedEl.classList.remove('hidden');
+          loggedInEl.classList.add('hidden');
+          form.classList.add('hidden');
+          alreadyReg.classList.add('hidden');
+          loginRequired.classList.remove('hidden');
+        }
+      }
+
+      async function refreshUserState() {
+        if (!currentUser) {
+          myVotedIds = new Set();
+          hasRegistered = false;
+          return;
+        }
+        try {
+          const [votesRes, regRes] = await Promise.all([
+            supabase.from('votes').select('competitor_id'),
+            supabase.from('competitors').select('id').eq('user_id', currentUser.id).maybeSingle()
+          ]);
+          myVotedIds = new Set((votesRes.data || []).map(v => v.competitor_id));
+          hasRegistered = !!regRes.data;
+        } catch (e) {
+          console.warn('refreshUserState', e);
+          myVotedIds = new Set();
+          hasRegistered = false;
+        }
       }
 
       // ——————————————————————————————
-      // 7. Turnstile integration
-      // ——————————————————————————————
-      let turnstileToken = null;
-
-      window.onTurnstileSuccess = function(token) {
-        turnstileToken = token;
-        document.getElementById('submit-btn').disabled = false;
-      };
-
-      // ——————————————————————————————
-      // 8. Load participants with likes & update leader
+      // 6. Load participants
       // ——————————————————————————————
       async function loadParticipants() {
         const grid = document.getElementById('participants-grid');
@@ -1266,15 +914,14 @@
         try {
           const { data, error } = await supabase
             .from(TABLE)
-            .select('id, name, country, youtube_url, created_at, likes')
+            .select('id, name, country, youtube_url, created_at, likes, user_id')
             .order('likes', { ascending: false })
             .order('created_at', { ascending: false });
 
           if (error) throw error;
 
           if (!data || data.length === 0) {
-            grid.innerHTML =
-              `<div class="participants-empty">${getTranslation('participants-empty')}</div>`;
+            grid.innerHTML = `<div class="participants-empty">${getTranslation('participants-empty')}</div>`;
             countEl.textContent = '0';
             leaderEl.textContent = '—';
             return;
@@ -1287,75 +934,76 @@
             leaderEl.textContent = '—';
           }
 
-          const votedIds = getVotedCompetitors();
-
           grid.innerHTML = data.map((p, index) => {
             const date = new Date(p.created_at);
-            const dateStr =
-              `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`;
+            const dateStr = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`;
             const youtubeDisplay = p.youtube_url ? p.youtube_url.replace(/^https?:\/\//, '').slice(0, 30) : '';
             const isTop = index === 0 && data.length > 1;
-            const userVoted = votedIds.includes(p.id);
+            const isMine = currentUser && p.user_id === currentUser.id;
+            const userVoted = myVotedIds.has(p.id);
+            const canVote = !!currentUser && !userVoted && !isMine;
+
+            let btnLabel, btnClass, btnDisabled;
+            if (!currentUser) {
+              btnLabel = getTranslation('login-to-vote');
+              btnClass = ''; btnDisabled = true;
+            } else if (isMine) {
+              btnLabel = currentLang === 'ar' ? 'أنت' : 'You';
+              btnClass = ''; btnDisabled = true;
+            } else if (userVoted) {
+              btnLabel = getTranslation('already-voted');
+              btnClass = 'voted'; btnDisabled = true;
+            } else {
+              btnLabel = getTranslation('like-btn');
+              btnClass = ''; btnDisabled = false;
+            }
 
             return `
-                <div class="participant-card ${isTop ? 'top' : ''}" data-id="${p.id}">
-                  <div class="p-info">
-                    <div class="p-name">
-                      ${escapeHtml(p.name)}
-                      ${isTop ? `<span class="top-badge">${getTranslation('top-contestant')}</span>` : ''}
-                    </div>
-                    <div class="p-country">📍 ${escapeHtml(p.country)}</div>
-                    ${p.youtube_url ? `<a href="${escapeHtml(p.youtube_url)}" target="_blank" rel="noopener" class="p-youtube">▶ ${escapeHtml(youtubeDisplay)}</a>` : ''}
-                    <div class="p-date">🗓 ${dateStr}</div>
+              <div class="participant-card ${isTop ? 'top' : ''} ${isMine ? 'mine' : ''}" data-id="${p.id}">
+                <div class="p-info">
+                  <div class="p-name">
+                    ${escapeHtml(p.name)}
+                    ${isTop ? `<span class="top-badge">${getTranslation('top-contestant')}</span>` : ''}
+                    ${isMine ? `<span class="mine-badge">${currentLang === 'ar' ? 'أنت' : 'You'}</span>` : ''}
                   </div>
-                  <div class="p-vote">
-                    <div class="p-likes">
-                      <span class="heart">❤️</span>
-                      <span>${p.likes || 0}</span>
-                      <span style="font-weight:400;color:var(--text-tertiary);font-size:0.6rem;">${getTranslation('likes-count')}</span>
-                    </div>
-                    <button class="btn-like ${userVoted ? 'voted' : ''}" 
-                            data-id="${p.id}" 
-                            ${userVoted ? 'disabled' : ''}
-                            data-i18n-like="${userVoted ? 'already-voted' : 'like-btn'}">
-                      ${userVoted ? getTranslation('already-voted') : getTranslation('like-btn')}
-                    </button>
-                  </div>
+                  <div class="p-country">📍 ${escapeHtml(p.country)}</div>
+                  ${p.youtube_url ? `<a href="${escapeHtml(p.youtube_url)}" target="_blank" rel="noopener" class="p-youtube">▶ ${escapeHtml(youtubeDisplay)}</a>` : ''}
+                  <div class="p-date">🗓 ${dateStr}</div>
                 </div>
-              `;
+                <div class="p-vote">
+                  <div class="p-likes">
+                    <span class="heart">❤️</span>
+                    <span>${p.likes || 0}</span>
+                    <span style="font-weight:400;color:var(--text-tertiary);font-size:0.6rem;">${getTranslation('likes-count')}</span>
+                  </div>
+                  <button class="btn-like ${btnClass}" data-id="${p.id}" ${btnDisabled ? 'disabled' : ''}>
+                    ${btnLabel}
+                  </button>
+                </div>
+              </div>
+            `;
           }).join('');
 
           document.querySelectorAll('.btn-like:not([disabled])').forEach(btn => {
             btn.addEventListener('click', handleLike);
           });
 
-          document.querySelectorAll('.btn-like[disabled]').forEach(btn => {
-            if (btn.classList.contains('voted')) {
-              btn.textContent = getTranslation('already-voted');
-            }
-          });
-
         } catch (err) {
-          console.error('❌ Error loading participants:', err);
-          grid.innerHTML =
-            `<div class="participants-empty" style="color:#c62828;">${getTranslation('msg-load-error')}</div>`;
+          console.error('❌ loadParticipants', err);
+          grid.innerHTML = `<div class="participants-empty" style="color:#c62828;">${getTranslation('msg-load-error')}</div>`;
         }
       }
 
       // ——————————————————————————————
-      // 9. Handle Like (vote) with advanced security
+      // 7. Handle Like (per-user)
       // ——————————————————————————————
       async function handleLike(e) {
         const btn = e.currentTarget;
         const competitorId = parseInt(btn.getAttribute('data-id'), 10);
         if (!competitorId || isNaN(competitorId)) return;
 
-        // 1. التحقق من التصويت المسبق في localStorage (منع سريع)
-        if (hasVotedFor(competitorId)) {
-          showToast(getTranslation('already-voted'), 'error');
-          btn.disabled = true;
-          btn.classList.add('voted');
-          btn.textContent = getTranslation('already-voted');
+        if (!currentUser) {
+          showToast(getTranslation('msg-login-required'), 'error');
           return;
         }
 
@@ -1364,98 +1012,59 @@
         btn.textContent = '⏳ ...';
 
         try {
-          // 2. كشف IP و VPN
-          const ipData = await detectIpAndVpn();
-          if (!ipData) {
-            showToast('⚠️ تعذر تحديد عنوان IP الخاص بك.', 'error');
-            btn.disabled = false;
-            btn.textContent = originalText;
-            return;
-          }
-          if (ipData.isVpn) {
-            showToast(getTranslation('msg-vpn-blocked'), 'error');
-            btn.disabled = false;
-            btn.textContent = originalText;
-            return;
-          }
-
-          const voterId = getVoterId();
-          const fingerprint = clientFingerprint;
-
-          // 3. استدعاء RPC مع بيانات الأمان الإضافية
           const { data, error } = await supabase.rpc('add_vote', {
-            p_competitor_id: competitorId,
-            p_voter_id: voterId,
-            p_ip_address: ipData.ip,
-            p_is_vpn: ipData.isVpn,
-            p_fingerprint: fingerprint,
+            p_competitor_id: competitorId
           });
 
-          if (error) {
-            if (error.message && error.message.includes('already_voted')) {
+          if (error) throw error;
+
+          if (!data.success) {
+            if (data.error === 'not_authenticated') {
+              showToast(getTranslation('msg-login-required'), 'error');
+            } else if (data.error === 'already_voted') {
               showToast(getTranslation('already-voted'), 'error');
-              addVotedCompetitor(competitorId);
-              btn.textContent = getTranslation('already-voted');
-              btn.classList.add('voted');
-              btn.disabled = true;
-              loadParticipants();
-              return;
-            }
-            if (error.message && error.message.includes('rate_limit')) {
+              myVotedIds.add(competitorId);
+            } else if (data.error === 'rate_limit') {
               showToast(getTranslation('rate-limit'), 'error');
-              btn.disabled = false;
-              btn.textContent = originalText;
-              return;
+            } else if (data.error === 'self_vote') {
+              showToast(getTranslation('msg-self-vote'), 'error');
+            } else {
+              showToast(getTranslation('vote-error'), 'error');
             }
-            if (error.message && error.message.includes('cooldown')) {
-              showToast(getTranslation('vote-cooldown'), 'error');
-              btn.disabled = false;
-              btn.textContent = originalText;
-              return;
-            }
-            throw error;
+            btn.disabled = false;
+            btn.textContent = originalText;
+            loadParticipants();
+            return;
           }
 
-          // نجاح
-          addVotedCompetitor(competitorId);
           showToast(getTranslation('vote-success'), 'success');
+          myVotedIds.add(competitorId);
 
-          btn.textContent = getTranslation('already-voted');
-          btn.classList.add('voted');
-          btn.disabled = true;
-
-          // تحديث عدد الإعجابات محلياً
+          // Update UI locally
           const card = btn.closest('.participant-card');
           if (card) {
-            const likesSpan = card.querySelector('.p-likes span');
+            const likesSpan = card.querySelector('.p-likes span:nth-child(2)');
             if (likesSpan) {
               const currentLikes = parseInt(likesSpan.textContent, 10) || 0;
               likesSpan.textContent = currentLikes + 1;
             }
+            btn.textContent = getTranslation('already-voted');
+            btn.classList.add('voted');
+            btn.disabled = true;
           }
 
-          // إعادة تحميل القائمة بعد فترة قصيرة
           setTimeout(() => loadParticipants(), 800);
-
-          // إعادة تعيين Turnstile (اختياري)
-          if (window.turnstile) {
-            try {
-              turnstile.reset();
-            } catch (e) {}
-          }
 
         } catch (err) {
           console.error('❌ Vote error:', err);
           showToast(getTranslation('vote-error'), 'error');
-          if (!btn.classList.contains('voted')) {
-            btn.disabled = false;
-            btn.textContent = originalText;
-          }
+          btn.disabled = false;
+          btn.textContent = originalText;
         }
       }
 
       // ——————————————————————————————
-      // 10. Form submission مع الأمان الكامل
+      // 8. Form submission
       // ——————————————————————————————
       const form = document.getElementById('competition-form');
       const submitBtn = document.getElementById('submit-btn');
@@ -1466,8 +1075,8 @@
       form.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        if (!turnstileToken) {
-          showMessage(getTranslation('msg-turnstile-error'), 'error');
+        if (!currentUser) {
+          showMessage(getTranslation('msg-login-required'), 'error');
           return;
         }
 
@@ -1494,23 +1103,11 @@
           return;
         }
 
-        const ipData = await detectIpAndVpn();
-        if (!ipData) {
-          showMessage('⚠️ تعذر تحديد عنوان IP.', 'error');
-          return;
-        }
-        if (ipData.isVpn) {
-          showMessage(getTranslation('msg-vpn-blocked'), 'error');
-          return;
-        }
-
         submitBtn.disabled = true;
         btnText.textContent = currentLang === 'ar' ? 'جاري التسجيل...' : 'Registering...';
         btnSpinner.classList.remove('hidden');
 
         try {
-          const fingerprint = clientFingerprint;
-
           const { data, error } = await supabase.rpc('register_competitor', {
             p_name: name,
             p_country: country,
@@ -1521,16 +1118,19 @@
             p_cond_youtube: condYt,
             p_cond_snapchat: condSnap,
             p_cond_terms: condTerms,
-            p_ip_address: ipData.ip,
-            p_is_vpn: ipData.isVpn,
-            p_fingerprint: fingerprint,
           });
 
           if (error) throw error;
 
           if (!data.success) {
-            if (data.error === 'duplicate_ip' || data.error === 'duplicate_phone') {
+            if (data.error === 'already_registered') {
+              showMessage(getTranslation('already-registered-title'), 'info');
+              hasRegistered = true;
+              updateAuthUI();
+            } else if (data.error === 'duplicate_phone') {
               showMessage(getTranslation('msg-duplicate'), 'error');
+            } else if (data.error === 'not_authenticated') {
+              showMessage(getTranslation('msg-login-required'), 'error');
             } else {
               showMessage(getTranslation('msg-error'), 'error');
             }
@@ -1542,22 +1142,15 @@
 
           showMessage(getTranslation('msg-success'), 'success');
           form.reset();
-          turnstileToken = null;
-          submitBtn.disabled = true;
+          hasRegistered = true;
+          updateAuthUI();
           loadParticipants();
-
-          // إعادة تعيين Turnstile
-          if (window.turnstile) {
-            try {
-              turnstile.reset();
-            } catch (e) {}
-          }
 
         } catch (err) {
           console.error('❌ Submission error:', err);
           showMessage(getTranslation('msg-error'), 'error');
         } finally {
-          submitBtn.disabled = false;
+          if (!hasRegistered) submitBtn.disabled = false;
           btnText.textContent = getTranslation('submit-btn');
           btnSpinner.classList.add('hidden');
         }
@@ -1568,14 +1161,12 @@
         msgEl.className = 'form-message ' + type;
         msgEl.style.display = 'block';
         if (type === 'success') {
-          setTimeout(() => {
-            msgEl.style.display = 'none';
-          }, 6000);
+          setTimeout(() => { msgEl.style.display = 'none'; }, 6000);
         }
       }
 
       // ——————————————————————————————
-      // 11. Countdown Timer
+      // 9. Countdown
       // ——————————————————————————————
       function updateCountdown() {
         const now = new Date();
@@ -1596,7 +1187,7 @@
       setInterval(updateCountdown, 1000);
 
       // ——————————————————————————————
-      // 12. Helpers & Init
+      // 10. Helpers
       // ——————————————————————————————
       function escapeHtml(text) {
         if (!text) return '';
@@ -1605,158 +1196,189 @@
         return div.innerHTML;
       }
 
-      // تحميل أولي
-      loadParticipants();
-      setInterval(loadParticipants, 30000);
+      // ——————————————————————————————
+      // 11. Init
+      // ——————————————————————————————
+      async function init() {
+        // Get initial session
+        const { data: { session } } = await supabase.auth.getSession();
+        currentUser = session?.user || null;
+        authReady = true;
 
-      // كشف IP عند بدء التشغيل
-      detectIpAndVpn();
+        await refreshUserState();
+        updateAuthUI();
+        await loadParticipants();
+
+        // Listen for changes
+        supabase.auth.onAuthStateChange(async (event, session) => {
+          currentUser = session?.user || null;
+          await refreshUserState();
+          updateAuthUI();
+          await loadParticipants();
+
+          if (event === 'SIGNED_IN') {
+            showToast(currentLang === 'ar' ? '✅ تم تسجيل الدخول بنجاح' : '✅ Signed in successfully', 'success');
+          } else if (event === 'SIGNED_OUT') {
+            showToast(getTranslation('login-canceled'), 'error');
+          }
+        });
+      }
+
+      init();
+      setInterval(loadParticipants, 30000);
 
     })();
   </script>
 
   <!-- ============================================================
-  تعليمات RPC على Supabase (يجب تنفيذها في SQL Editor)
-  ============================================================ 
-  
-  -- 1. دالة register_competitor (مُحسَّنة)
+  📌 تعليمات إعداد قاعدة البيانات (Supabase SQL Editor)
+  ============================================================
+
+  -- 1) إضافة عمود user_id للجداول
+  ALTER TABLE competitors ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id);
+  ALTER TABLE votes ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id);
+  CREATE INDEX IF NOT EXISTS idx_competitors_user ON competitors(user_id);
+  CREATE INDEX IF NOT EXISTS idx_votes_user ON votes(user_id);
+
+  -- (اختياري) حذف الأعمدة القديمة المرتبطة بالـ IP
+  -- ALTER TABLE competitors DROP COLUMN IF EXISTS ip_address;
+  -- ALTER TABLE competitors DROP COLUMN IF EXISTS fingerprint;
+  -- ALTER TABLE competitors DROP COLUMN IF EXISTS is_vpn;
+  -- ALTER TABLE votes DROP COLUMN IF EXISTS voter_id;
+  -- ALTER TABLE votes DROP COLUMN IF EXISTS ip_address;
+  -- ALTER TABLE votes DROP COLUMN IF EXISTS fingerprint;
+
+  -- 2) تفعيل RLS
+  ALTER TABLE competitors ENABLE ROW LEVEL SECURITY;
+  ALTER TABLE votes ENABLE ROW LEVEL SECURITY;
+
+  -- قراءة المتسابقين للجميع (للعرض)
+  DROP POLICY IF EXISTS "Anyone can read competitors" ON competitors;
+  CREATE POLICY "Anyone can read competitors" ON competitors
+    FOR SELECT USING (true);
+
+  -- كل مستخدم يقرأ تصويتاته فقط
+  DROP POLICY IF EXISTS "Users read own votes" ON votes;
+  CREATE POLICY "Users read own votes" ON votes
+    FOR SELECT USING (auth.uid() = user_id);
+
+  -- 3) دالة التسجيل
   CREATE OR REPLACE FUNCTION register_competitor(
     p_name TEXT,
     p_country TEXT,
     p_phone TEXT,
     p_youtube_url TEXT,
-    p_email TEXT DEFAULT NULL,
+    p_email TEXT,
     p_creative_answer TEXT,
     p_cond_youtube BOOLEAN,
     p_cond_snapchat BOOLEAN,
-    p_cond_terms BOOLEAN,
-    p_ip_address TEXT,
-    p_is_vpn BOOLEAN,
-    p_fingerprint TEXT
+    p_cond_terms BOOLEAN
   )
   RETURNS JSON
   LANGUAGE plpgsql
   SECURITY DEFINER
+  SET search_path = public
   AS $$
   DECLARE
-    v_result JSON;
+    v_uid UUID := auth.uid();
   BEGIN
-    -- التحقق من VPN
-    IF p_is_vpn THEN
-      RETURN json_build_object('success', false, 'error', 'vpn_blocked');
+    IF v_uid IS NULL THEN
+      RETURN json_build_object('success', false, 'error', 'not_authenticated');
     END IF;
 
-    -- التحقق من تكرار IP خلال آخر 24 ساعة
+    IF NOT p_cond_youtube OR NOT p_cond_snapchat OR NOT p_cond_terms THEN
+      RETURN json_build_object('success', false, 'error', 'terms_not_accepted');
+    END IF;
+
+    -- تسجيل واحد لكل مستخدم كل سنة
     IF EXISTS (
-      SELECT 1 FROM competitors 
-      WHERE ip_address = p_ip_address 
-        AND created_at > NOW() - INTERVAL '1 day'
+      SELECT 1 FROM competitors
+      WHERE user_id = v_uid
+        AND EXTRACT(YEAR FROM created_at) = EXTRACT(YEAR FROM NOW())
     ) THEN
-      RETURN json_build_object('success', false, 'error', 'duplicate_ip');
+      RETURN json_build_object('success', false, 'error', 'already_registered');
     END IF;
 
-    -- التحقق من تكرار الهاتف أو البريد (إذا كان البريد موجوداً)
+    -- منع تكرار الهاتف/البريد
     IF EXISTS (
-      SELECT 1 FROM competitors 
-      WHERE phone = p_phone OR (p_email IS NOT NULL AND email = p_email)
+      SELECT 1 FROM competitors
+      WHERE phone = p_phone
+         OR (p_email IS NOT NULL AND email = p_email)
     ) THEN
       RETURN json_build_object('success', false, 'error', 'duplicate_phone');
     END IF;
 
-    -- إدراج المتسابق
     INSERT INTO competitors (
       name, country, phone, youtube_url, email, creative_answer,
       cond_youtube, cond_snapchat, cond_terms,
-      ip_address, is_vpn, fingerprint, likes, created_at
+      user_id, likes, created_at
     ) VALUES (
       p_name, p_country, p_phone, p_youtube_url, p_email, p_creative_answer,
       p_cond_youtube, p_cond_snapchat, p_cond_terms,
-      p_ip_address, p_is_vpn, p_fingerprint, 0, NOW()
+      v_uid, 0, NOW()
     );
 
     RETURN json_build_object('success', true);
   END;
   $$;
 
-  -- 2. دالة add_vote (مُحسَّنة)
-  CREATE OR REPLACE FUNCTION add_vote(
-    p_competitor_id INT,
-    p_voter_id TEXT,
-    p_ip_address TEXT,
-    p_is_vpn BOOLEAN,
-    p_fingerprint TEXT
-  )
+  -- 4) دالة التصويت
+  CREATE OR REPLACE FUNCTION add_vote(p_competitor_id INT)
   RETURNS JSON
   LANGUAGE plpgsql
   SECURITY DEFINER
+  SET search_path = public
   AS $$
   DECLARE
+    v_uid UUID := auth.uid();
     v_today DATE := CURRENT_DATE;
     v_vote_count INT;
+    v_owner UUID;
   BEGIN
-    -- منع VPN
-    IF p_is_vpn THEN
-      RETURN json_build_object('success', false, 'error', 'vpn_blocked');
+    IF v_uid IS NULL THEN
+      RETURN json_build_object('success', false, 'error', 'not_authenticated');
     END IF;
 
-    -- التحقق من تكرار IP خلال 24 ساعة
+    -- منع التصويت الذاتي
+    SELECT user_id INTO v_owner FROM competitors WHERE id = p_competitor_id;
+    IF v_owner IS NULL THEN
+      RETURN json_build_object('success', false, 'error', 'not_found');
+    END IF;
+    IF v_owner = v_uid THEN
+      RETURN json_build_object('success', false, 'error', 'self_vote');
+    END IF;
+
+    -- تصويت واحد لكل مستخدم لكل متسابق
     IF EXISTS (
-      SELECT 1 FROM votes 
-      WHERE ip_address = p_ip_address 
-        AND created_at > NOW() - INTERVAL '1 day'
+      SELECT 1 FROM votes
+      WHERE user_id = v_uid AND competitor_id = p_competitor_id
     ) THEN
-      RETURN json_build_object('success', false, 'error', 'cooldown');
+      RETURN json_build_object('success', false, 'error', 'already_voted');
     END IF;
 
-    -- التحقق من تكرار fingerprint خلال 24 ساعة
-    IF EXISTS (
-      SELECT 1 FROM votes 
-      WHERE fingerprint = p_fingerprint 
-        AND created_at > NOW() - INTERVAL '1 day'
-    ) THEN
-      RETURN json_build_object('success', false, 'error', 'cooldown');
-    END IF;
-
-    -- الحد اليومي 10 تصويتات لكل IP
+    -- حد يومي 10 تصويتات لكل حساب
     SELECT COUNT(*) INTO v_vote_count
     FROM votes
-    WHERE ip_address = p_ip_address 
-      AND DATE(created_at) = v_today;
+    WHERE user_id = v_uid AND DATE(created_at) = v_today;
 
     IF v_vote_count >= 10 THEN
       RETURN json_build_object('success', false, 'error', 'rate_limit');
     END IF;
 
-    -- تسجيل التصويت
-    INSERT INTO votes (competitor_id, voter_id, ip_address, fingerprint, created_at)
-    VALUES (p_competitor_id, p_voter_id, p_ip_address, p_fingerprint, NOW());
+    INSERT INTO votes (competitor_id, user_id, created_at)
+    VALUES (p_competitor_id, v_uid, NOW());
 
-    -- تحديث عدد الإعجابات في جدول المتسابقين
     UPDATE competitors
-    SET likes = likes + 1
+    SET likes = COALESCE(likes, 0) + 1
     WHERE id = p_competitor_id;
 
     RETURN json_build_object('success', true);
   END;
   $$;
 
-  -- جداول إضافية (إذا لم تكن موجودة)
-  CREATE TABLE IF NOT EXISTS votes (
-    id SERIAL PRIMARY KEY,
-    competitor_id INT REFERENCES competitors(id) ON DELETE CASCADE,
-    voter_id TEXT NOT NULL,
-    ip_address TEXT NOT NULL,
-    fingerprint TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
-  );
-  CREATE INDEX idx_votes_ip ON votes(ip_address);
-  CREATE INDEX idx_votes_fingerprint ON votes(fingerprint);
-  CREATE INDEX idx_votes_created ON votes(created_at);
-
-  -- إضافة عمود fingerprint إلى جدول competitors إذا لم يكن موجوداً
-  ALTER TABLE competitors ADD COLUMN IF NOT EXISTS fingerprint TEXT;
-  ALTER TABLE competitors ADD COLUMN IF NOT EXISTS is_vpn BOOLEAN DEFAULT FALSE;
+  -- 5) منح تنفيذ الدوال للمستخدمين
+  GRANT EXECUTE ON FUNCTION register_competitor(TEXT,TEXT,TEXT,TEXT,TEXT,TEXT,BOOLEAN,BOOLEAN,BOOLEAN) TO authenticated;
+  GRANT EXECUTE ON FUNCTION add_vote(INT) TO authenticated;
   -->
-
 </body>
 </html>
