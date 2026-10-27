@@ -272,6 +272,10 @@
       flex-wrap: wrap; gap: 0.8rem; margin-bottom: 1.4rem;
     }
     .participants-section .section-header h2 { font-size: 1.1rem; font-weight: 700; }
+    .participants-section .section-header .section-hint {
+      font-size: 0.7rem; font-weight: 300; color: var(--text-tertiary);
+      margin-top: 0.15rem;
+    }
     .participants-section .section-header .count {
       font-size: 0.75rem; font-weight: 400; color: var(--text-tertiary);
       background: var(--bg); padding: 0.2rem 1rem; border-radius: 30px;
@@ -282,8 +286,9 @@
       padding: 0.8rem 1.2rem; border: 1px solid var(--border);
       transition: var(--transition); display: flex; flex-wrap: wrap;
       align-items: center; justify-content: space-between; gap: 0.6rem 1rem;
+      cursor: pointer;
     }
-    .participant-card:hover { border-color: var(--gold); box-shadow: var(--shadow-hover); }
+    .participant-card:hover { border-color: var(--gold); box-shadow: var(--shadow-hover); transform: translateY(-1px); }
     .participant-card.top { border-color: var(--gold); background: var(--gold-light); }
     .participant-card.mine { border-color: #4285F4; background: #eef4ff; }
     .participant-card .p-info { display: flex; flex-direction: column; flex: 1 1 180px; gap: 0.1rem; min-width: 0; }
@@ -523,7 +528,10 @@
     <!-- Participants -->
     <section class="participants-section reveal">
       <div class="section-header">
-        <h2 data-i18n="participants-title">المتسابقون</h2>
+        <div>
+          <h2 data-i18n="participants-title">المتسابقون</h2>
+          <p class="section-hint" data-i18n="participants-hint">اضغط على أي متسابق لعرض ملفه والتصويت له</p>
+        </div>
         <span class="count" id="participants-count">٠</span>
       </div>
       <div id="participants-grid" class="participants-grid">
@@ -616,6 +624,7 @@
           'cond3-num': '٣', 'cond3-title': 'إجابة إبداعية',
           'cond3-desc': 'أجب على السؤال الإبداعي: <strong>"لماذا تستحق الفوز؟"</strong> في ٣ أسطر.',
           'participants-title': 'المتسابقون',
+          'participants-hint': 'اضغط على أي متسابق لعرض ملفه والتصويت له',
           'participants-empty': 'لا يوجد متسابقون حتى الآن. كن الأول!',
           'footer-credit': '© 2025 Hoscribe · هوسكرايب — كريم محمد إسماعيل',
           'msg-load-error': 'تعذر تحميل المتسابقين. حاول تحديث الصفحة.',
@@ -667,6 +676,7 @@
           'cond3-num': '3', 'cond3-title': 'Creative Answer',
           'cond3-desc': 'Answer: <strong>"Why do you deserve to win?"</strong> in 3 lines.',
           'participants-title': 'Contestants',
+          'participants-hint': 'Tap any contestant to view their profile and vote',
           'participants-empty': 'No contestants yet. Be the first!',
           'footer-credit': '© 2025 Hoscribe · هوسكرايب — Karim Mohamed Ismail',
           'msg-load-error': 'Failed to load contestants.',
@@ -906,7 +916,7 @@
             }
 
             return `
-              <div class="participant-card ${isTop ? 'top' : ''} ${isMine ? 'mine' : ''}" data-id="${p.id}">
+              <div class="participant-card ${isTop ? 'top' : ''} ${isMine ? 'mine' : ''}" data-id="${p.id}" data-href="profile.html?id=${p.id}">
                 <div class="p-info">
                   <div class="p-name">
                     ${escapeHtml(p.name)}
@@ -931,6 +941,16 @@
             `;
           }).join('');
 
+          // اجعل كل بطاقة قابلة للنقر لفتح ملف المتسابق
+          document.querySelectorAll('.participant-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+              // لا ننتقل إذا ضغط على زر الإعجاب أو رابط خارجي
+              if (e.target.closest('a, .btn-like')) return;
+              const href = card.getAttribute('data-href');
+              if (href) window.location.href = href;
+            });
+          });
+
           document.querySelectorAll('.btn-like:not([disabled])').forEach(btn => {
             btn.addEventListener('click', handleLike);
           });
@@ -942,6 +962,7 @@
       }
 
       async function handleLike(e) {
+        e.stopPropagation();
         const btn = e.currentTarget;
         const competitorId = parseInt(btn.getAttribute('data-id'), 10);
         if (!competitorId || isNaN(competitorId)) return;
