@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" />
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -81,7 +81,6 @@
     .hero-reg h1 .highlight { color: var(--gold); }
     .hero-reg .sub { font-size: 0.9rem; font-weight: 300; color: var(--text-secondary); margin-top: 0.4rem; }
 
-    /* State cards */
     .state-card {
       background: var(--surface); border-radius: var(--radius);
       padding: 2rem 1.5rem; margin: 1.5rem 0;
@@ -116,7 +115,6 @@
     }
     .btn-outline:hover { background: var(--gold-light); }
 
-    /* Form */
     .form-section {
       background: var(--surface); border-radius: var(--radius);
       padding: 2rem 2.2rem; border: 1px solid var(--border);
@@ -179,6 +177,7 @@
     .toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
     .toast.success { border-color: #4caf50; background: #e8f5e9; color: #2e7d32; }
     .toast.error { border-color: #ef5350; background: #ffebee; color: #c62828; }
+    .toast.info { border-color: var(--gold); background: var(--gold-light); color: #8a6d20; }
 
     .spinner {
       display: inline-block; width: 18px; height: 18px;
@@ -202,31 +201,26 @@
 
   <div class="container">
 
-    <!-- Language Switcher -->
     <div class="lang-switcher">
       <button class="lang-btn active" data-lang="ar">عربي</button>
       <button class="lang-btn" data-lang="en">English</button>
     </div>
 
-    <!-- Back -->
     <a href="co.html" class="back-link">
       <svg viewBox="0 0 24 24"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
       <span data-i18n="back-comp">العودة للمسابقة</span>
     </a>
 
-    <!-- Hero -->
     <header class="hero-reg">
       <div class="badge" data-i18n="badge">التسجيل</div>
       <h1 data-i18n="reg-heading">سجل في <span class="highlight">المسابقة</span></h1>
       <p class="sub" data-i18n="reg-sub">املأ بياناتك للانضمام إلى قائمة المتسابقين</p>
     </header>
 
-    <!-- Loading -->
     <div id="loading-state" class="state-card">
       <p data-i18n="loading">جاري التحقق من الحساب...</p>
     </div>
 
-    <!-- Not logged in -->
     <div id="not-logged-state" class="state-card hidden">
       <div class="state-icon">🔒</div>
       <h2 data-i18n="login-required-title">تسجيل الدخول مطلوب</h2>
@@ -250,7 +244,6 @@
       </div>
     </div>
 
-    <!-- Already registered -->
     <div id="already-registered-state" class="state-card hidden">
       <div class="state-icon">✅</div>
       <h2 data-i18n="already-registered-title">أنت مسجل بالفعل!</h2>
@@ -262,7 +255,6 @@
       </div>
     </div>
 
-    <!-- Form -->
     <section class="form-section hidden" id="form-container">
       <h2 class="form-title" data-i18n="form-title">سجل الآن</h2>
       <p class="form-sub" data-i18n="form-sub">املأ البيانات أدناه وانضم لقائمة المتسابقين</p>
@@ -329,9 +321,16 @@
 
       const SUPABASE_URL = 'https://dygrssfqkiedrolhkpbi.supabase.co';
       const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5Z3Jzc2Zxa2llZHJvbGhrcGJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwODE0OTQsImV4cCI6MjEwODY1NzQ5NH0.MWT_m2ZE-6qV1g9uiddlcMQP_1d6EltXge0yKLmCkNU';
-      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true,
+          flowType: 'pkce'
+        }
+      });
 
-      // i18n
+      // ============ i18n ============
       const translations = {
         ar: {
           'page-title': 'التسجيل في المسابقة — هوسكرايب',
@@ -368,6 +367,7 @@
           'msg-login-required': '🔒 يرجى تسجيل الدخول أولاً.',
           'login-failed': '⚠️ فشل تسجيل الدخول. حاول مرة أخرى.',
           'signin-success': '✅ تم تسجيل الدخول بنجاح',
+          'verifying': 'جاري التحقق من الحساب...'
         },
         en: {
           'page-title': 'Register — Hoscribe Competition',
@@ -404,6 +404,7 @@
           'msg-login-required': '🔒 Please login first.',
           'login-failed': '⚠️ Login failed. Try again.',
           'signin-success': '✅ Signed in successfully',
+          'verifying': 'Verifying account...'
         }
       };
 
@@ -458,7 +459,7 @@
         (navigator.language && navigator.language.startsWith('en') ? 'en' : 'ar');
       setLanguage(initialLang);
 
-      // Toast
+      // ============ Toast ============
       const toastEl = document.getElementById('toast');
       let toastTimeout;
       function showToast(message, type = 'success') {
@@ -468,6 +469,7 @@
         toastTimeout = setTimeout(() => toastEl.classList.remove('show'), 4000);
       }
 
+      // ============ OAuth login ============
       async function loginWith(provider) {
         try {
           const { error } = await supabase.auth.signInWithOAuth({
@@ -481,11 +483,13 @@
       }
       window.loginWith = loginWith;
 
-      // UI states
+      // ============ UI states ============
       const loadingEl = document.getElementById('loading-state');
       const notLoggedEl = document.getElementById('not-logged-state');
       const alreadyRegEl = document.getElementById('already-registered-state');
       const formContainer = document.getElementById('form-container');
+
+      let stateResolved = false;
 
       function showState(state) {
         loadingEl.classList.add('hidden');
@@ -498,7 +502,22 @@
         else if (state === 'form') formContainer.classList.remove('hidden');
       }
 
-      // Form
+      function showStateSafe(state) {
+        stateResolved = true;
+        showState(state);
+      }
+
+      // ============ Timeout helper ============
+      function withTimeout(promise, ms = 10000) {
+        return Promise.race([
+          promise,
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('timeout after ' + ms + 'ms')), ms)
+          )
+        ]);
+      }
+
+      // ============ Form ============
       const form = document.getElementById('competition-form');
       const submitBtn = document.getElementById('submit-btn');
       const btnText = document.getElementById('btn-text');
@@ -545,17 +564,20 @@
         btnSpinner.classList.remove('hidden');
 
         try {
-          const { data, error } = await supabase.rpc('register_competitor', {
-            p_name: name,
-            p_country: country,
-            p_phone: phone,
-            p_youtube_url: youtube_url,
-            p_email: email,
-            p_creative_answer: creative_answer,
-            p_cond_youtube: condYt,
-            p_cond_snapchat: condSnap,
-            p_cond_terms: condTerms,
-          });
+          const { data, error } = await withTimeout(
+            supabase.rpc('register_competitor', {
+              p_name: name,
+              p_country: country,
+              p_phone: phone,
+              p_youtube_url: youtube_url,
+              p_email: email,
+              p_creative_answer: creative_answer,
+              p_cond_youtube: condYt,
+              p_cond_snapchat: condSnap,
+              p_cond_terms: condTerms,
+            }),
+            20000
+          );
 
           if (error) throw error;
 
@@ -576,12 +598,10 @@
             return;
           }
 
-          // Success
           showMessage(getTranslation('msg-success'), 'success');
           showToast(getTranslation('msg-success'), 'success');
           form.reset();
 
-          // بعد ثانيتين، انتقل لصفحة المتسابقين
           setTimeout(() => {
             showState('already');
             setTimeout(() => {
@@ -598,46 +618,88 @@
         }
       });
 
-      // Init
-      async function init() {
-        const { data: { session } } = await supabase.auth.getSession();
-        const user = session?.user || null;
-
-        if (!user) {
-          showState('not-logged');
-          return;
-        }
-
-        // Check if already registered
+      // ============ Handle authenticated user ============
+      async function handleUser(user) {
         try {
-          const { data } = await supabase
-            .from('competitors')
-            .select('id')
-            .eq('user_id', user.id)
-            .maybeSingle();
+          const { data, error } = await withTimeout(
+            supabase
+              .from('competitors')
+              .select('id')
+              .eq('user_id', user.id)
+              .maybeSingle(),
+            10000
+          );
 
-          if (data) {
-            showState('already');
-          } else {
-            showState('form');
+          if (error) {
+            console.warn('⚠️ check registration error:', error.message);
+            showStateSafe('form');
+            return;
           }
+
+          showStateSafe(data ? 'already' : 'form');
         } catch (e) {
-          console.warn('check registration', e);
-          showState('form');
+          console.warn('⚠️ check registration failed:', e.message);
+          showStateSafe('form');
         }
       }
 
-      init();
+      // ============ Init ============
+      async function init() {
+        try {
+          const { data, error } = await withTimeout(supabase.auth.getSession(), 10000);
 
-      // React to auth changes (login from this page)
-      supabase.auth.onAuthStateChange(async (event, session) => {
+          if (error) {
+            console.warn('⚠️ getSession error:', error.message);
+            showStateSafe('not-logged');
+            return;
+          }
+
+          const user = data?.session?.user || null;
+          if (!user) {
+            showStateSafe('not-logged');
+            return;
+          }
+
+          await handleUser(user);
+        } catch (e) {
+          console.warn('⚠️ init failed:', e.message);
+          showStateSafe('not-logged');
+        }
+      }
+
+      // ============ OAuth error in URL ============
+      const hash = window.location.hash || '';
+      const hasOAuthError = hash.includes('error=') && !hash.includes('access_token=');
+
+      if (hasOAuthError) {
+        const params = new URLSearchParams(hash.substring(1));
+        const errDesc = params.get('error_description') || params.get('error') || 'login_failed';
+        console.error('❌ OAuth error:', errDesc);
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+        showStateSafe('not-logged');
+        showToast(getTranslation('login-failed'), 'error');
+      } else {
+        init();
+      }
+
+      // ============ Auth changes (no await — avoid deadlock) ============
+      supabase.auth.onAuthStateChange((event, session) => {
         if (event === 'SIGNED_IN' && session?.user) {
           showToast(getTranslation('signin-success'), 'success');
-          await init();
+          setTimeout(() => handleUser(session.user), 0);
         } else if (event === 'SIGNED_OUT') {
-          showState('not-logged');
+          showStateSafe('not-logged');
         }
       });
+
+      // ============ Watchdog: never stay on loading forever ============
+      setTimeout(() => {
+        if (!stateResolved) {
+          console.warn('⚠️ watchdog forcing state after 12s');
+          showStateSafe('not-logged');
+        }
+      }, 12000);
+
     })();
   </script>
 
