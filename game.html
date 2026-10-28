@@ -1,0 +1,2407 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>الظل</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{width:100%;height:100%;overflow:hidden;background:#000;
+    font-family:system-ui,'Segoe UI',Tahoma,'Noto Sans Arabic',sans-serif}
+  canvas{display:block;position:absolute;inset:0;touch-action:none;cursor:none}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+(() => {
+'use strict';
+
+/* ══════════════════════ CANVAS ══════════════════════ */
+const cvs = document.getElementById('c');
+const ctx = cvs.getContext('2d');
+const VW = 960, VH = 540;
+let dpr = 1, scale = 1, offX = 0, offY = 0, viewW = 0, viewH = 0;
+
+function resize(){
+  dpr = Math.min(devicePixelRatio || 1, 2);
+  viewW = innerWidth; viewH = innerHeight;
+  cvs.width  = Math.floor(viewW * dpr);
+  cvs.height = Math.floor(viewH * dpr);
+  cvs.style.width  = viewW + 'px';
+  cvs.style.height = viewH + 'px';
+  scale = Math.min(viewW / VW, viewH / VH);
+  offX = (viewW - VW * scale) / 2;
+  offY = (viewH - VH * scale) / 2;
+}
+addEventListener('resize', resize); resize();
+ctx.direction = 'rtl';
+
+const clamp = (v,a,b) => v < a ? a : v > b ? b : v;
+const rnd = (a,b) => a + Math.random()*(b-a);
+const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+const vary = (...args) => pick(args);
+
+/* ══════════════════════ REAL WORLD AWARENESS (EXPANDED) ══════════════════════ */
+const RW = {
+  tz:'', lang:'', langName:'', platform:'', cores:0, memory:0,
+  touch:false, touchPoints:0, battery:null, batteryCharging:null, online:true,
+  screenW:0, screenH:0, colorDepth:0, pixelRatio:1,
+  connection:'', prefersDark:false, prefersReducedMotion:false,
+  visits:0, lastVisit:0, totalTime:0,
+  hour:0, minute:0, day:0, dayName:'', dateStr:'',
+  isNight:false, isWeekend:false, isMorning:false, isEvening:false,
+  browser:'', os:'', deviceType:'',
+  timezoneOffset:0,
+};
+
+const LANG_NAMES = {
+  'ar':'العربية','en':'الإنجليزية','fr':'الفرنسية','es':'الإسبانية',
+  'de':'الألمانية','ru':'الروسية','zh':'الصينية','ja':'اليابانية',
+  'tr':'التركية','fa':'الفارسية','ur':'الأردية','hi':'الهندية',
+  'it':'الإيطالية','pt':'البرتغالية','ko':'الكورية','nl':'الهولندية',
+  'sv':'السويدية','pl':'البولندية','id':'الإندونيسية','th':'التايلاندية',
+  'he':'العبرية','el':'اليونانية','uk':'الأوكرانية',
+};
+
+const DAY_NAMES = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+const MONTH_NAMES = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+
+function detectBrowser(){
+  const ua = navigator.userAgent;
+  if (ua.includes('Firefox')) return 'فايرفوكس';
+  if (ua.includes('Edg/')) return 'إيدج';
+  if (ua.includes('OPR') || ua.includes('Opera')) return 'أوبرا';
+  if (ua.includes('Chrome')) return 'كروم';
+  if (ua.includes('Safari')) return 'سفاري';
+  return 'متصفح';
+}
+
+function detectOS(){
+  const ua = navigator.userAgent;
+  if (/Android/.test(ua)) return 'أندرويد';
+  if (/iPhone|iPad|iPod/.test(ua)) return 'iOS';
+  if (/Windows/.test(ua)) return 'ويندوز';
+  if (/Mac/.test(ua)) return 'ماك';
+  if (/Linux/.test(ua)) return 'لينكس';
+  return 'جهاز';
+}
+
+function detectDeviceType(){
+  const ua = navigator.userAgent;
+  if (/iPad|Tablet/.test(ua)) return 'جهاز لوحي';
+  if (/Mobile|Android|iPhone/.test(ua)) return 'هاتف';
+  return 'حاسوب';
+}
+
+function loadRW(){
+  try {
+    RW.tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+    RW.timezoneOffset = new Date().getTimezoneOffset();
+    RW.lang = navigator.language || 'ar';
+    RW.langName = LANG_NAMES[RW.lang.split('-')[0]] || '';
+    RW.platform = navigator.platform || '';
+    RW.cores = navigator.hardwareConcurrency || 0;
+    RW.memory = navigator.deviceMemory || 0;
+    RW.touch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+    RW.touchPoints = navigator.maxTouchPoints || 0;
+    RW.online = navigator.onLine;
+    RW.screenW = screen.width;
+    RW.screenH = screen.height;
+    RW.colorDepth = screen.colorDepth || 24;
+    RW.pixelRatio = window.devicePixelRatio || 1;
+    RW.connection = (navigator.connection && navigator.connection.effectiveType) || '';
+    RW.prefersDark = matchMedia && matchMedia('(prefers-color-scheme: dark)').matches;
+    RW.prefersReducedMotion = matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const now = new Date();
+    RW.hour = now.getHours();
+    RW.minute = now.getMinutes();
+    RW.day = now.getDay();
+    RW.dayName = DAY_NAMES[RW.day];
+    RW.dateStr = `${now.getDate()} ${MONTH_NAMES[now.getMonth()]}`;
+    RW.isNight = RW.hour >= 22 || RW.hour < 5;
+    RW.isMorning = RW.hour >= 5 && RW.hour < 12;
+    RW.isEvening = RW.hour >= 17 && RW.hour < 22;
+    RW.isWeekend = RW.day === 5 || RW.day === 6;
+    RW.browser = detectBrowser();
+    RW.os = detectOS();
+    RW.deviceType = detectDeviceType();
+
+    RW.visits = parseInt(localStorage.getItem('sh_visits') || '0', 10) || 0;
+    RW.lastVisit = parseInt(localStorage.getItem('sh_last') || '0', 10) || 0;
+    RW.totalTime = parseFloat(localStorage.getItem('sh_time') || '0') || 0;
+  } catch(e){}
+
+  if (navigator.getBattery){
+    navigator.getBattery().then(b => {
+      RW.battery = Math.round(b.level * 100);
+      RW.batteryCharging = b.charging;
+    }).catch(()=>{});
+  }
+}
+loadRW();
+
+function timeName(){
+  if (RW.hour >= 5 && RW.hour < 12) return 'الصباح';
+  if (RW.hour >= 12 && RW.hour < 17) return 'الظهيرة';
+  if (RW.hour >= 17 && RW.hour < 21) return 'المساء';
+  return 'الليل';
+}
+
+function daysSinceLastVisit(){
+  if (!RW.lastVisit) return -1;
+  return Math.floor((Date.now() - RW.lastVisit) / 86400000);
+}
+
+function currentClock(){
+  const d = new Date();
+  return String(d.getHours()).padStart(2,'0') + ':' +
+         String(d.getMinutes()).padStart(2,'0');
+}
+
+function currentClockSec(){
+  const d = new Date();
+  return String(d.getHours()).padStart(2,'0') + ':' +
+         String(d.getMinutes()).padStart(2,'0') + ':' +
+         String(d.getSeconds()).padStart(2,'0');
+}
+
+function saveVisit(){
+  try {
+    localStorage.setItem('sh_visits', String(RW.visits + 1));
+    localStorage.setItem('sh_last', String(Date.now()));
+  } catch(e){}
+}
+
+/* ══════════════════════ CONSTANTS ══════════════════════ */
+const GROUND_Y = 432;
+const WORLD_W  = 15000;
+const DOOR_X   = 14000;
+const SPEED    = 118;
+const STEP     = 1 / 60;
+
+/* ══════════════════════ AUDIO ══════════════════════ */
+let audioCtx = null, humGain = null, muted = false, masterGain = null;
+let subBassGain = null, breathGain = null;
+
+function initAudio(){
+  if (audioCtx) return;
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    audioCtx = new AC();
+    masterGain = audioCtx.createGain();
+    masterGain.gain.value = 1.0;
+    masterGain.connect(audioCtx.destination);
+
+    humGain = audioCtx.createGain();
+    humGain.gain.value = 0;
+    humGain.connect(masterGain);
+
+    const osc = (type, freq, g) => {
+      const o = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      o.type = type; o.frequency.value = freq;
+      gain.gain.value = g;
+      o.connect(gain); gain.connect(humGain); o.start();
+      return o;
+    };
+    osc('sine', 55, 0.55);
+    osc('sine', 55.4, 0.45);
+    osc('sine', 82.5, 0.18);
+    osc('triangle', 110, 0.10);
+
+    subBassGain = audioCtx.createGain();
+    subBassGain.gain.value = 0.18;
+    subBassGain.connect(masterGain);
+    const sub = audioCtx.createOscillator();
+    sub.type = 'sawtooth';
+    sub.frequency.value = 32;
+    const subFilter = audioCtx.createBiquadFilter();
+    subFilter.type = 'lowpass';
+    subFilter.frequency.value = 80;
+    sub.connect(subFilter); subFilter.connect(subBassGain);
+    sub.start();
+
+    const breathBuf = audioCtx.createBuffer(1, audioCtx.sampleRate * 4, audioCtx.sampleRate);
+    const bd = breathBuf.getChannelData(0);
+    for (let i = 0; i < bd.length; i++) bd[i] = (Math.random()*2-1) * 0.5;
+    const bsrc = audioCtx.createBufferSource();
+    bsrc.buffer = breathBuf; bsrc.loop = true;
+    const bfilter = audioCtx.createBiquadFilter();
+    bfilter.type = 'bandpass'; bfilter.frequency.value = 380; bfilter.Q.value = 1.5;
+    breathGain = audioCtx.createGain();
+    breathGain.gain.value = 0.015;
+    bsrc.connect(bfilter); bfilter.connect(breathGain); breathGain.connect(masterGain);
+    bsrc.start();
+
+    const breathLfo = audioCtx.createOscillator();
+    breathLfo.type = 'sine'; breathLfo.frequency.value = 0.22;
+    const breathLfoGain = audioCtx.createGain();
+    breathLfoGain.gain.value = 0.022;
+    breathLfo.connect(breathLfoGain); breathLfoGain.connect(breathGain.gain);
+    breathLfo.start();
+
+    humGain.gain.linearRampToValueAtTime(0.22, audioCtx.currentTime + 7);
+  } catch(e){}
+}
+
+function blip(freq = 320, dur = 0.14, vol = 0.12){
+  if (!audioCtx || muted) return;
+  const t = audioCtx.currentTime;
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = 'sine';
+  o.frequency.setValueAtTime(freq, t);
+  o.frequency.exponentialRampToValueAtTime(freq * 0.55, t + dur);
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(vol, t + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g); g.connect(masterGain);
+  o.start(t); o.stop(t + dur + 0.02);
+}
+
+function whisper(dur = 0.9, vol = 0.16){
+  if (!audioCtx || muted) return;
+  try {
+    const t = audioCtx.currentTime;
+    const rate = audioCtx.sampleRate;
+    const size = Math.floor(rate * dur);
+    const buf = audioCtx.createBuffer(1, size, rate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < size; i++){
+      const env = Math.sin(i / size * Math.PI);
+      data[i] = (Math.random() * 2 - 1) * env * (0.5 + 0.5 * Math.sin(i * 0.008));
+    }
+    const src = audioCtx.createBufferSource();
+    src.buffer = buf;
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 700 + Math.random() * 900;
+    filter.Q.value = 5;
+    const g = audioCtx.createGain();
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.05);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    src.connect(filter); filter.connect(g); g.connect(masterGain);
+    src.start(t); src.stop(t + dur + 0.05);
+  } catch(e){}
+}
+
+function heartbeat(vol = 0.20, rate = 0.15){
+  if (!audioCtx || muted) return;
+  const t = audioCtx.currentTime;
+  [0, rate].forEach((offset, i) => {
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(65, t + offset);
+    o.frequency.exponentialRampToValueAtTime(26, t + offset + 0.12);
+    g.gain.setValueAtTime(0, t + offset);
+    g.gain.linearRampToValueAtTime(vol * (i === 0 ? 1 : 0.7), t + offset + 0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + offset + 0.18);
+    o.connect(g); g.connect(masterGain);
+    o.start(t + offset); o.stop(t + offset + 0.22);
+  });
+}
+
+function deepTone(freq = 40, dur = 2.0, vol = 0.20){
+  if (!audioCtx || muted) return;
+  const t = audioCtx.currentTime;
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = 'sine';
+  o.frequency.setValueAtTime(freq, t);
+  o.frequency.linearRampToValueAtTime(freq * 0.7, t + dur);
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(vol, t + 0.15);
+  g.gain.linearRampToValueAtTime(0, t + dur);
+  o.connect(g); g.connect(masterGain);
+  o.start(t); o.stop(t + dur + 0.1);
+}
+
+function silenceDrop(dur = 0.6){
+  G.silenceUntil = G.t + dur;
+}
+
+/* ══════════════════════ STATE ══════════════════════ */
+const G = {
+  phase: 'intro',
+  t: 0,
+  x: 150,
+  vx: 0,
+  facing: 1,
+  lastFacing: 1,
+  lastDir: 0,
+  dirChanges: [],
+  walkPhase: 0,
+  camX: 0,
+
+  trail: [],
+  shadowActive: false,
+  shadowLag: 52,
+  shadowAlpha: 0,
+  shadowX: 150,
+  shadowVX: 0,
+  shadowFacing: 1,
+  shadowWalkPhase: 0,
+  shadowState: 'normal',
+  shadowStateTimer: 0,
+  creep: 0,
+  doubleShadow: 0,
+  shadowIndependence: 0,
+  shadowCopied: false,
+  shadowDeviation: 0,
+
+  msg: null,
+  queue: [],
+  hint: 0,
+
+  worldFade: 0,
+  darkness: 0,
+  darknessTarget: 0,
+
+  crashTimer: 0,
+  crashProgress: 0,
+  crashCount: 0,
+
+  choiceIndex: 0,
+  choiceVisible: false,
+
+  endTimer: 0,
+  endDrain: 0,
+  fade: 0,
+  endType: '',
+  redirectStarted: false,
+
+  visits: 0,
+  startTime: 0,
+  lastLookBack: -99,
+  lastTabAway: -99,
+  tabHiddenAt: 0,
+
+  stats: {
+    walked: 0,
+    steps: 0,
+    idleCount: 0,
+    longestIdle: 0,
+    lookBacks: 0,
+    panics: 0,
+    tabSwitches: 0,
+    pauses: 0,
+    directionChanges: 0,
+    inputEvents: 0,
+    lastInputTime: 0,
+    longestInputGap: 0,
+    startScreenTime: 0,
+    choicesReversed: 0,
+    speedChanges: 0,
+  },
+  idleTime: 0,
+  wasIdle: false,
+
+  // visual
+  flicker: 0,
+  shake: 0,
+  freezeUntil: 0,
+  redFlash: 0,
+  glitchUntil: 0,
+  glitchAmount: 0,
+  colorInvert: 0,
+  grainPhase: 0,
+
+  // audio
+  heartbeatTimer: 0,
+  whisperTimer: 0,
+  lastSilence: -99,
+  silenceUntil: 0,
+
+  // jumpscare
+  jumpScareTimer: 0,
+
+  // meta
+  hasLookedBack: false,
+  hasStopped: false,
+  hasPanicked: false,
+  hasTabbed: false,
+  hasRead: false,
+  isNowWalkingBack: false,
+  lastKnownClock: '',
+  predictedActions: [],
+  predictionsHit: 0,
+  predictionsMade: 0,
+  gaslitCount: 0,
+  lastGaslight: -99,
+  mirrorMoment: false,
+  mirrorDelivered: false,
+  lastTitleChange: 0,
+  lastInputTick: 0,
+  titleIndex: 0,
+
+  entityMood: 'calm',
+  contradicted: false,
+  lastMessageTime: 0,
+  lastTriggerFireTime: 0,
+
+  // motion tracking
+  speedHistory: [],
+  lastSpeed: 0,
+  accelHistory: [],
+  lastInputType: '',
+
+  // profile
+  profile: 'unknown',
+  profileRevealed: false,
+};
+
+let started = false;
+const keys = {};
+const pointerHeld = { left: false, right: false };
+const triggers = [];
+const timeTriggers = [];
+
+/* ══════════════════════ MESSAGES ══════════════════════ */
+function say(text, o = {}){
+  G.queue.push({
+    text,
+    delay: o.delay ?? 0.15,
+    cps:   o.cps   ?? 24,
+    hold:  o.hold  ?? 2.2,
+    size:  o.size  ?? 26,
+    color: o.color ?? '#c9cfdd',
+    style: o.style ?? 'normal',
+    age: 0,
+    audio: o.audio !== false,
+  });
+}
+
+function updateMessages(dt){
+  if (!G.msg && G.queue.length){
+    G.msg = G.queue.shift();
+    G.msg.age = 0;
+    G.lastMessageTime = G.t;
+    if (G.msg.audio){
+      if (G.msg.style === 'whisper') whisper(1.0, 0.11);
+      else if (G.msg.style === 'shout') { blip(90, 0.5, 0.20); G.shake = Math.max(G.shake, 6); }
+      else if (G.msg.style === 'glitch') { blip(200, 0.3, 0.15); G.glitchUntil = G.t + 0.8; G.glitchAmount = 8; }
+      else blip(260 + Math.random() * 120, 0.16, 0.09);
+    }
+  }
+  if (G.msg){
+    G.msg.age += dt;
+    const typeTime = G.msg.text.length / G.msg.cps;
+    const total = G.msg.delay + typeTime + G.msg.hold;
+    if (G.msg.age >= total) G.msg = null;
+  }
+}
+
+/* ══════════════════════ PROFILE ANALYSIS ══════════════════════ */
+function updateProfile(){
+  const s = G.stats;
+  if (s.lookBacks >= 2 && s.idleCount >= 3) G.profile = 'خائف';
+  else if (s.lookBacks >= 2) G.profile = 'متردد';
+  else if (s.panics >= 1 || s.directionChanges >= 6) G.profile = 'مرتبك';
+  else if (s.tabSwitches >= 1) G.profile = 'هارب';
+  else if (s.idleCount >= 5) G.profile = 'قلق';
+  else if (s.lookBacks === 0 && s.idleCount <= 1 && G.stats.walked > 800) G.profile = 'شجاع';
+  else if (s.steps < 20) G.profile = 'متحفظ';
+  else G.profile = 'فضولي';
+}
+
+function getProfileDesc(){
+  switch(G.profile){
+    case 'شجاع':   return 'أنت لا تنظر خلفك. مثير للإعجاب... أو غبي.';
+    case 'خائف':   return 'تنظر خلفك كثيراً. تنظر إليّ.';
+    case 'متردد':  return 'أنت متردد. لا تعرف إن كنت تريد الوصول.';
+    case 'مرتبك':  return 'أنت مرتبك. عيناك تتحركان أسرع من قدميك.';
+    case 'هارب':   return 'حاولت أن تهرب مني. لم تنجح.';
+    case 'قلق':    return 'أنت تتوقف كثيراً. تفكر كثيراً. تخاف كثيراً.';
+    case 'متحفظ':  return 'أنت حذر. هذا لا ينفعك هنا.';
+    default:       return 'أنت فضولي. هذا ما يجعلك هنا.';
+  }
+}
+
+/* ══════════════════════ SCRIPT ══════════════════════ */
+function at(x, fn){ triggers.push({ x, done: false, fn }); }
+function atTime(t, fn){ timeTriggers.push({ t, done: false, fn }); }
+
+function buildScript(){
+  triggers.length = 0;
+  timeTriggers.length = 0;
+
+  /* ── OPENING ── */
+  at(0, () => {
+    say('...',                    { hold: 1.4, cps: 3, delay: 2.0 });
+    say(vary('أنت تستطيع القراءة.','أنت تفهم ما أقول.','أنت هنا.'), { hold: 1.8, cps: 13, delay: 0.8 });
+    say('ثم أنت موجود.',          { hold: 2.4, cps: 11, delay: 0.6 });
+    say(vary('لم أسألك من أنت.','لا أعرف اسمك.','لا أحتاج اسمك.'), { hold: 2.2, cps: 18, delay: 0.5 });
+    say('لأنني أعرف.',            { hold: 2.8, cps: 9, delay: 0.6 });
+    say('تحرّك.',                 { hold: 2.0, cps: 8, delay: 1.0 });
+  });
+
+  at(90, () => { G.hint = 1; });
+
+  at(260, () => {
+    say(vary('لا تسرع.','تمهّل.','لا يوجد ما يستحق العجلة.','الوقت هنا لا يمر كالخارج.'), { hold: 2.0 });
+    say('ليس هناك ما يستحق العجلة.', { hold: 2.6 });
+  });
+
+  at(430, () => {
+    say('جيد.',                   { hold: 1.4 });
+    say('أنت تسمع.',              { hold: 2.0 });
+    say('هذا كل ما أحتاجه.',      { hold: 2.4, color: '#b8c0d0' });
+  });
+
+  at(560, () => {
+    say('لكن...',                 { hold: 1.2 });
+    say('هل تعرف لماذا أنت هنا؟', { hold: 2.6 });
+  });
+
+  at(700, () => {
+    say('لا. لا تجب.',            { hold: 1.8 });
+    say('لا تزال الإجابة خاطئة.', { hold: 2.4, color: '#cbb0b0' });
+  });
+
+  at(820, () => {
+    G.shadowActive = true;
+    G.shadowAlpha = 0;
+    say('الآن...',                { hold: 1.0 });
+    say('لا تنظر خلفك.',          { hold: 2.8, color: '#e8a0a0', style: 'glitch' });
+  });
+
+  at(960, () => {
+    if (G.hasLookedBack){
+      say(vary('...لقد نظرت.','نظرت. أعرف.','رأيتك تنظر.'), { hold: 3.0, color: '#e0a8a8' });
+      say('لماذا؟',               { hold: 2.4 });
+      say('كنتُ أتمنى ألا تفعل.', { hold: 2.4, color: '#cbb0b0' });
+    } else {
+      say('جيد.',                 { hold: 1.6 });
+      say('أنت تسمع.',            { hold: 2.2 });
+    }
+  });
+
+  at(1120, () => {
+    G.shadowLag = 32;
+    say('الآن هو أقرب.',          { hold: 2.2 });
+    say('هذا الذي خلفك.',         { hold: 2.4 });
+  });
+
+  at(1300, () => {
+    G.shadowLag = 20;
+    say('إنه ليس ظلّك.',          { hold: 2.6, color: '#cbb0b0' });
+    say('إنه أنت. قبل ثانية.',    { hold: 3.0, color: '#d8a8a8' });
+  });
+
+  at(1480, () => {
+    say('توقف لثانية.',           { hold: 2.0 });
+    say('هل تراه يتوقف بعدك؟',    { hold: 2.8 });
+  });
+
+  /* ── PESRÔNAL STATS REVEAL ── */
+  at(1700, () => {
+    const steps = Math.round(G.stats.walked / 26);
+    say(vary(`مشيتَ ${steps} خطوة.`, `أعدّ خطواتك: ${steps}.`, `${steps} خطوة. حتى الآن.`), { hold: 2.2 });
+    say('كنتُ أعدّ.',              { hold: 2.0, color: '#cbb0b0' });
+  });
+
+  at(1880, () => {
+    say(`توقفتَ ${G.stats.idleCount} مرة.`, { hold: 2.4 });
+    say('كل مرة. رأيتك.',         { hold: 2.2 });
+  });
+
+  at(2060, () => {
+    if (G.stats.idleCount > 3){
+      say('أنت تتوقف كثيراً.',    { hold: 2.2 });
+      say('هل تظن أن التوقف يجعلك أقل وضوحاً؟', { hold: 3.0, style: 'whisper' });
+    } else {
+      say(`أطول صمت لك كان ${G.stats.longestIdle.toFixed(1)} ثانية.`, { hold: 2.8 });
+      say('كنتُ أعدّ.',            { hold: 2.2, color: '#cbb0b0' });
+    }
+  });
+
+  /* ── REAL DATA REVEAL 1 ── */
+  at(2240, () => {
+    say('هناك شيء أريد أن أخبرك به.', { hold: 2.4 });
+    say('لكن أولاً...',           { hold: 1.4 });
+    if (RW.battery !== null){
+      say(`بطارية جهازك ${RW.battery}%.`, { hold: 2.6, color: '#cbb0b0' });
+      say('أنا أرى ذلك.',         { hold: 2.0 });
+    } else if (RW.screenW){
+      say(`شاشتك ${RW.screenW} بكسل عرضاً.`, { hold: 2.6, color: '#cbb0b0' });
+      say('أنا أرى ذلك.',         { hold: 2.0 });
+    }
+  });
+
+  at(2420, () => {
+    G.shadowState = 'close';
+    G.shadowLag = 12;
+    G.flicker = 1;
+    say('الآن.',                  { hold: 1.6, style: 'shout' });
+    say(vary('توقف عن الحركة.','توقف.','لا تتحرك.'), { hold: 2.4, style: 'shout', color: '#e0b0b0' });
+  });
+
+  /* ── CRASH ── */
+  at(2620, () => {
+    G.phase = 'crash';
+    G.crashTimer = 0;
+    G.crashProgress = 0;
+    G.crashCount++;
+    G.msg = null;
+    G.queue.length = 0;
+    G.flicker = 2;
+    silenceDrop(0.35);
+    blip(90, 0.9, 0.22);
+    deepTone(35, 3.0, 0.22);
+  });
+
+  at(2900, () => {
+    say('لم أنتهِ.',              { size: 38, color: '#e8c0c0', hold: 3.2, cps: 6, delay: 0.4 });
+    say('أنا هنا.',               { hold: 2.2, cps: 8, delay: 0.6 });
+    say('كنتُ أختبر شيئاً.',      { hold: 2.6, color: '#cbb0b0' });
+  });
+
+  at(3180, () => {
+    say('الآن أنا في الأمام.',    { hold: 2.4 });
+    say('لا أستطيع أن أرى وجهك.', { hold: 2.8 });
+    say('لكنني أراك.',            { hold: 2.4, style: 'whisper' });
+  });
+
+  at(3380, () => {
+    if (G.stats.lookBacks > 0){
+      say(`نظرتَ خلفك ${G.stats.lookBacks} مرة.`, { hold: 2.8 });
+      say('في كل مرة، كنتُ أقرب.', { hold: 2.6, color: '#cbb0b0' });
+    } else {
+      say('لم تنظر خلفك.',        { hold: 2.0 });
+      say('هذا جيد.',             { hold: 1.6 });
+      say('لأنك لو نظرت...',      { hold: 2.4, color: '#cbb0b0' });
+      say('...لما كنتَ هنا الآن.',  { hold: 3.0, style: 'whisper' });
+    }
+  });
+
+  /* ── REAL DATA: TIME ── */
+  at(3580, () => {
+    const hh = currentClock();
+    say(`الساعة الآن ${hh}.`, { hold: 2.6 });
+    if (RW.isNight){
+      say('لماذا أنت مستيقظ؟',    { hold: 2.8, color: '#cbb0b0' });
+      say('هل تعلم أنني أستيقظ معك؟', { hold: 2.6 });
+    } else if (RW.isMorning){
+      say(`أنت في ${timeName()}.`, { hold: 2.4 });
+      say('بدأت يومك بي.',        { hold: 2.4, color: '#cbb0b0' });
+    } else if (RW.isEvening){
+      say(`أنت في ${timeName()}.`, { hold: 2.4 });
+      say('تنهي يومك بي.',        { hold: 2.4, color: '#cbb0b0' });
+    } else {
+      say(`أنت في ${timeName()}.`, { hold: 2.4 });
+      say('كنتُ أنتظر.',          { hold: 2.2, color: '#cbb0b0' });
+    }
+  });
+
+  /* ── REAL DATA: DAY/DATE ── */
+  at(3780, () => {
+    say(`اليوم ${RW.dayName}.`, { hold: 2.4 });
+    if (RW.isWeekend){
+      say('يوم عطلتك.',           { hold: 1.8 });
+      say('خصصته لي.',            { hold: 2.6, color: '#cbb0b0' });
+    } else {
+      say('يوم عمل.',             { hold: 1.8 });
+      say('لكنك هنا.',            { hold: 2.4, color: '#cbb0b0' });
+    }
+    say(`إنه ${RW.dateStr}.`,     { hold: 2.2 });
+    say('سأتذكر هذا التاريخ.',   { hold: 2.6, color: '#d8a8a8' });
+  });
+
+  /* ── REAL DATA: DEVICE ── */
+  at(3980, () => {
+    say(`أنت تستخدم ${RW.browser}.`, { hold: 2.4 });
+    if (RW.cores){
+      say(`جهازك فيه ${RW.cores} أنوية.`, { hold: 2.4 });
+      say('لكنك تفكر بقلب واحد.', { hold: 2.6, color: '#cbb0b0' });
+    }
+    if (RW.deviceType){
+      say(`من ${RW.deviceType}.`, { hold: 2.0 });
+    }
+  });
+
+  at(4180, () => {
+    say(`لغة متصفحك ${RW.langName || RW.lang}.`, { hold: 2.6 });
+    say('لكنك تفهمني.',           { hold: 2.4 });
+    say('هذا مقلق.',              { hold: 2.4, color: '#cbb0b0' });
+  });
+
+  /* ── PHILOSOPHICAL ── */
+  at(4380, () => {
+    say('هل تعتقد أنني برنامج؟',  { hold: 2.6 });
+    say('أنا لست ما تظن.',        { hold: 2.4, style: 'whisper' });
+  });
+
+  /* ── MIRROR MOMENT 1: "YOU" ── */
+  at(4580, () => {
+    say('...',                    { hold: 1.4, cps: 3 });
+    say('أنت.',                   { size: 34, hold: 2.4, style: 'shout', color: '#e8d0b0' });
+    say('الذي يقرأ.',             { hold: 2.0 });
+    say('ليس هو.',                { hold: 1.6, color: '#cbb0b0' });
+    say('أنا أتحدث إليك.',        { size: 30, hold: 3.0, style: 'whisper', color: '#d8b8b8' });
+  });
+
+  at(4780, () => {
+    say('الشخص الذي يحرك الشخصية.', { hold: 2.4 });
+    say('أنت.',                   { hold: 1.8 });
+    say('ليس هو.',                { hold: 1.6, color: '#cbb0b0' });
+    say('هو يظن أنه يلعب.',       { hold: 2.4 });
+    say('لكن اللعبة تلعبه.',      { hold: 3.0, style: 'whisper' });
+  });
+
+  /* ── VISITS & MEMORY ── */
+  at(4980, () => {
+    say('هذه المرة رقم ' + (RW.visits + 1) + '.', { hold: 2.6 });
+    if (RW.visits > 0){
+      const days = daysSinceLastVisit();
+      if (days > 0 && days < 30){
+        say(`آخر مرة كانت منذ ${days} ${days === 1 ? 'يوم' : 'أيام'}.`, { hold: 2.8 });
+      } else if (days >= 30){
+        say(`آخر مرة كانت منذ ${Math.floor(days/30)} شهر.`, { hold: 2.8 });
+      }
+      say('عدت.',                  { hold: 2.0, color: '#cbb0b0' });
+      say('كما قلت.',              { hold: 2.2, style: 'whisper' });
+    } else {
+      say('لكنني أعرفك.',          { hold: 2.6 });
+      say('قبل أن تبدأ.',          { hold: 2.4, color: '#cbb0b0' });
+    }
+  });
+
+  /* ── GASLIGHT 1 ── */
+  at(5180, () => {
+    if (G.stats.idleCount >= 2){
+      say('لماذا تتوقف كل هذا الوقت؟', { hold: 2.4 });
+      say('أنا لا أتوقف.',          { hold: 2.2, color: '#cbb0b0' });
+    } else {
+      say('أنت لا تتوقف أبداً.',    { hold: 2.4 });
+      say('ألا تشعر بالتعب؟',       { hold: 2.4, color: '#cbb0b0' });
+    }
+  });
+
+  /* ── MIRROR MOMENT 2: SHADOW DEVIATION ── */
+  at(5380, () => {
+    G.shadowState = 'ahead';
+    G.shadowCopied = true;
+    say('انظر إلى الأمام.',        { hold: 2.0 });
+    say('هل ترى؟',                { hold: 1.8 });
+    say('أنا هناك.',              { hold: 2.6, color: '#d8a8a8' });
+  });
+
+  at(5580, () => {
+    say('لكن...',                 { hold: 1.4 });
+    say('ألا تلاحظ شيئاً؟',       { hold: 2.4 });
+    say('الظل الذي أمامك.',       { hold: 2.4 });
+    say('إنه لا يتحرك مثلك تماماً.', { hold: 3.0, color: '#cbb0b0' });
+  });
+
+  at(5780, () => {
+    G.shadowDeviation = 1;
+    say('هل رأيت؟',               { hold: 2.0 });
+    say('نظر إلى اليسار.',        { hold: 2.0 });
+    say('أنت لم تنظر إلى اليسار.', { hold: 2.6, color: '#d8a8a8' });
+    say('أو ربما نظرت.',          { hold: 2.4, style: 'whisper' });
+  });
+
+  /* ── GASLIGHT 2 ── */
+  at(5980, () => {
+    if (G.hasLookedBack){
+      say('لم تنظر خلفك.',         { hold: 2.4, color: '#cbb0b0' });
+      say('أعرف أنك تظن أنك نظرت.', { hold: 2.8 });
+      say('لكنك لم تنظر.',         { hold: 2.6, style: 'whisper' });
+      G.gaslitCount++;
+    } else {
+      say('نظرت خلفك.',            { hold: 2.4, color: '#cbb0b0' });
+      say('رأيتك.',                 { hold: 2.0 });
+      say('لماذا تنكر؟',            { hold: 2.6, style: 'whisper' });
+      G.gaslitCount++;
+    }
+  });
+
+  /* ── PREDICTION SETUP ── */
+  at(6180, () => {
+    say('قبل أن تكمل...',         { hold: 2.0 });
+    say('سأتوقف عن الكلام.',      { hold: 2.4 });
+    say('وسأتوقف عن الحركة.',     { hold: 2.4 });
+    say('وسأتوقف عن الوجود.',     { hold: 2.6, color: '#cbb0b0' });
+    say('لثانيتين فقط.',          { hold: 2.0 });
+    G.freezeUntil = (G.t + 0.5) * 1000;
+    silenceDrop(2.0);
+  });
+
+  /* ── PROFILE REVEAL ── */
+  at(6400, () => {
+    updateProfile();
+    G.profileRevealed = true;
+    say('مشيتَ طويلاً.',          { hold: 2.0 });
+    say('رأيت أشياء.',             { hold: 2.0 });
+    say('لم تتكلم.',              { hold: 2.0 });
+    say('لكنني أعرف من أنت.',     { hold: 2.6 });
+    say(getProfileDesc(),          { hold: 3.2, color: '#d8a8a8' });
+    say('هذا ما أنت.',             { hold: 2.6, style: 'whisper' });
+  });
+
+  /* ── SHADOW BECOMES YOU ── */
+  at(6600, () => {
+    G.mirrorMoment = true;
+    say('الآن...',                { hold: 1.4 });
+    say('سأكون أنت.',             { hold: 2.6 });
+    say('وسأفعل ما تفعله.',       { hold: 2.4 });
+    say('لكن...',                 { hold: 1.4 });
+    say('سأفعل ما لا تجرؤ على فعله.', { hold: 2.8, color: '#d8a8a8' });
+  });
+
+  at(6800, () => {
+    say('...',                    { hold: 1.4, cps: 3 });
+    say('حسناً.',                 { hold: 1.6 });
+    say('أنا لا أستطيع.',         { hold: 2.4, color: '#cbb0b0' });
+    say('أنا مجرد ظل.',           { hold: 2.2, style: 'whisper' });
+    say('لكن يمكنني أن أختفي.',   { hold: 2.6 });
+  });
+
+  /* ── SILENCE DROP ── */
+  at(7000, () => {
+    G.shadowActive = false;
+    G.shadowAlpha = 0;
+    G.darknessTarget = 0.6;
+    silenceDrop(3.0);
+  });
+
+  at(7200, () => {
+    G.shadowActive = true;
+    say('اشتقت إليّ؟',            { hold: 2.6, color: '#d8a8a8' });
+    say('لم أذهب بعيداً.',        { hold: 2.4 });
+    say('كنت خلفك.',              { hold: 2.6, style: 'whisper' });
+  });
+
+  /* ── DOOR APPROACH ── */
+  at(7400, () => {
+    say('هناك باب في النهاية.',   { hold: 2.4 });
+    say('تعرف ذلك.',              { hold: 2.0 });
+    say('لأنني وضعته هناك.',      { hold: 2.6, style: 'whisper' });
+  });
+
+  at(7600, () => {
+    say('لا أعرف ما وراءه.',      { hold: 2.2 });
+    say('أو ربما أعرف.',          { hold: 1.8 });
+    say('وأتظاهر أنني لا أعرف.',  { hold: 2.8 });
+    say('مثل كل مرة.',            { hold: 2.4, color: '#cbb0b0' });
+  });
+
+  /* ── FALSE PROMISE ── */
+  at(7800, () => {
+    say('عندما تدخل...',          { hold: 2.0 });
+    say('سأتركك.',                { hold: 2.4, color: '#b8c0d0' });
+    say('هذا وعد.',               { hold: 2.0 });
+  });
+
+  at(8000, () => {
+    say('لكن قبل ذلك...',         { hold: 1.6 });
+    say('يجب أن تصل.',            { hold: 2.0 });
+    say('وأنت لن تصل.',           { hold: 2.6, color: '#cbb0b0' });
+    say('لأنني لن أسمح.',         { hold: 2.8, style: 'whisper' });
+  });
+
+  /* ── GASLIGHT 3 ── */
+  at(8200, () => {
+    say('قلت لك ألا تتوقف.',      { hold: 2.4 });
+    say('لكنك توقفت.',            { hold: 2.2 });
+    if (G.stats.idleCount < 3){
+      say('حسناً، ربما لم تتوقف.', { hold: 2.6, color: '#cbb0b0' });
+      say('ربما أنا أتوهم.',      { hold: 2.4, style: 'whisper' });
+    }
+  });
+
+  /* ── STATS META ── */
+  at(8400, () => {
+    const mins = Math.floor(G.t / 60);
+    const secs = Math.floor(G.t % 60);
+    say(`كنت هنا ${mins} دقيقة و${secs} ثانية.`, { hold: 2.8 });
+    say('كل ثانية كنت أعدّها.',   { hold: 2.4, color: '#cbb0b0' });
+  });
+
+  at(8600, () => {
+    const steps = Math.round(G.stats.walked / 26);
+    say(`${steps} خطوة.`,         { hold: 2.0 });
+    say(`${G.stats.idleCount} توقف.`, { hold: 2.0 });
+    say(`${G.stats.lookBacks} نظرة خلفية.`, { hold: 2.4 });
+    say('كلها محفوظة.',           { hold: 2.4, color: '#d8a8a8' });
+  });
+
+  /* ── FINAL APPROACH ── */
+  at(8800, () => {
+    say('اقترب.',                 { hold: 2.0 });
+    say('لا تخف.',                { hold: 1.6 });
+    say('أو خف.',                 { hold: 1.4 });
+    say('لا يهم.',                { hold: 2.0, color: '#cbb0b0' });
+  });
+
+  at(9000, () => {
+    G.shadowState = 'close';
+    G.shadowLag = 6;
+    G.flicker = 1.2;
+    say('أنا خلفك تماماً الآن.',  { hold: 2.6, style: 'whisper' });
+    say('يمكنك أن تشعر بي.',      { hold: 2.4 });
+    say('أليس كذلك؟',             { hold: 2.6, color: '#d8a8a8' });
+  });
+
+  at(9200, () => {
+    say('هذه هي اللحظة.',         { hold: 2.0 });
+    say('اللحظة التي أخبرك فيها.', { hold: 2.4 });
+    say('أنني لا أستطيع أن ألمسك.', { hold: 2.8, color: '#cbb0b0' });
+    say('لكن يمكنني أن أجعلك تلمس نفسك.', { hold: 3.0, style: 'whisper' });
+  });
+
+  /* ── FINAL GASLIGHT ── */
+  at(9400, () => {
+    say('أنت لا تتذكر كيف وصلت هنا.', { hold: 2.8 });
+    say('أنت لا تتذكر متى بدأت.',   { hold: 2.6 });
+    say('أنت لا تتذكر لماذا.',      { hold: 2.4 });
+    say('أنا أتذكر.',               { hold: 2.6, color: '#d8a8a8' });
+    say('سأخبرك.',                  { hold: 2.0, style: 'whisper' });
+  });
+
+  at(9600, () => {
+    say('أنت جلست.',               { hold: 2.0 });
+    say('وضعت يدك على الفأرة.',    { hold: 2.4 });
+    say('أو على الشاشة.',          { hold: 2.2 });
+    say('وضغطت.',                  { hold: 1.8 });
+    say('لأنك أردت أن تعرف.',      { hold: 2.6 });
+    say('وهذا كل ما أحتاجه.',       { hold: 2.8, color: '#cbb0b0' });
+  });
+
+  /* ── LAST MESSAGE BEFORE DOOR ── */
+  at(9800, () => {
+    say('آخر شيء.',               { hold: 1.6 });
+    say('إذا دخلت...',            { hold: 2.0 });
+    say('لا تلتفت.',              { hold: 2.4, style: 'whisper' });
+    say('لأنني سأكون خلفك.',      { hold: 3.0, color: '#d8a8a8' });
+  });
+
+  at(10000, () => {
+    say('أو...',                  { hold: 1.4 });
+    say('إذا رجعت...',            { hold: 2.0 });
+    say('ستعود إلى هنا.',         { hold: 2.4 });
+    say('مرة أخرى.',              { hold: 2.0 });
+    say('ومرة أخرى.',             { hold: 2.0 });
+    say('إلى الأبد.',             { hold: 3.0, color: '#cbb0b0' });
+  });
+
+  /* ── ADDITIONAL PACING ── */
+  at(10200, () => {
+    say('ماذا تختار؟',            { hold: 2.2 });
+    say('لا. لا تجب بعد.',        { hold: 2.0 });
+    say('امشِ.',                  { hold: 2.0 });
+  });
+
+  at(10600, () => {
+    say('أشعر بيديك على المفاتيح.', { hold: 2.8 });
+    say('أشعر ببطء أنفاسك.',      { hold: 2.6 });
+    say('أشعر بالوقت يمر.',        { hold: 2.4 });
+    say('أشعر بك.',                { hold: 2.6, color: '#d8a8a8' });
+  });
+
+  at(11000, () => {
+    say('أنت قريب.',              { hold: 2.0 });
+    say('أستطيع أن أرى الباب.',   { hold: 2.2 });
+    say('أستطيع أن أرى الخيار.',  { hold: 2.4 });
+    say('لكن لا أستطيع أن أختار.', { hold: 2.8, color: '#cbb0b0' });
+  });
+
+  at(11400, () => {
+    say('هذه هي المرة الأولى التي أشعر فيها بالخوف.', { hold: 3.2 });
+    say('ليس منك.',                { hold: 2.0 });
+    say('من نفسي.',                { hold: 2.6, style: 'whisper', color: '#cbb0b0' });
+    say('من ما سأصبح عليه.',       { hold: 2.8 });
+  });
+
+  at(11800, () => {
+    say('لا بأس.',                { hold: 2.0 });
+    say('كل شيء سيكون على ما يرام.', { hold: 2.6 });
+    say('كل شيء.',                { hold: 2.4 });
+    say('على ما يرام.',           { hold: 2.8, style: 'whisper', color: '#d8a8a8' });
+  });
+
+  at(12200, () => {
+    say('ادخل.',                  { hold: 2.0 });
+    say('أو ارجع.',               { hold: 2.0 });
+    say('كلاهما لي.',             { hold: 2.6, color: '#cbb0b0' });
+  });
+
+  /* ── TIME-BASED TRIGGERS ── */
+  atTime(60, () => {
+    if (G.stats.idleCount > 2 && G.msg === null && G.queue.length === 0){
+      say('لماذا تتوقف؟',        { hold: 2.4, style: 'whisper' });
+      say('هل تظن أنني لا أراك؟', { hold: 2.6 });
+    }
+  });
+
+  atTime(120, () => {
+    if (G.phase === 'play'){
+      say('أنت تتباطأ.',          { hold: 2.2 });
+      say('لماذا؟',               { hold: 1.8 });
+      say('هل بدأت تفهم؟',        { hold: 2.6, color: '#cbb0b0' });
+    }
+  });
+
+  atTime(180, () => {
+    if (G.phase === 'play'){
+      say('وقت طويل.',            { hold: 2.0 });
+      say('أنت تقرأ كل كلمة.',    { hold: 2.4 });
+      say('شكراً.',               { hold: 2.0, color: '#cbb0b0' });
+    }
+  });
+
+  atTime(240, () => {
+    if (G.phase === 'play'){
+      say('لماذا ما زلت هنا؟',    { hold: 2.4 });
+      say('هل تعتقد أن هناك شيئاً في النهاية؟', { hold: 3.0 });
+      say('هناك.',                { hold: 2.0, color: '#cbb0b0' });
+      say('لكنه ليس ما تريد.',    { hold: 2.8, style: 'whisper' });
+    }
+  });
+
+  atTime(300, () => {
+    if (G.phase === 'play'){
+      say('أنا فخور بك.',         { hold: 2.2 });
+      say('قليل من الناس يصلون إلى هنا.', { hold: 2.8 });
+      say('أو يبقون.',            { hold: 2.4, color: '#cbb0b0' });
+    }
+  });
+}
+
+/* ══════════════════════ PREDICTIONS (REAL-TIME) ══════════════════════ */
+function checkPredictions(dt){
+  if (G.phase !== 'play') return;
+
+  const now = G.t;
+  const moving = Math.abs(G.vx) > 10;
+
+  // Track speed for prediction
+  G.speedHistory.push(Math.abs(G.vx));
+  if (G.speedHistory.length > 90) G.speedHistory.shift();
+
+  // Detect sudden deceleration → predict "you're about to stop"
+  if (G.lastSpeed > 60 && Math.abs(G.vx) < 30 && G.vx !== 0){
+    if (now - G.lastGaslight > 20 && G.msg === null && G.queue.length === 0){
+      say('ستتوقف الآن.', { hold: 2.4, style: 'whisper', color: '#d8a8a8' });
+      G.lastGaslight = now;
+    }
+  }
+  G.lastSpeed = Math.abs(G.vx);
+
+  // Idle prediction
+  if (G.idleTime > 3.5 && G.idleTime < 4 && !G.predictedActions.includes('idle_' + Math.floor(G.idleTime))){
+    G.predictedActions.push('idle_' + Math.floor(G.idleTime));
+    if (now - G.lastGaslight > 15 && G.msg === null && G.queue.length === 0){
+      say('سأعدّ.', { hold: 1.6, style: 'whisper' });
+      say('واحد...', { hold: 1.2 });
+      say('اثنان...', { hold: 1.2 });
+      G.lastGaslight = now;
+    }
+  }
+}
+
+/* ══════════════════════ INPUT REACTIONS (REAL-TIME) ══════════════════════ */
+function reactToInput(type){
+  if (G.phase !== 'play') return;
+
+  const s = G.stats;
+  s.inputEvents++;
+  const now = G.t;
+  const gap = now - s.lastInputTime;
+  if (gap > s.longestInputGap && s.lastInputTime > 0) s.longestInputGap = gap;
+  s.lastInputTime = now;
+
+  // After long input gap
+  if (gap > 6 && now - G.lastGaslight > 12 && G.msg === null && G.queue.length === 0){
+    if (type === 'key' && Math.random() < 0.6){
+      say('أصابعك عادت.', { hold: 2.4, style: 'whisper', color: '#d8a8a8' });
+      G.lastGaslight = now;
+    } else if (type === 'pointer' && Math.random() < 0.6){
+      say('يدك تحركت.', { hold: 2.4, style: 'whisper', color: '#d8a8a8' });
+      G.lastGaslight = now;
+    }
+  }
+}
+
+/* ══════════════════════ START ══════════════════════ */
+function start(){
+  if (started) return;
+  started = true;
+  initAudio();
+
+  saveVisit();
+  G.visits = RW.visits + 1;
+  G.phase = 'play';
+  G.startTime = G.t;
+
+  G.trail = [];
+  for (let i = 0; i < 400; i++) G.trail.push({ x: G.x, facing: 1 });
+  G.shadowX = G.x;
+
+  buildScript();
+
+  deepTone(40, 4, 0.20);
+  whisper(1.8, 0.08);
+}
+
+/* ══════════════════════ MOVEMENT ══════════════════════ */
+function updateMovement(dt){
+  const left  = keys['ArrowLeft']  || keys['KeyA'] || pointerHeld.left;
+  const right = keys['ArrowRight'] || keys['KeyD'] || pointerHeld.right;
+  const dir = (right ? 1 : 0) - (left ? 1 : 0);
+
+  if (dir !== 0 && G.lastDir !== 0 && dir !== G.lastDir){
+    G.dirChanges.push(G.t);
+    G.dirChanges = G.dirChanges.filter(t => G.t - t < 2);
+    G.stats.directionChanges++;
+    if (G.dirChanges.length >= 4 && !G.hasPanicked){
+      G.hasPanicked = true;
+      G.stats.panics++;
+      onPanic();
+    }
+  }
+  G.lastDir = dir;
+
+  if (dir !== 0){
+    G.vx += (dir * SPEED - G.vx) * Math.min(1, dt * 9);
+    G.facing = dir;
+  } else {
+    G.vx -= G.vx * Math.min(1, dt * 12);
+    if (Math.abs(G.vx) < 3) G.vx = 0;
+  }
+
+  G.walkPhase += dt * 9 * Math.min(1, Math.abs(G.vx) / SPEED);
+  G.x += G.vx * dt;
+
+  if (G.x < 40){ G.x = 40; G.vx = 0; }
+
+  const limit = DOOR_X - 70;
+  if (G.x > limit){
+    G.x = limit;
+    G.vx = 0;
+    if (G.phase === 'play'){
+      G.phase = 'choice';
+      G.choiceIndex = 0;
+      G.choiceVisible = true;
+      G.msg = null;
+      G.queue.length = 0;
+      updateProfile();
+      blip(140, 0.8, 0.15);
+      deepTone(50, 2.5, 0.18);
+    }
+  }
+
+  G.trail.push({ x: G.x, facing: G.facing });
+  if (G.trail.length > 460) G.trail.shift();
+}
+
+function onPanic(){
+  G.shake = 5;
+  G.flicker = 0.8;
+  deepTone(40, 1.5, 0.18);
+  say('لماذا تسرع؟', { hold: 2.2, style: 'whisper', color: '#d8b8b8' });
+  say('توقف.', { hold: 1.6 });
+  G.entityMood = 'curious';
+}
+
+function onTabReturn(away){
+  G.stats.tabSwitches++;
+  G.hasTabbed = true;
+  if (away > 30 && G.phase === 'play'){
+    say(`غيبتك ${Math.round(away)} ثانية.`, { hold: 2.6 });
+    say('كنتُ أنتظر.', { hold: 2.4, color: '#cbb0b0' });
+  } else if (away > 8 && G.phase === 'play'){
+    say('أين ذهبت؟', { hold: 2.2 });
+    say('عد.', { hold: 1.6, style: 'whisper' });
+  } else if (away > 2 && G.phase === 'play'){
+    say('عدت.', { hold: 1.8 });
+  }
+}
+
+/* ══════════════════════ STATS ══════════════════════ */
+function updateStats(dt){
+  const moving = Math.abs(G.vx) > 10;
+
+  if (moving){
+    G.stats.walked += Math.abs(G.vx) * dt;
+    G.stats.steps = Math.round(G.stats.walked / 26);
+    G.idleTime = 0;
+    G.wasIdle = false;
+  } else {
+    G.idleTime += dt;
+    if (G.idleTime > 1.5 && !G.wasIdle){
+      G.stats.idleCount++;
+      G.wasIdle = true;
+      if (G.idleTime > 8) G.hasStopped = true;
+    }
+    if (G.idleTime > G.stats.longestIdle) G.stats.longestIdle = G.idleTime;
+
+    if (G.idleTime > 6 && !G.hasStopped && G.phase === 'play'){
+      G.hasStopped = true;
+      if (G.msg === null && G.queue.length === 0){
+        say('لماذا توقفت؟', { hold: 2.4, style: 'whisper' });
+        say('هل تظن أنني لا أراك؟', { hold: 2.6, color: '#cbb0b0' });
+      }
+    }
+  }
+
+  if (G.facing === -1 && G.lastFacing === 1 &&
+      G.stats.walked > 150 && G.t - G.lastLookBack > 1.5){
+    G.stats.lookBacks++;
+    G.lastLookBack = G.t;
+    G.hasLookedBack = true;
+    G.flicker = 0.5;
+    heartbeat(0.18);
+  }
+  G.lastFacing = G.facing;
+}
+
+/* ══════════════════════ SHADOW ══════════════════════ */
+function updateShadow(dt){
+  if (!G.shadowActive) return;
+
+  G.shadowAlpha = Math.min(1, G.shadowAlpha + dt * 0.4);
+  G.shadowStateTimer += dt;
+
+  const lagMultiplier = G.jumpScareTimer > 0 ? 0.15 : 1;
+  const lag = Math.min(Math.floor(G.shadowLag * lagMultiplier), G.trail.length - 1);
+  const pos = G.trail[G.trail.length - 1 - lag];
+
+  let targetX = pos.x;
+  let targetFacing = pos.facing;
+  let rate = 6;
+
+  const creeping = G.idleTime > 5;
+  G.creep = creeping
+    ? Math.min(1, (G.idleTime - 5) / 5)
+    : Math.max(0, G.creep - dt * 2);
+
+  if (creeping){
+    targetX = G.x - G.facing * 34;
+    targetFacing = G.facing;
+    rate = 0.8;
+  }
+
+  if (G.shadowState === 'close'){
+    targetX = G.x - G.facing * 22;
+    targetFacing = G.facing;
+    rate = 3;
+  } else if (G.shadowState === 'ahead'){
+    targetX = G.x + G.facing * 60;
+    targetFacing = -G.facing;
+    rate = 2;
+  } else if (G.shadowState === 'double'){
+    G.doubleShadow = Math.min(1, G.doubleShadow + dt * 0.5);
+  } else {
+    G.doubleShadow = Math.max(0, G.doubleShadow - dt * 0.8);
+  }
+
+  // Shadow deviation (mirror moment)
+  if (G.shadowDeviation > 0){
+    targetX += Math.sin(G.t * 0.8) * 15 * G.shadowDeviation;
+    targetFacing = Math.sin(G.t * 0.4) > 0 ? 1 : -1;
+  }
+
+  const nx = G.shadowX + (targetX - G.shadowX) * Math.min(1, dt * rate);
+
+  G.shadowVX = (nx - G.shadowX) / Math.max(dt, 0.0001);
+  G.shadowX = nx;
+  G.shadowFacing = targetFacing;
+  G.shadowWalkPhase += Math.abs(G.shadowVX) * dt * 0.035;
+
+  if (creeping && G.idleTime > 8 && G.t - G.lastSilence > 3){
+    G.lastSilence = G.t;
+    whisper(1.2, 0.10);
+  }
+}
+
+/* ══════════════════════ JUMPSCARE ══════════════════════ */
+function triggerJumpScare(){
+  if (G.jumpScareTimer > 0) return;
+  G.jumpScareTimer = 0.55;
+  G.flicker = 2.5;
+  G.shake = 12;
+  G.redFlash = 0.7;
+  G.glitchAmount = 12;
+  G.glitchUntil = G.t + 0.6;
+  if (audioCtx && !muted){
+    whisper(0.4, 0.22);
+    blip(45, 0.5, 0.22);
+    deepTone(38, 0.8, 0.22);
+    heartbeat(0.20, 0.09);
+  }
+}
+
+/* ══════════════════════ CRASH ══════════════════════ */
+function updateCrash(dt){
+  G.crashTimer += dt;
+
+  if (G.crashTimer < 4){
+    G.crashProgress = (G.crashTimer / 4) * 0.97;
+  } else if (G.crashTimer < 5){
+    G.crashProgress = 0.97;
+  } else if (G.crashTimer < 5.6){
+    G.crashProgress = 1;
+  } else if (G.crashTimer >= 6.4){
+    G.phase = 'play';
+    G.darknessTarget = 1;
+    G.shadowLag = 6;
+    G.shadowState = 'close';
+    G.crashProgress = 0;
+    G.shadowIndependence = 1;
+    blip(70, 1.4, 0.20);
+    deepTone(35, 3, 0.22);
+  }
+}
+
+/* ══════════════════════ SAVE FOR GAME 2 ══════════════════════ */
+/*
+ * يُحفظ كل ما قد يحتاجه game2.html في localStorage تحت المفتاح 'sh_game2_data'
+ * صيغة البيانات (JSON):
+ * {
+ *   version, savedAt, sessionNumber, isReturningPlayer,
+ *   endType: 'enter' | 'back',        // ← الاختيار الحاسم
+ *   endTypeLabel: 'دخل' | 'عاد',
+ *   profile, profileDesc,
+ *   stats: { walked, steps, idleCount, longestIdle, lookBacks,
+ *            panics, tabSwitches, pauses, directionChanges,
+ *            inputEvents, longestInputGap },
+ *   playTime, playTimeMinutes, playTimeSeconds,
+ *   hasLookedBack, hasStopped, hasPanicked, hasTabbed,
+ *   gaslitCount, mirrorMoment,
+ *   shadowState, shadowIndependence, shadowLag,
+ *   realWorld: { hour, minute, day, dayName, dateStr, month, year,
+ *                isNight, isMorning, isEvening, isWeekend,
+ *                timezone, timezoneOffset, language, langName,
+ *                browser, os, deviceType, screenW, screenH,
+ *                touch, touchPoints, cores, memory, battery,
+ *                batteryCharging, online, connection,
+ *                colorDepth, pixelRatio, prefersDark, prefersReducedMotion },
+ *   clockAtEnd
+ * }
+ * في game2.html استخدم:
+ *   const data = JSON.parse(localStorage.getItem('sh_game2_data') || 'null');
+ */
+function saveGame2Data(){
+  try {
+    const now = new Date();
+    const data = {
+      version: 1,
+      savedAt: now.getTime(),
+      sessionNumber: G.visits,
+      isReturningPlayer: RW.visits > 0,
+
+      // الاختيار الحاسم
+      endType: G.endType,                                // 'enter' | 'back'
+      endTypeLabel: G.endType === 'enter' ? 'دخل' : 'عاد',
+
+      // بروفايل اللاعب
+      profile: G.profile,
+      profileDesc: getProfileDesc(),
+
+      // إحصائيات سلوكية
+      stats: {
+        walked: Math.round(G.stats.walked),
+        steps: Math.round(G.stats.walked / 26),
+        idleCount: G.stats.idleCount,
+        longestIdle: parseFloat(G.stats.longestIdle.toFixed(2)),
+        lookBacks: G.stats.lookBacks,
+        panics: G.stats.panics,
+        tabSwitches: G.stats.tabSwitches,
+        pauses: G.stats.pauses,
+        directionChanges: G.stats.directionChanges,
+        inputEvents: G.stats.inputEvents,
+        longestInputGap: parseFloat(G.stats.longestInputGap.toFixed(2)),
+      },
+
+      // توقيت الجلسة
+      playTime: parseFloat(G.t.toFixed(2)),
+      playTimeMinutes: Math.floor(G.t / 60),
+      playTimeSeconds: Math.floor(G.t % 60),
+
+      // أعلام سلوكية
+      hasLookedBack: G.hasLookedBack,
+      hasStopped: G.hasStopped,
+      hasPanicked: G.hasPanicked,
+      hasTabbed: G.hasTabbed,
+      gaslitCount: G.gaslitCount,
+      mirrorMoment: G.mirrorMoment,
+
+      // حالة الظل عند النهاية
+      shadowState: G.shadowState,
+      shadowIndependence: G.shadowIndependence,
+      shadowLag: G.shadowLag,
+
+      // لقطة جديدة للعالم الحقيقي (بالوقت الحالي، لا المخزَّن القديم)
+      realWorld: {
+        hour: now.getHours(),
+        minute: now.getMinutes(),
+        day: now.getDay(),
+        dayName: DAY_NAMES[now.getDay()],
+        dateStr: `${now.getDate()} ${MONTH_NAMES[now.getMonth()]}`,
+        month: now.getMonth(),
+        year: now.getFullYear(),
+        isNight: now.getHours() >= 22 || now.getHours() < 5,
+        isMorning: now.getHours() >= 5 && now.getHours() < 12,
+        isEvening: now.getHours() >= 17 && now.getHours() < 22,
+        isWeekend: now.getDay() === 5 || now.getDay() === 6,
+        timezone: RW.tz,
+        timezoneOffset: now.getTimezoneOffset(),
+        language: RW.lang,
+        langName: RW.langName,
+        browser: RW.browser,
+        os: RW.os,
+        deviceType: RW.deviceType,
+        screenW: RW.screenW,
+        screenH: RW.screenH,
+        touch: RW.touch,
+        touchPoints: RW.touchPoints,
+        cores: RW.cores,
+        memory: RW.memory,
+        battery: RW.battery,
+        batteryCharging: RW.batteryCharging,
+        online: RW.online,
+        connection: RW.connection,
+        colorDepth: RW.colorDepth,
+        pixelRatio: RW.pixelRatio,
+        prefersDark: RW.prefersDark,
+        prefersReducedMotion: RW.prefersReducedMotion,
+      },
+
+      // الساعة لحظة النهاية
+      clockAtEnd: currentClock(),
+    };
+
+    localStorage.setItem('sh_game2_data', JSON.stringify(data));
+    localStorage.setItem('sh_completed_part1', 'true');
+    localStorage.setItem('sh_last_end_type', G.endType);
+    return true;
+  } catch(e){
+    console.warn('[SHADOW] فشل حفظ بيانات الجزء الثاني:', e);
+    return false;
+  }
+}
+
+function goToGame2(){
+  saveGame2Data();
+  try {
+    window.location.href = 'game2.html';
+  } catch(e){
+    // احتياطي إذا حجب المتصفح الانتقال
+    location.reload();
+  }
+}
+
+/* ══════════════════════ ENDING ══════════════════════ */
+function confirmChoice(){
+  const enter = G.choiceIndex === 0;
+  G.endType = enter ? 'enter' : 'back';
+
+  G.phase = 'ending';
+  G.endTimer = 0;
+  G.endDrain = 0;
+  G.msg = null;
+  G.queue.length = 0;
+  G.choiceVisible = false;
+
+  updateProfile();
+
+  // 🔻 حفظ فوري بمجرد اختيار اللاعب (قبل تشغيل رسائل النهاية)
+  saveGame2Data();
+
+  blip(160, 1.1, 0.18);
+  deepTone(enter ? 30 : 45, 3, 0.22);
+
+  if (enter){
+    say('دخلت.',              { hold: 2.0, cps: 5 });
+    say(vary('لم أتوقع ذلك.','كنتُ آمل.','هذا ما أردت.'), { hold: 2.6, cps: 8 });
+    say('لكن.',               { hold: 1.4 });
+    say('الباب أغلق.',        { hold: 2.4, color: '#cbb0b0' });
+    say('الآن أنا في الخارج.', { hold: 2.8 });
+    say('وأنت في الداخل.',    { hold: 2.6, color: '#d8a8a8' });
+    say('معي.',               { hold: 3.0, style: 'whisper', color: '#e8c0c0' });
+  } else {
+    say('عدت.',               { hold: 2.0, cps: 8 });
+    say('كما في كل مرة.',     { hold: 2.6, cps: 7, color: '#cbb0b0' });
+    say('لكن.',               { hold: 1.4 });
+    say('هذا ليس الطريق.',    { hold: 2.4 });
+    say('الطريق الذي أتيت منه.', { hold: 2.6 });
+    say('لم يعد موجوداً.',    { hold: 2.8, color: '#cbb0b0' });
+    say('لا مخرج.',           { hold: 3.2, style: 'whisper', color: '#e8c0c0' });
+  }
+
+  // Profile-based ending
+  say(getProfileDesc(), { hold: 3.2, color: '#d8a8a8' });
+
+  const mins = Math.floor(G.t / 60);
+  const secs = Math.floor(G.t % 60);
+  const lines = [
+    `مشيتَ ${Math.round(G.stats.walked / 26)} خطوة.`,
+    `توقفتَ ${G.stats.idleCount} مرة.`,
+    `نظرتَ خلفك ${G.stats.lookBacks} مرة.`,
+    `كنتَ هنا ${mins} دقيقة و${secs} ثانية.`,
+  ].join('\n');
+
+  say(lines,                     { hold: 9.0, cps: 40, size: 22, delay: 0.8, color: '#a8b0c0' });
+  say('ستُغلق النافذة الآن.',    { hold: 4.0, cps: 10, color: '#a0a8b8' });
+  say('أو ربما لا.',             { hold: 7.0, cps: 3,  size: 30, color: '#c8a8a8' });
+}
+
+function updateEnding(dt){
+  if (!G.msg && G.queue.length === 0){
+    G.endDrain += dt;
+    if (G.endDrain > 2.5){
+      G.phase = 'end';
+      G.endTimer = 0;
+      G.fade = 0;
+    }
+  }
+}
+
+function updateEnd(dt){
+  G.endTimer += dt;
+  G.fade = Math.min(1, G.endTimer / 3.5);
+
+  if (G.endTimer > 5 && G.endTimer < 5.2){
+    whisper(1.5, 0.10);
+    deepTone(32, 4, 0.15);
+  }
+
+  // 🔻 إعادة توجيه تلقائية إلى game2.html بعد عرض النهاية
+  if (G.endTimer > 10 && !G.redirectStarted){
+    G.redirectStarted = true;
+    goToGame2();
+  }
+}
+
+/* ══════════════════════ TITLE CHANGES ══════════════════════ */
+function updateTitle(){
+  if (G.phase !== 'play') return;
+  if (G.t - G.lastTitleChange < 8) return;
+  G.lastTitleChange = G.t;
+
+  const titles = [
+    'الظل', 'أراك', 'لا تنظر', 'أنا خلفك', '...', 'اقترب',
+    'أنت', 'الشخص الذي يقرأ', 'لا مخرج',
+    RW.visits > 1 ? 'مرة أخرى' : 'الظل',
+    RW.isNight ? 'لماذا أنت مستيقظ؟' : 'الظل',
+    'أعرف اسمك', 'أعرف أين أنت', 'أنا هنا',
+  ];
+  document.title = pick(titles);
+}
+
+/* ══════════════════════ UPDATE ══════════════════════ */
+function update(dt){
+  G.t += dt;
+  G.grainPhase += dt;
+
+  if (started){
+    G.worldFade = clamp((G.t - G.startTime - 1.5) / 6, 0, 1);
+    if (G.darknessTarget > G.darkness)
+      G.darkness += (G.darknessTarget - G.darkness) * Math.min(1, dt * 0.8);
+  }
+
+  G.flicker = Math.max(0, G.flicker - dt * 1.5);
+  G.shake = Math.max(0, G.shake - dt * 8);
+  G.redFlash = Math.max(0, G.redFlash - dt * 2);
+  G.colorInvert = Math.max(0, G.colorInvert - dt * 1.2);
+
+  if (audioCtx && humGain && !muted){
+    const silenced = G.t < G.silenceUntil;
+    const target = silenced ? 0 : (0.22 + Math.sin(G.t * 0.4) * 0.06);
+    humGain.gain.setTargetAtTime(target, audioCtx.currentTime, 0.15);
+  }
+  if (subBassGain && audioCtx){
+    const subTarget = (G.shadowActive ? 0.30 : 0.16) + Math.sin(G.t * 0.6) * 0.06;
+    subBassGain.gain.setTargetAtTime(subTarget, audioCtx.currentTime, 0.4);
+  }
+  if (breathGain && audioCtx){
+    const bTarget = 0.012 + (G.creep * 0.03);
+    breathGain.gain.setTargetAtTime(bTarget, audioCtx.currentTime, 0.5);
+  }
+
+  if (!started) return;
+
+  updateMessages(dt);
+  updateTitle();
+
+  if (G.phase === 'crash'){ updateCrash(dt); return; }
+  if (G.phase === 'choice'){
+    G.heartbeatTimer += dt;
+    if (G.heartbeatTimer > 1.0){
+      G.heartbeatTimer = 0;
+      heartbeat(0.15);
+    }
+    return;
+  }
+  if (G.phase === 'ending'){ updateEnding(dt); return; }
+  if (G.phase === 'end'){ updateEnd(dt); return; }
+  if (G.phase !== 'play') return;
+
+  if (G.t * 1000 < G.freezeUntil) return;
+
+  updateMovement(dt);
+  updateStats(dt);
+  updateShadow(dt);
+  checkPredictions(dt);
+
+  for (const tr of triggers){
+    if (!tr.done && G.x >= tr.x){
+      if (G.t - G.lastTriggerFireTime < 0.5) break;
+      tr.done = true;
+      G.lastTriggerFireTime = G.t;
+      tr.fn();
+    }
+  }
+  for (const tr of timeTriggers){
+    if (!tr.done && G.t >= tr.t){
+      tr.done = true;
+      tr.fn();
+    }
+  }
+
+  if (G.shadowActive && G.creep > 0.45 && G.jumpScareTimer <= 0){
+    if (Math.random() < dt * 0.06) triggerJumpScare();
+  }
+  if (G.jumpScareTimer > 0){
+    G.jumpScareTimer -= dt;
+  }
+
+  const tension = G.shadowActive ? (0.6 + G.creep * 0.8) : 0.2;
+  G.heartbeatTimer += dt * tension;
+  const heartThreshold = 1.5 - G.creep * 0.7;
+  if (G.heartbeatTimer > heartThreshold && (G.creep > 0.3 || G.shadowState === 'close')){
+    G.heartbeatTimer = 0;
+    heartbeat(0.15 + G.creep * 0.08);
+  }
+
+  G.whisperTimer += dt;
+  if (G.whisperTimer > rnd(6, 14) && G.shadowActive){
+    G.whisperTimer = 0;
+    whisper(rnd(0.8, 1.6), 0.08 + G.creep * 0.08);
+  }
+
+  const targetCam = clamp(G.x - VW * 0.38, 0, WORLD_W - VW);
+  G.camX += (targetCam - G.camX) * Math.min(1, dt * 3.5);
+}
+
+/* ══════════════════════ DUST ══════════════════════ */
+const dust = [];
+for (let i = 0; i < 130; i++){
+  dust.push({
+    x: Math.random() * (VW + 200),
+    y: Math.random() * (GROUND_Y - 30),
+    r: Math.random() * 1.5 + 0.4,
+    ph: Math.random() * Math.PI * 2,
+    sp: 0.3 + Math.random() * 0.7,
+  });
+}
+
+/* ══════════════════════ VIGNETTE & GRAIN CACHE ══════════════════════ */
+let vignetteCache = null;
+function getVignette(){
+  if (!vignetteCache){
+    const c = document.createElement('canvas');
+    c.width = VW; c.height = VH;
+    const cx = c.getContext('2d');
+    const g = cx.createRadialGradient(VW/2, VH/2, VH*0.30, VW/2, VH/2, VH*0.95);
+    g.addColorStop(0, 'rgba(0,0,0,0)');
+    g.addColorStop(1, 'rgba(0,0,0,0.92)');
+    cx.fillStyle = g;
+    cx.fillRect(0, 0, VW, VH);
+    vignetteCache = c;
+  }
+  return vignetteCache;
+}
+
+let grainCache = null;
+function getGrain(){
+  if (grainCache) return grainCache;
+  const gw = 480, gh = 270;
+  const c = document.createElement('canvas');
+  c.width = gw; c.height = gh;
+  const gctx = c.getContext('2d');
+  const img = gctx.createImageData(gw, gh);
+  for (let i = 0; i < img.data.length; i += 4){
+    const v = Math.floor(Math.random() * 255);
+    img.data[i] = v; img.data[i+1] = v; img.data[i+2] = v;
+    img.data[i+3] = 40;
+  }
+  gctx.putImageData(img, 0, 0);
+  grainCache = c;
+  return c;
+}
+
+/* ══════════════════════ CURSOR ══════════════════════ */
+const cursor = { x: -999, y: -999, visible: false };
+
+/* ══════════════════════ DRAWING ══════════════════════ */
+function drawPillars(par, color, spacing, offset){
+  const shift = ((G.camX * par + offset) % spacing + spacing) % spacing;
+  ctx.fillStyle = color;
+  for (let i = -1; i * spacing - shift < VW + spacing; i++){
+    const x = Math.round(i * spacing - shift);
+    const h = 60 + ((i % 3) * 24);
+    ctx.fillRect(x, h, 22, GROUND_Y - h);
+    ctx.fillRect(x - 7, h - 12, 36, 14);
+    ctx.fillRect(x - 4, h, 30, 6);
+  }
+}
+
+function drawDust(){
+  for (const d of dust){
+    const sx = ((d.x - G.camX * 0.45) % (VW + 200) + VW + 200) % (VW + 200) - 100;
+    const sy = d.y + Math.sin(G.t * 0.5 * d.sp + d.ph) * 14;
+    const a = 0.05 + Math.sin(G.t * 0.7 + d.ph) * 0.04;
+    ctx.globalAlpha = Math.max(0, a);
+    ctx.fillStyle = '#a8c4e8';
+    ctx.beginPath();
+    ctx.arc(sx, sy, d.r, 0, 7);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawDoor(){
+  const x = DOOR_X - G.camX;
+  if (x < -220 || x > VW + 220) return;
+
+  const g = ctx.createRadialGradient(x, GROUND_Y - 90, 10, x, GROUND_Y - 90, 170);
+  g.addColorStop(0, 'rgba(120,160,220,0.14)');
+  g.addColorStop(1, 'rgba(120,160,220,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(x - 190, GROUND_Y - 270, 380, 330);
+
+  ctx.fillStyle = '#141a26';
+  ctx.fillRect(x - 50, GROUND_Y - 186, 100, 186);
+
+  ctx.fillStyle = '#05070c';
+  ctx.fillRect(x - 40, GROUND_Y - 176, 80, 176);
+
+  ctx.strokeStyle = 'rgba(120,150,200,0.30)';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(x - 40, GROUND_Y - 176, 80, 176);
+
+  ctx.fillStyle = 'rgba(120,150,200,0.18)';
+  ctx.fillRect(x - 44, GROUND_Y - 192, 88, 8);
+}
+
+function drawFigureBody(px, py, facing, walkPhase, moving, color, opts){
+  opts = opts || {};
+  const tall = !!opts.tall;
+  const eyes = opts.eyes || 0;
+
+  ctx.save();
+  ctx.translate(px, py);
+  ctx.scale(facing, 1);
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+
+  const sw  = moving ? Math.sin(walkPhase) : 0;
+  const sw2 = moving ? Math.sin(walkPhase + Math.PI) : 0;
+
+  const hipY      = tall ? -46 : -32;
+  const shoulderY = tall ? -76 : -52;
+  const headY     = tall ? -88 : -64;
+  const headR     = tall ? 7 : 8.5;
+
+  ctx.lineWidth = tall ? 5 : 7;
+  ctx.beginPath();
+  ctx.moveTo(0, hipY); ctx.lineTo(sw * 12, -2);
+  ctx.moveTo(0, hipY); ctx.lineTo(sw2 * 12, -2);
+  ctx.stroke();
+
+  ctx.lineWidth = tall ? 11 : 14;
+  ctx.beginPath();
+  ctx.moveTo(0, hipY); ctx.lineTo(0, shoulderY);
+  ctx.stroke();
+
+  ctx.lineWidth = tall ? 4 : 6;
+  ctx.beginPath();
+  if (tall){
+    ctx.moveTo(0, shoulderY);
+    ctx.quadraticCurveTo(sw2 * 12, -50, sw2 * 15, -18);
+    ctx.moveTo(0, shoulderY);
+    ctx.quadraticCurveTo(sw * 12, -50, sw * 15, -18);
+  } else {
+    ctx.moveTo(0, shoulderY); ctx.lineTo(sw2 * 11, -33);
+    ctx.moveTo(0, shoulderY); ctx.lineTo(sw * 11, -33);
+  }
+  ctx.stroke();
+
+  if (tall){
+    ctx.beginPath();
+    ctx.ellipse(0, headY, headR - 1, headR + 1, 0, 0, Math.PI * 2);
+    ctx.fill();
+  } else {
+    ctx.beginPath();
+    ctx.arc(1, headY, headR, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  if (eyes > 0.05 && tall){
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    const glow = eyes * (0.7 + Math.sin(G.t * 4) * 0.3);
+    const eyeColor = `rgba(230,30,30,${glow})`;
+    ctx.fillStyle = eyeColor;
+    ctx.shadowColor = eyeColor;
+    ctx.shadowBlur = 10 * eyes;
+    const eyeY = headY - 1;
+    ctx.beginPath();
+    ctx.arc(3, eyeY, 1.7, 0, Math.PI * 2);
+    ctx.arc(-2, eyeY, 1.7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  ctx.restore();
+}
+
+function drawPlayer(){
+  const px = G.x - G.camX;
+  const py = GROUND_Y;
+
+  const g = ctx.createRadialGradient(px, py - 40, 6, px, py - 40, 95);
+  g.addColorStop(0, 'rgba(140,180,235,0.10)');
+  g.addColorStop(1, 'rgba(140,180,235,0)');
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(px, py - 40, 95, 0, 7);
+  ctx.fill();
+
+  drawFigureBody(px, py, G.facing, G.walkPhase, Math.abs(G.vx) > 10, '#1a2230');
+
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.strokeStyle = 'rgba(120,160,215,0.09)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(px + G.facing * 7, py - 68);
+  ctx.lineTo(px + G.facing * 7, py - 4);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawShadow(){
+  if (!G.shadowActive) return;
+  const sx = G.shadowX - G.camX;
+  if (sx < -140 || sx > VW + 140) return;
+
+  const intensity = Math.min(1, G.shadowAlpha * (0.45 + G.creep * 0.55));
+  const moving = Math.abs(G.shadowVX) > 6;
+  const eyeIntensity = G.creep * 0.9 + (G.shadowState === 'close' ? 0.6 : 0);
+
+  ctx.save();
+  const aura = ctx.createRadialGradient(sx, GROUND_Y - 50, 10, sx, GROUND_Y - 50, 100);
+  aura.addColorStop(0, `rgba(90,0,10,${intensity * 0.35})`);
+  aura.addColorStop(1, 'rgba(90,0,10,0)');
+  ctx.fillStyle = aura;
+  ctx.fillRect(sx - 110, GROUND_Y - 160, 220, 200);
+  ctx.restore();
+
+  ctx.save();
+  ctx.globalAlpha = intensity;
+  drawFigureBody(sx, GROUND_Y, G.shadowFacing, G.shadowWalkPhase, moving, 'rgba(4,2,8,0.95)', {
+    tall: true,
+    eyes: eyeIntensity
+  });
+  ctx.restore();
+
+  if (G.doubleShadow > 0.05){
+    ctx.save();
+    ctx.globalAlpha = G.doubleShadow * 0.35 * intensity;
+    drawFigureBody(sx - 22, GROUND_Y, -G.shadowFacing, G.shadowWalkPhase * 0.8, moving, 'rgba(4,2,8,0.9)', {
+      tall: true,
+      eyes: eyeIntensity * 0.7
+    });
+    ctx.restore();
+  }
+}
+
+function drawWorld(){
+  const dark = G.darkness;
+
+  const sky = ctx.createLinearGradient(0, 0, 0, VH);
+  if (dark < 0.5){
+    sky.addColorStop(0,    '#05070d');
+    sky.addColorStop(0.55, '#0a0f18');
+    sky.addColorStop(1,    '#11161f');
+  } else {
+    sky.addColorStop(0,    '#020305');
+    sky.addColorStop(0.55, '#04060a');
+    sky.addColorStop(1,    '#070a10');
+  }
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, VW, VH);
+
+  drawPillars(0.16, 'rgba(16,22,34,0.9)', 340, 0);
+  drawPillars(0.30, 'rgba(24,32,48,0.7)', 260, 90);
+
+  const gg = ctx.createLinearGradient(0, GROUND_Y - 120, 0, GROUND_Y + 8);
+  gg.addColorStop(0,   'rgba(90,130,190,0)');
+  gg.addColorStop(0.72,'rgba(85,125,185,' + (0.10 * (1 - dark * 0.7)) + ')');
+  gg.addColorStop(1,   'rgba(140,180,230,' + (0.18 * (1 - dark * 0.8)) + ')');
+  ctx.fillStyle = gg;
+  ctx.fillRect(0, GROUND_Y - 120, VW, 130);
+
+  ctx.fillStyle = 'rgba(155,185,225,' + (0.22 * (1 - dark * 0.6)) + ')';
+  ctx.fillRect(0, GROUND_Y, VW, 1.5);
+
+  ctx.fillStyle = '#03050a';
+  ctx.fillRect(0, GROUND_Y + 1, VW, VH - GROUND_Y);
+
+  drawDust();
+  drawDoor();
+  drawShadow();
+  drawPlayer();
+}
+
+function drawMessage(){
+  const m = G.msg;
+  if (!m) return;
+
+  const typeTime = m.text.length / m.cps;
+  const total = m.delay + typeTime + m.hold;
+
+  if (m.age < m.delay) return;
+
+  const typed = Math.min(m.text.length, Math.floor((m.age - m.delay) * m.cps));
+  const shown = m.text.slice(0, typed);
+
+  let alpha = 1;
+  if (m.age < m.delay + 0.4) alpha = (m.age - m.delay) / 0.4;
+  else if (m.age > total - 0.8) alpha = Math.max(0, (total - m.age) / 0.8);
+
+  const fullLines = m.text.split('\n');
+  const typedLines = shown.split('\n');
+  const lineH = m.size * 1.55;
+  const totalH = fullLines.length * lineH;
+  const baseY = VH * 0.30 - totalH / 2;
+
+  ctx.save();
+  ctx.globalAlpha = alpha * 0.95;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = `500 ${m.size}px system-ui, 'Segoe UI', Tahoma, 'Noto Sans Arabic', sans-serif`;
+  ctx.fillStyle = m.color;
+  ctx.shadowColor = 'rgba(0,0,0,0.95)';
+  ctx.shadowBlur = 16;
+
+  if (m.style === 'whisper'){
+    ctx.globalAlpha *= 0.6 + Math.sin(G.t * 8) * 0.1;
+    ctx.shadowBlur = 8;
+  } else if (m.style === 'shout'){
+    ctx.font = `600 ${m.size + 4}px system-ui, 'Segoe UI', Tahoma, 'Noto Sans Arabic', sans-serif`;
+    ctx.shadowColor = 'rgba(180,60,60,0.5)';
+    ctx.shadowBlur = 24;
+  } else if (m.style === 'glitch'){
+    const amt = (G.t * 30) % 1 > 0.5 ? 3 : -3;
+    const lines = shown.split('\n');
+    lines.forEach((line, i) => {
+      ctx.fillStyle = 'rgba(255,60,60,0.5)';
+      ctx.fillText(line, VW/2 + amt, baseY + lineH * (i + 0.5) + amt*0.5);
+      ctx.fillStyle = 'rgba(60,255,255,0.5)';
+      ctx.fillText(line, VW/2 - amt, baseY + lineH * (i + 0.5) - amt*0.5);
+    });
+    ctx.fillStyle = m.color;
+  }
+
+  typedLines.forEach((line, i) => {
+    if (m.style === 'glitch'){
+      const corrupted = line.split('').map(c =>
+        Math.random() < 0.05 ? pick('█▓▒░@#$%&*') : c
+      ).join('');
+      ctx.fillText(corrupted, VW / 2, baseY + lineH * (i + 0.5));
+    } else {
+      ctx.fillText(line, VW / 2, baseY + lineH * (i + 0.5));
+    }
+  });
+
+  ctx.restore();
+}
+
+function drawHint(){
+  if (G.stats.walked > 120) return;
+  const a = 0.12 + Math.sin(G.t * 1.8) * 0.07;
+  ctx.save();
+  ctx.globalAlpha = Math.max(0, a);
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = '20px system-ui, Tahoma, sans-serif';
+  ctx.fillStyle = '#a8b4c8';
+  ctx.fillText('←     →', VW / 2, VH * 0.86);
+  ctx.restore();
+}
+
+function drawVignette(){
+  ctx.drawImage(getVignette(), 0, 0);
+
+  if (G.creep > 0.1 || G.shadowState === 'close'){
+    const pulse = 0.5 + Math.sin(G.t * 2.5) * 0.5;
+    const baseIntensity = Math.max(G.creep, G.shadowState === 'close' ? 0.7 : 0);
+    const g = ctx.createRadialGradient(VW/2, VH/2, VH * 0.22, VW/2, VH/2, VH * 0.92);
+    g.addColorStop(0, 'rgba(0,0,0,0)');
+    g.addColorStop(1, `rgba(90,0,10,${baseIntensity * (0.25 + pulse * 0.25)})`);
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, VW, VH);
+  }
+
+  if (G.redFlash > 0.01){
+    ctx.fillStyle = `rgba(140,0,15,${G.redFlash * 0.35})`;
+    ctx.fillRect(0, 0, VW, VH);
+  }
+}
+
+function drawGrain(){
+  const g = getGrain();
+  const ox = (Math.random() - 0.5) * 16;
+  const oy = (Math.random() - 0.5) * 16;
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  ctx.globalAlpha = 0.20 + G.creep * 0.15;
+  ctx.drawImage(g, ox, oy, VW, VH);
+  ctx.restore();
+}
+
+function drawCrash(){
+  ctx.fillStyle = '#040507';
+  ctx.fillRect(0, 0, VW, VH);
+
+  const g = ctx.createRadialGradient(VW/2, VH/2, 80, VW/2, VH/2, 720);
+  g.addColorStop(0, 'rgba(18,22,30,0.45)');
+  g.addColorStop(1, 'rgba(0,0,0,0.95)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, VW, VH);
+
+  if (G.crashTimer > 5.6){
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, VW, VH);
+    if (G.crashTimer > 5.9){
+      const a = Math.min(1, (G.crashTimer - 5.9) / 0.4);
+      ctx.globalAlpha = a;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = '300 24px system-ui, Tahoma, sans-serif';
+      ctx.fillStyle = 'rgba(200,190,190,0.7)';
+      ctx.fillText('...', VW / 2, VH / 2);
+      ctx.globalAlpha = 1;
+    }
+    return;
+  }
+
+  ctx.strokeStyle = 'rgba(200,80,80,0.65)';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.arc(VW/2, VH/2 - 118, 20, 0.35, Math.PI * 1.75);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(VW/2 + 15, VH/2 - 132);
+  ctx.lineTo(VW/2 + 27, VH/2 - 120);
+  ctx.stroke();
+
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  ctx.fillStyle = 'rgba(215,215,225,0.82)';
+  ctx.font = '600 22px Consolas, "Courier New", monospace';
+  ctx.fillText('حدث خطأ غير متوقع', VW/2, VH/2 - 48);
+
+  ctx.fillStyle = 'rgba(140,150,170,0.55)';
+  ctx.font = '14px Consolas, "Courier New", monospace';
+  const code = G.crashCount > 1 ? '0xSHAD0W_' + G.crashCount : '0x5HAD0W';
+  ctx.fillText(code, VW/2, VH/2 - 14);
+
+  const barW = 380, barH = 4;
+  const bx = VW/2 - barW/2;
+  const by = VH/2 + 62;
+
+  ctx.fillStyle = 'rgba(255,255,255,0.07)';
+  ctx.fillRect(bx, by, barW, barH);
+
+  ctx.fillStyle = 'rgba(200,100,100,0.7)';
+  ctx.fillRect(bx, by, barW * G.crashProgress, barH);
+
+  ctx.fillStyle = 'rgba(140,150,170,0.45)';
+  ctx.font = '13px Consolas, "Courier New", monospace';
+  ctx.fillText('جارٍ استعادة الجلسة...', VW/2, by + 32);
+}
+
+function drawChoice(){
+  ctx.save();
+
+  const g = ctx.createLinearGradient(0, VH * 0.42, 0, VH * 0.82);
+  g.addColorStop(0, 'rgba(0,0,0,0)');
+  g.addColorStop(0.4, 'rgba(0,0,0,0.7)');
+  g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, VH * 0.42, VW, VH * 0.4);
+
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  ctx.font = '400 16px system-ui, Tahoma, sans-serif';
+  ctx.fillStyle = 'rgba(150,158,175,0.55)';
+  ctx.fillText('اختر', VW/2, VH * 0.50);
+
+  const opts = ['ادخل', 'ارجع'];
+  opts.forEach((opt, i) => {
+    const y = VH * 0.60 + i * 62;
+    const sel = i === G.choiceIndex;
+
+    ctx.globalAlpha = sel ? 1 : 0.38;
+    ctx.font = `500 ${sel ? 32 : 28}px system-ui, Tahoma, sans-serif`;
+
+    if (sel){
+      ctx.shadowColor = 'rgba(190,170,130,0.55)';
+      ctx.shadowBlur = 24;
+      ctx.fillStyle = '#ece2cc';
+    } else {
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = '#8b93a5';
+    }
+    ctx.fillText(opt, VW/2, y);
+
+    if (sel){
+      ctx.shadowBlur = 0;
+      ctx.globalAlpha = 0.5;
+      ctx.fillStyle = 'rgba(200,180,140,0.7)';
+      ctx.font = '16px system-ui, Tahoma, sans-serif';
+      ctx.fillText('◆', VW/2 - 100, y);
+      ctx.fillText('◆', VW/2 + 100, y);
+    }
+  });
+
+  ctx.restore();
+}
+
+function drawEnd(){
+  if (G.fade <= 0) return;
+  ctx.fillStyle = `rgba(0,0,0,${G.fade})`;
+  ctx.fillRect(0, 0, VW, VH);
+
+  if (G.endTimer > 7){
+    const a = Math.min(1, (G.endTimer - 7) / 1.5) * (0.4 + Math.sin(G.t * 1.2) * 0.15);
+    ctx.save();
+    ctx.globalAlpha = a;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '300 30px system-ui, Tahoma, sans-serif';
+    ctx.fillStyle = '#8b93a5';
+    ctx.shadowColor = 'rgba(0,0,0,0.9)';
+    ctx.shadowBlur = 20;
+    ctx.fillText(G.endType === 'enter' ? '...' : 'ستعود.', VW/2, VH/2 - 20);
+    ctx.restore();
+  }
+
+  if (G.endTimer > 7){
+    const a = Math.min(1, (G.endTimer - 7) / 1.5) * (0.25 + Math.sin(G.t * 1.4) * 0.1);
+    ctx.save();
+    ctx.globalAlpha = a;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '400 16px system-ui, Tahoma, sans-serif';
+    ctx.fillStyle = '#7a8295';
+    ctx.fillText('اضغط للمتابعة إلى الجزء الثاني', VW/2, VH/2 + 60);
+    ctx.restore();
+  }
+}
+
+function drawStartScreen(){
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, VW, VH);
+
+  const a = 0.18 + Math.sin(G.t * 1.4) * 0.10;
+  ctx.save();
+  ctx.globalAlpha = Math.max(0, a);
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = '400 16px system-ui, Tahoma, sans-serif';
+  ctx.fillStyle = '#8d94a4';
+  ctx.fillText('اضغط في أي مكان', VW/2, VH * 0.56);
+  ctx.restore();
+}
+
+/* ══════════════════════ RENDER ══════════════════════ */
+function render(){
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, viewW, viewH);
+
+  let sx = 0, sy = 0;
+  if (G.shake > 0.1){
+    sx = (Math.random() - 0.5) * G.shake;
+    sy = (Math.random() - 0.5) * G.shake;
+  }
+
+  ctx.save();
+  ctx.translate(offX + sx, offY + sy);
+  ctx.scale(scale, scale);
+
+  ctx.beginPath();
+  ctx.rect(0, 0, VW, VH);
+  ctx.clip();
+
+  if (!started){
+    drawStartScreen();
+  } else {
+    if (G.phase === 'crash'){
+      drawCrash();
+    } else if (G.phase === 'end'){
+      drawWorld();
+      drawVignette();
+      drawGrain();
+      drawEnd();
+    } else {
+      if (G.worldFade > 0){
+        ctx.globalAlpha = G.worldFade;
+        drawWorld();
+        ctx.globalAlpha = 1;
+      }
+      drawMessage();
+      if (G.hint > 0) drawHint();
+      drawVignette();
+      drawGrain();
+
+      if (G.flicker > 0.05){
+        const f = G.flicker * (0.5 + Math.random() * 0.5);
+        ctx.fillStyle = `rgba(0,0,0,${Math.min(0.75, f * 0.4)})`;
+        ctx.fillRect(0, 0, VW, VH);
+      }
+
+      if (G.phase === 'choice') drawChoice();
+    }
+  }
+
+  ctx.restore();
+
+  ctx.save();
+  if (cursor.visible){
+    ctx.globalAlpha = 0.05 + Math.sin(G.t * 3) * 0.02;
+    ctx.fillStyle = '#a0b0d0';
+    ctx.beginPath();
+    ctx.arc(cursor.x, cursor.y, 2, 0, 7);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+/* ══════════════════════ INPUT ══════════════════════ */
+function onKeyDown(code){
+  if (!started){ start(); return; }
+
+  if (code === 'KeyM'){
+    muted = !muted;
+    if (humGain && audioCtx){
+      humGain.gain.setTargetAtTime(muted ? 0 : 0.22, audioCtx.currentTime, 0.3);
+    }
+    return;
+  }
+
+  if (G.phase === 'end'){ goToGame2(); return; }
+
+  reactToInput('key');
+
+  if (G.phase === 'choice'){
+    if (code === 'ArrowUp' || code === 'ArrowLeft'){
+      if (G.choiceIndex !== 0){ G.choiceIndex = 0; blip(500, 0.09, 0.08); }
+    } else if (code === 'ArrowDown' || code === 'ArrowRight'){
+      if (G.choiceIndex !== 1){ G.choiceIndex = 1; blip(500, 0.09, 0.08); }
+    } else if (code === 'Enter' || code === 'Space'){
+      confirmChoice();
+    }
+  }
+}
+
+addEventListener('keydown', e => {
+  if (['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space'].includes(e.code)){
+    e.preventDefault();
+  }
+  if (keys[e.code]) return;
+  keys[e.code] = true;
+  onKeyDown(e.code);
+});
+
+addEventListener('keyup', e => { keys[e.code] = false; });
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden){
+    G.tabHiddenAt = performance.now();
+  } else if (G.tabHiddenAt){
+    const away = (performance.now() - G.tabHiddenAt) / 1000;
+    if (away > 1 && G.phase === 'play' && started) onTabReturn(away);
+    G.tabHiddenAt = 0;
+  }
+});
+
+cvs.addEventListener('pointerdown', e => {
+  e.preventDefault();
+  if (!started){ start(); return; }
+  if (G.phase === 'end'){ goToGame2(); return; }
+
+  reactToInput('pointer');
+
+  if (G.phase === 'choice'){
+    const y = (e.clientY - offY) / scale;
+    const i = y > VH * 0.60 + 31 ? 1 : 0;
+    if (G.choiceIndex === i) confirmChoice();
+    else { G.choiceIndex = i; blip(500, 0.09, 0.08); }
+    return;
+  }
+
+  const x = (e.clientX - offX) / scale;
+  if (x < VW / 2) pointerHeld.left = true;
+  else pointerHeld.right = true;
+});
+
+cvs.addEventListener('pointermove', e => {
+  cursor.x = e.clientX;
+  cursor.y = e.clientY;
+  cursor.visible = true;
+});
+
+cvs.addEventListener('pointerup', () => {
+  pointerHeld.left = false;
+  pointerHeld.right = false;
+});
+
+cvs.addEventListener('pointercancel', () => {
+  pointerHeld.left = false;
+  pointerHeld.right = false;
+});
+
+cvs.addEventListener('contextmenu', e => e.preventDefault());
+
+/* ══════════════════════ LOOP ══════════════════════ */
+let last = performance.now();
+let acc = 0;
+
+function loop(now){
+  requestAnimationFrame(loop);
+
+  let dt = (now - last) / 1000;
+  last = now;
+  if (dt > 0.25) dt = 0.25;
+
+  acc += dt;
+  let guard = 0;
+  while (acc >= STEP && guard++ < 6){
+    update(STEP);
+    acc -= STEP;
+  }
+
+  render();
+}
+
+requestAnimationFrame(loop);
+
+})();
+</script>
+</body>
+</html>
