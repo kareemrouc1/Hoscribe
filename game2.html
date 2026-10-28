@@ -45,6 +45,10 @@ const vary = (...args) => pick(args);
 /* ══════════════════════ PART 1 DATA ══════════════════════ */
 let P1 = null;
 try { P1 = JSON.parse(localStorage.getItem('sh_game2_data') || 'null'); } catch(e){}
+
+/* ══════════════════════ GATE: PART 1 REQUIRED ══════════════════════ */
+const hasPlayedPart1 = P1 !== null && typeof P1 === 'object';
+
 const endType     = P1?.endType || 'enter';
 const profile     = P1?.profile || 'فضولي';
 const profileDesc = P1?.profileDesc || 'أنت هنا الآن. هذا يكفي.';
@@ -255,11 +259,16 @@ function say(text, o = {}){
   G.queue.push({
     text, delay: o.delay ?? 0.15, cps: o.cps ?? 24, hold: o.hold ?? 2.2,
     size: o.size ?? 26, color: o.color ?? '#e8dcc0', style: o.style ?? 'normal',
+    speaker: o.speaker ?? null,
     age: 0, audio: o.audio !== false,
   });
 }
-function entitySay(text, o = {}){ say(text, Object.assign({ color: '#c8b898' }, o)); }
-function playerInnerSay(text, o = {}){ say(text, Object.assign({ color: '#a8b0c0', style: 'italic' }, o)); }
+function entitySay(text, o = {}){
+  say(text, Object.assign({ color: '#c8b898', speaker: 'The Shadow' }, o));
+}
+function playerInnerSay(text, o = {}){
+  say(text, Object.assign({ color: '#a8b0c0', style: 'italic', speaker: 'You' }, o));
+}
 
 function updateMessages(dt){
   if (!G.msg && G.queue.length){
@@ -707,6 +716,7 @@ let started = false;
 
 function start(){
   if (started) return;
+  if (!hasPlayedPart1) return;
   started = true;
   initAudio();
   G.phase = 'play';
@@ -1085,6 +1095,21 @@ function drawFigureBody(px, py, facing, walkPhase, moving, color, opts){
   ctx.restore();
 }
 
+/* ────── اسم فوق الشخصية (name tag) ────── */
+function drawNameTag(text, x, y, alpha, color){
+  ctx.save();
+  ctx.direction = 'ltr';
+  ctx.globalAlpha = alpha;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = '600 11px Georgia,"Times New Roman",serif';
+  ctx.fillStyle = color || '#e8dcc0';
+  ctx.shadowColor = 'rgba(0,0,0,0.9)';
+  ctx.shadowBlur = 8;
+  ctx.fillText(text, x, y);
+  ctx.restore();
+}
+
 function drawPillars(par, color, spacing, offset){
   const shift = ((G.camX*par + offset) % spacing + spacing) % spacing;
   ctx.fillStyle = color;
@@ -1100,7 +1125,6 @@ function drawPillars(par, color, spacing, offset){
 function drawWorld(){
   const dark = G.darkness;
 
-  // Warm amber gradient - inverted from part 1's cold blue
   const sky = ctx.createLinearGradient(0, 0, 0, VH);
   if (dark < 0.5){
     sky.addColorStop(0,    '#1a1408');
@@ -1114,7 +1138,6 @@ function drawWorld(){
   ctx.fillStyle = sky;
   ctx.fillRect(0, 0, VW, VH);
 
-  // Swinging ceiling light
   const lightSwing = Math.sin(G.t * G.lightSwingSpeed) * 40;
   const lightGrad = ctx.createRadialGradient(VW/2 + lightSwing, 40, 20, VW/2 + lightSwing, 40, 500);
   lightGrad.addColorStop(0, `rgba(255,200,120,${0.15 * (1 - dark*0.7)})`);
@@ -1138,7 +1161,6 @@ function drawWorld(){
   ctx.fillStyle = '#0a0604';
   ctx.fillRect(0, GROUND_Y+1, VW, VH-GROUND_Y);
 
-  // Echoes
   for (const e of G.echoes){
     const ex = e.x - G.camX;
     if (ex < -100 || ex > VW+100) continue;
@@ -1201,6 +1223,9 @@ function drawEntity(){
     tall: true, eyes: eyeIntensity, eyeColor: 'rgba(255,220,150,'
   });
   ctx.restore();
+
+  // ← اسم فوق الشخصية: The Shadow
+  drawNameTag('The Shadow', ex, GROUND_Y - 112, intensity * 0.75, '#ffd27a');
 }
 
 function drawPlayer(){
@@ -1224,6 +1249,9 @@ function drawPlayer(){
   ctx.restore();
 
   drawFigureBody(px, py, G.facing, G.walkPhase, Math.abs(G.vx) > 10, '#c8b898');
+
+  // ← اسم فوق الشخصية: You
+  drawNameTag('You', px, py - 90, 0.65, '#e8dcc0');
 }
 
 function drawMessage(){
@@ -1264,6 +1292,21 @@ function drawMessage(){
   } else if (m.style === 'italic'){
     ctx.font = `italic 400 ${m.size-2}px system-ui,'Segoe UI',Tahoma,'Noto Sans Arabic',sans-serif`;
     ctx.globalAlpha *= 0.7;
+  }
+
+  // ══ اسم المتحدث فوق النص (You / The Shadow) ══
+  if (m.speaker && typed > 0){
+    ctx.save();
+    ctx.globalAlpha *= 0.85;
+    ctx.direction = 'ltr';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '600 13px Georgia,"Times New Roman",serif';
+    ctx.fillStyle = m.color;
+    ctx.shadowColor = 'rgba(0,0,0,0.95)';
+    ctx.shadowBlur = 10;
+    ctx.fillText(m.speaker, VW/2, baseY - 16);
+    ctx.restore();
   }
 
   typedLines.forEach((line, i) => {
@@ -1386,19 +1429,42 @@ function drawEnd(){
     else if (G.endType === 'entity_exit') endText = 'أخيراً... ليس وحيداً.';
     else if (G.endType === 'merge') endText = 'أنتما الآن... واحد.';
 
-    ctx.fillText(endText, VW/2, VH/2 - 20);
+    ctx.fillText(endText, VW/2, VH/2 - 30);
     ctx.restore();
   }
 
-  if (G.endTimer > 6){
-    const a = Math.min(1, (G.endTimer-6)/1.5) * (0.3 + Math.sin(G.t*1.4)*0.1);
+  // ══ THE END ══
+  if (G.endTimer > 8){
+    const a = Math.min(1, (G.endTimer-8)/2) * 0.9;
+    const pulse = 0.85 + Math.sin(G.t*0.9)*0.15;
+    ctx.save();
+    ctx.globalAlpha = a * pulse;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '300 46px Georgia,"Times New Roman",serif';
+    ctx.fillStyle = '#e8d8b0';
+    ctx.shadowColor = 'rgba(255,200,120,0.45)';
+    ctx.shadowBlur = 32;
+    ctx.direction = 'ltr';
+    ctx.fillText('The END', VW/2, VH/2 + 70);
+
+    const w = 100;
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = a * 0.35;
+    ctx.fillStyle = '#a89060';
+    ctx.fillRect(VW/2 - w/2, VH/2 + 112, w, 1);
+    ctx.restore();
+  }
+
+  if (G.endTimer > 12){
+    const a = Math.min(1, (G.endTimer-12)/2) * (0.3 + Math.sin(G.t*1.4)*0.1);
     ctx.save();
     ctx.globalAlpha = a;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font = '400 14px system-ui,Tahoma,sans-serif';
+    ctx.font = '400 13px system-ui,Tahoma,sans-serif';
     ctx.fillStyle = '#8a8070';
-    ctx.fillText('...', VW/2, VH/2 + 60);
+    ctx.fillText('انتهى كل شيء.', VW/2, VH - 60);
     ctx.restore();
   }
 }
@@ -1412,11 +1478,34 @@ function drawStartScreen(){
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, VW, VH);
 
-  const a = 0.20 + Math.sin(G.t*1.4)*0.10;
   ctx.save();
-  ctx.globalAlpha = Math.max(0, a);
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
+
+  if (!hasPlayedPart1){
+    ctx.font = '500 26px system-ui,Tahoma,sans-serif';
+    ctx.fillStyle = '#a89870';
+    ctx.globalAlpha = 0.9;
+    ctx.fillText('لا يمكنك الدخول من هنا.', VW/2, VH/2 - 40);
+
+    ctx.font = '400 16px system-ui,Tahoma,sans-serif';
+    ctx.fillStyle = '#7a7058';
+    ctx.globalAlpha = 0.7;
+    ctx.fillText('الجزء الأول هو الباب.', VW/2, VH/2 + 10);
+    ctx.fillText('ارجع إليه... ثم عد.', VW/2, VH/2 + 40);
+
+    ctx.globalAlpha = 0.15 + Math.sin(G.t*1.1)*0.08;
+    const hg = ctx.createRadialGradient(VW/2, VH*0.30, 20, VW/2, VH*0.30, 180);
+    hg.addColorStop(0, 'rgba(180,120,40,0.4)');
+    hg.addColorStop(1, 'rgba(180,120,40,0)');
+    ctx.fillStyle = hg;
+    ctx.fillRect(0, 0, VW, VH);
+    ctx.restore();
+    return;
+  }
+
+  const a = 0.20 + Math.sin(G.t*1.4)*0.10;
+  ctx.globalAlpha = Math.max(0, a);
   ctx.font = '400 16px system-ui,Tahoma,sans-serif';
   ctx.fillStyle = '#a89870';
   ctx.fillText('اضغط للمتابعة', VW/2, VH*0.56);
@@ -1456,7 +1545,6 @@ function render(){
       ctx.globalAlpha = 1;
     }
 
-    // Color inversion effect (visual only - controls also inverted separately)
     if (G.invert > 0.5){
       ctx.save();
       ctx.globalCompositeOperation = 'difference';
@@ -1490,6 +1578,7 @@ function reactToInput(type){
 
 function onKeyDown(code){
   if (!started){ start(); return; }
+  if (!hasPlayedPart1) return;
 
   if (code === 'KeyM'){
     muted = !muted;
@@ -1537,9 +1626,10 @@ document.addEventListener('visibilitychange', () => {
 cvs.addEventListener('pointerdown', e => {
   e.preventDefault();
   if (!started){ start(); return; }
+  if (!hasPlayedPart1) return;
 
   if (G.phase === 'end'){
-    if (G.endTimer > 6) location.reload();
+    if (G.endTimer > 12) location.reload();
     return;
   }
 
