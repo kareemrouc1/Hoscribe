@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>الداخل</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{width:100%;height:100%;overflow:hidden;background:#000;
+    font-family:system-ui,'Segoe UI',Tahoma,'Noto Sans Arabic',sans-serif}
+  canvas{display:block;position:absolute;inset:0;touch-action:none;cursor:none}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+(() => {
+'use strict';
+
+/* ══════════════════════ CANVAS ══════════════════════ */
+const cvs = document.getElementById('c');
+const ctx = cvs.getContext('2d');
+const VW = 960, VH = 540;
+let dpr = 1, scale = 1, offX = 0, offY = 0, viewW = 0, viewH = 0;
+
+function resize(){
+  dpr = Math.min(devicePixelRatio || 1, 2);
+  viewW = innerWidth; viewH = innerHeight;
+  cvs.width  = Math.floor(viewW * dpr);
+  cvs.height = Math.floor(viewH * dpr);
+  cvs.style.width  = viewW + 'px';
+  cvs.style.height = viewH + 'px';
+  scale = Math.min(viewW / VW, viewH / VH);
+  offX = (viewW - VW * scale) / 2;
+  offY = (viewH - VH * scale) / 2;
+}
+addEventListener('resize', resize); resize();
+ctx.direction = 'rtl';
+
+const clamp = (v,a,b) => v < a ? a : v > b ? b : v;
+const rnd = (a,b) => a + Math.random()*(b-a);
+const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+const vary = (...args) => pick(args);
+
+/* ══════════════════════ PART 1 DATA ══════════════════════ */
+let P1 = null;
+try { P1 = JSON.parse(localStorage.getItem('sh_game2_data') || 'null'); } catch(e){}
+const endType     = P1?.endType || 'enter';
+const profile     = P1?.profile || 'فضولي';
+const profileDesc = P1?.profileDesc || 'أنت هنا الآن. هذا يكفي.';
+const p1Stats     = P1?.stats || { walked:0, steps:0, idleCount:0, lookBacks:0 };
+const p1Gaslit    = P1?.gaslitCount || 0;
+
+/* ══════════════════════ REAL WORLD ══════════════════════ */
+const RW = { hour:0, dayName:'', isNight:false, isMorning:false, isEvening:false,
+  isWeekend:false, browser:'', os:'', deviceType:'', battery:null, screenW:0, touch:false };
+
+const DAY_NAMES = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+
+function loadRW(){
+  try{
+    const now = new Date();
+    RW.hour = now.getHours();
+    RW.dayName = DAY_NAMES[now.getDay()];
+    RW.isNight = RW.hour >= 22 || RW.hour < 5;
+    RW.isMorning = RW.hour >= 5 && RW.hour < 12;
+    RW.isEvening = RW.hour >= 17 && RW.hour < 22;
+    RW.isWeekend = now.getDay() === 5 || now.getDay() === 6;
+    RW.screenW = screen.width;
+    RW.touch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+    const ua = navigator.userAgent;
+    RW.browser = ua.includes('Firefox') ? 'فايرفوكس' : ua.includes('Edg/') ? 'إيدج' :
+                 ua.includes('Chrome') ? 'كروم' : ua.includes('Safari') ? 'سفاري' : 'متصفح';
+    RW.deviceType = /iPad|Tablet/.test(ua) ? 'جهاز لوحي' :
+                    /Mobile|Android|iPhone/.test(ua) ? 'هاتف' : 'حاسوب';
+  } catch(e){}
+  if (navigator.getBattery){
+    navigator.getBattery().then(b => { RW.battery = Math.round(b.level*100); }).catch(()=>{});
+  }
+}
+loadRW();
+
+function currentClock(){
+  const d = new Date();
+  return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+
+/* ══════════════════════ CONSTANTS ══════════════════════ */
+const GROUND_Y  = 432;
+const WORLD_W   = 12000;
+const EXIT_X    = 11200;
+const SPEED     = 110;
+const STEP      = 1/60;
+const E_SPEED   = SPEED * 0.78;
+
+/* ══════════════════════ AUDIO ══════════════════════ */
+let audioCtx = null, humGain = null, muted = false, masterGain = null, subBassGain = null;
+
+function initAudio(){
+  if (audioCtx) return;
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    audioCtx = new AC();
+    masterGain = audioCtx.createGain(); masterGain.gain.value = 1.0;
+    masterGain.connect(audioCtx.destination);
+
+    humGain = audioCtx.createGain(); humGain.gain.value = 0;
+    humGain.connect(masterGain);
+
+    const osc = (type, freq, g) => {
+      const o = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+      o.type = type; o.frequency.value = freq; gain.gain.value = g;
+      o.connect(gain); gain.connect(humGain); o.start();
+    };
+    osc('sine', 65, 0.5);
+    osc('sine', 65.3, 0.4);
+    osc('triangle', 98, 0.15);
+
+    subBassGain = audioCtx.createGain(); subBassGain.gain.value = 0.12;
+    subBassGain.connect(masterGain);
+    const sub = audioCtx.createOscillator(); sub.type = 'sine'; sub.frequency.value = 38;
+    sub.connect(subBassGain); sub.start();
+
+    humGain.gain.linearRampToValueAtTime(0.18, audioCtx.currentTime + 6);
+  } catch(e){}
+}
+
+function blip(freq=280, dur=0.14, vol=0.10){
+  if (!audioCtx || muted) return;
+  const t = audioCtx.currentTime;
+  const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+  o.type = 'sine';
+  o.frequency.setValueAtTime(freq, t);
+  o.frequency.exponentialRampToValueAtTime(freq*0.6, t+dur);
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(vol, t+0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+  o.connect(g); g.connect(masterGain);
+  o.start(t); o.stop(t+dur+0.02);
+}
+
+function whisper(dur=0.9, vol=0.12){
+  if (!audioCtx || muted) return;
+  try {
+    const t = audioCtx.currentTime;
+    const size = Math.floor(audioCtx.sampleRate * dur);
+    const buf = audioCtx.createBuffer(1, size, audioCtx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i=0; i<size; i++){
+      const env = Math.sin(i/size * Math.PI);
+      d[i] = (Math.random()*2-1) * env * 0.5;
+    }
+    const src = audioCtx.createBufferSource(); src.buffer = buf;
+    const f = audioCtx.createBiquadFilter();
+    f.type = 'bandpass'; f.frequency.value = 600 + Math.random()*700; f.Q.value = 4;
+    const g = audioCtx.createGain();
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol, t+0.05);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+    src.connect(f); f.connect(g); g.connect(masterGain);
+    src.start(t); src.stop(t+dur+0.05);
+  } catch(e){}
+}
+
+function heartbeat(vol=0.18, rate=0.15){
+  if (!audioCtx || muted) return;
+  const t = audioCtx.currentTime;
+  [0, rate].forEach((offset, i) => {
+    const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(68, t+offset);
+    o.frequency.exponentialRampToValueAtTime(28, t+offset+0.12);
+    g.gain.setValueAtTime(0, t+offset);
+    g.gain.linearRampToValueAtTime(vol*(i===0?1:0.7), t+offset+0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+offset+0.18);
+    o.connect(g); g.connect(masterGain);
+    o.start(t+offset); o.stop(t+offset+0.22);
+  });
+}
+
+function deepTone(freq=40, dur=2.0, vol=0.18){
+  if (!audioCtx || muted) return;
+  const t = audioCtx.currentTime;
+  const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+  o.type = 'sine';
+  o.frequency.setValueAtTime(freq, t);
+  o.frequency.linearRampToValueAtTime(freq*0.7, t+dur);
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(vol, t+0.15);
+  g.gain.linearRampToValueAtTime(0, t+dur);
+  o.connect(g); g.connect(masterGain);
+  o.start(t); o.stop(t+dur+0.1);
+}
+
+function warmChord(){
+  if (!audioCtx || muted) return;
+  const t = audioCtx.currentTime;
+  [220, 277, 330, 440].forEach((freq, i) => {
+    const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+    o.type = 'sine'; o.frequency.value = freq;
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(0.04, t+0.3+i*0.1);
+    g.gain.linearRampToValueAtTime(0, t+3.5);
+    o.connect(g); g.connect(masterGain);
+    o.start(t); o.stop(t+4);
+  });
+}
+
+/* ══════════════════════ STATE ══════════════════════ */
+const G = {
+  phase: 'intro', t: 0, startTime: 0,
+  x: 200, vx: 0, facing: 1, walkPhase: 0, camX: 0,
+
+  entityX: 380, entityVX: 0, entityFacing: 1, entityWalkPhase: 0,
+  entityVisible: false, entityAlpha: 0, entityDistance: 0,
+  entityWantsStop: false, entityWaitStart: 0,
+  entityLookBackTimer: 0, entityLookBackDuration: 0,
+
+  echoes: [],
+
+  darkness: 0.0, darknessTarget: 0.0,
+  worldFade: 0,
+  lightSwing: 0, lightSwingSpeed: 0.4,
+
+  msg: null, queue: [],
+
+  stats: { followed: 0, lost: 0, idleCount: 0, waitedFor: 0, calledOut: 0 },
+  idleTime: 0, wasIdle: false,
+
+  flicker: 0, shake: 0, amberFlash: 0,
+  invert: 0, invertTarget: 0,
+
+  heartbeatTimer: 0, whisperTimer: 0,
+
+  choiceIndex: 0, choiceVisible: false, choiceReady: false,
+
+  endTimer: 0, endFade: 0, endType: '', redirectStarted: false,
+
+  hasStoppedForEntity: false, hasIgnoredEntity: false,
+  hasWaited: false, hasFollowedClosely: false, hasGoneAhead: false,
+
+  lastInputType: '', lastInputTime: 0, inputEvents: 0,
+  lastMessageTime: 0, lastTriggerFireTime: 0, lastAutoLine: -99,
+
+  empathy: 0, disobedience: 0,
+};
+
+const keys = {};
+const pointerHeld = { left: false, right: false };
+const cursor = { x: -999, y: -999 };
+
+/* ══════════════════════ MESSAGES ══════════════════════ */
+function say(text, o = {}){
+  G.queue.push({
+    text, delay: o.delay ?? 0.15, cps: o.cps ?? 24, hold: o.hold ?? 2.2,
+    size: o.size ?? 26, color: o.color ?? '#e8dcc0', style: o.style ?? 'normal',
+    age: 0, audio: o.audio !== false,
+  });
+}
+function entitySay(text, o = {}){ say(text, Object.assign({ color: '#c8b898' }, o)); }
+function playerInnerSay(text, o = {}){ say(text, Object.assign({ color: '#a8b0c0', style: 'italic' }, o)); }
+
+function updateMessages(dt){
+  if (!G.msg && G.queue.length){
+    G.msg = G.queue.shift();
+    G.msg.age = 0;
+    G.lastMessageTime = G.t;
+    if (G.msg.audio){
+      if (G.msg.style === 'whisper') whisper(1.0, 0.09);
+      else if (G.msg.style === 'shout') { blip(90, 0.5, 0.18); G.shake = Math.max(G.shake, 6); }
+      else blip(220 + Math.random()*100, 0.14, 0.08);
+    }
+  }
+  if (G.msg){
+    G.msg.age += dt;
+    const tt = G.msg.text.length / G.msg.cps;
+    const total = G.msg.delay + tt + G.msg.hold;
+    if (G.msg.age >= total) G.msg = null;
+  }
+}
+
+/* ══════════════════════ SCRIPT ══════════════════════ */
+const triggers = [];
+function at(x, fn){ triggers.push({ x, done: false, fn }); }
+
+function buildScript(){
+  triggers.length = 0;
+
+  /* ── OPENING ── */
+  at(0, () => {
+    say('...', { hold: 1.4, cps: 3, delay: 1.5 });
+
+    if (!P1){
+      say('أنت هنا.', { hold: 2.0, cps: 8 });
+      say('لا أعرف كيف وصلت.', { hold: 2.4, cps: 12 });
+      say('لكنك هنا.', { hold: 2.2 });
+      say('هذا كل ما يهم.', { hold: 2.4, color: '#d8c8a8' });
+    } else if (endType === 'enter'){
+      say('أنت دخلت.', { hold: 2.0, cps: 8 });
+      say('كنت أظن أنني سأشعر بشيء.', { hold: 2.6, cps: 12 });
+      say('لكن...', { hold: 1.4 });
+      say('الباب لم يكن باباً.', { hold: 2.6, color: '#d8c8a8' });
+    } else {
+      say('أنت رجعت.', { hold: 2.0, cps: 8 });
+      say('لكن الطريق الذي أتيت منه...', { hold: 2.6, cps: 12 });
+      say('لم يعد موجوداً.', { hold: 2.4 });
+      say('لأنني أخذته.', { hold: 2.6, style: 'whisper', color: '#d8c8a8' });
+    }
+  });
+
+  at(120, () => {
+    say('انظر أمامك.', { hold: 2.0, cps: 14 });
+    say('لا. أمامك.', { hold: 2.4, cps: 10, color: '#d8c8a8' });
+  });
+
+  at(280, () => {
+    G.entityVisible = true;
+    G.entityAlpha = 0;
+    entitySay('أنا هنا.', { hold: 2.2, cps: 10 });
+    entitySay('لم أكن خلفك.', { hold: 2.4 });
+    entitySay('كنت أمامك.', { hold: 2.6, color: '#d8c8a8' });
+  });
+
+  at(480, () => {
+    entitySay('اتبعني.', { hold: 2.0 });
+    entitySay('هذه المرة...', { hold: 1.6 });
+    entitySay('أنت الذي يتبعني.', { hold: 2.6, color: '#d8c8a8' });
+  });
+
+  at(680, () => {
+    entitySay('لا تتأخر.', { hold: 2.2 });
+    entitySay('لا أريد أن أضيع.', { hold: 2.4, style: 'whisper' });
+  });
+
+  at(880, () => {
+    if (endType === 'enter'){
+      entitySay('عندما دخلت الباب...', { hold: 2.0 });
+      entitySay('دخلت مكاناً كنت فيه أنا.', { hold: 2.8 });
+    } else {
+      entitySay('عندما رجعت...', { hold: 2.0 });
+      entitySay('وصلت إلى بداية طريق جديد.', { hold: 2.8 });
+    }
+    entitySay('هذا المكان.', { hold: 2.2 });
+  });
+
+  at(1080, () => {
+    entitySay('أنا لا أخيفك الآن.', { hold: 2.4 });
+    entitySay('أنا فقط... أحتاجك.', { hold: 2.8, style: 'whisper' });
+  });
+
+  /* ── ECHOES INTRO ── */
+  at(1300, () => {
+    spawnEcho(1700); spawnEcho(1900);
+    entitySay('هل تراهم؟', { hold: 2.2 });
+    entitySay('هؤلاء... كانوا قبلك.', { hold: 2.6 });
+    entitySay('كل من دخل. كل من رجع.', { hold: 2.8 });
+  });
+
+  at(1500, () => {
+    entitySay('كلهم توقفوا هنا.', { hold: 2.4 });
+    entitySay('ثم اختفوا.', { hold: 2.2, style: 'whisper' });
+  });
+
+  at(1700, () => {
+    if (p1Stats.steps > 0){
+      entitySay(`أنت مشيت ${p1Stats.steps} خطوة في المرة السابقة.`, { hold: 2.8 });
+      entitySay('أتذكر.', { hold: 2.0, color: '#d8c8a8' });
+    } else {
+      entitySay('لا أعرف من أنت.', { hold: 2.2 });
+      entitySay('لكنني أعرف أنك ستختفي أيضاً.', { hold: 2.8 });
+    }
+  });
+
+  at(1900, () => {
+    entitySay('هل تعرف لماذا أنا أمامك؟', { hold: 2.4 });
+    entitySay('لأنني كنت خلفك.', { hold: 2.4 });
+    entitySay('الآن... أنا أتقدم.', { hold: 2.6, color: '#d8c8a8' });
+  });
+
+  /* ── REVEAL: PREVIOUS PLAYER ── */
+  at(2150, () => {
+    entitySay('أنا كنت مثلك.', { hold: 2.4 });
+    entitySay('وصلت إلى الباب.', { hold: 2.2 });
+    entitySay('وكان لدي خيار.', { hold: 2.0 });
+    if (endType === 'enter'){
+      entitySay('اخترت أن أدخل.', { hold: 2.4 });
+      entitySay('وعلقت هنا.', { hold: 2.6, color: '#d8c8a8' });
+    } else {
+      entitySay('اخترت أن أرجع.', { hold: 2.4 });
+      entitySay('ورأيت أن هناك لا نهاية.', { hold: 2.8, color: '#d8c8a8' });
+    }
+  });
+
+  at(2350, () => {
+    entitySay('الآن...', { hold: 1.4 });
+    entitySay('أنا أعرف الطريق.', { hold: 2.2 });
+    entitySay('أعرف كيف أخرج.', { hold: 2.4 });
+    entitySay('لكنني لا أستطيع وحدي.', { hold: 2.8, style: 'whisper' });
+  });
+
+  at(2550, () => {
+    entitySay('هل تساعدني؟', { hold: 2.6 });
+    entitySay('لن أطلب منك شيئاً بعد الآن.', { hold: 2.8, color: '#d8c8a8' });
+    entitySay('فقط... اتبعني.', { hold: 2.4 });
+  });
+
+  /* ── WAIT MOMENT ── */
+  at(2750, () => {
+    entitySay('توقف.', { hold: 1.6, style: 'shout' });
+    G.entityWantsStop = true;
+    G.entityWaitStart = G.t;
+    entitySay('أريد أن أراك.', { hold: 2.4 });
+    entitySay('وجهاً لوجه.', { hold: 2.2, style: 'whisper' });
+  });
+
+  at(3000, () => {
+    if (G.hasStoppedForEntity){
+      entitySay('جيد.', { hold: 1.6 });
+      entitySay('شكراً.', { hold: 2.0 });
+      G.empathy += 1;
+    } else {
+      entitySay('لم تتوقف.', { hold: 2.2 });
+      entitySay('لا بأس.', { hold: 1.8 });
+      entitySay('كنت أظن...', { hold: 1.6 });
+      entitySay('لا. لا شيء.', { hold: 2.4, color: '#c8a888' });
+      G.disobedience += 1;
+    }
+    G.entityWantsStop = false;
+  });
+
+  /* ── DEEPER REVELATION ── */
+  at(3250, () => {
+    entitySay('هل تعرف ما هو هذا المكان؟', { hold: 2.4 });
+    entitySay('هذا هو الباب.', { hold: 2.0 });
+    entitySay('من الداخل.', { hold: 2.4, color: '#d8c8a8' });
+  });
+
+  at(3450, () => {
+    entitySay('كل من يدخل...', { hold: 2.0 });
+    entitySay('يصبح جزءاً منه.', { hold: 2.6 });
+    entitySay('وأنا جزء منه الآن.', { hold: 2.8, style: 'whisper' });
+  });
+
+  at(3650, () => {
+    if (G.hasGoneAhead){
+      entitySay('كنت تتقدم عليّ سابقاً.', { hold: 2.6 });
+      entitySay('لماذا؟', { hold: 1.8 });
+      entitySay('هل تريد أن تكون مكاني؟', { hold: 2.8 });
+    } else {
+      entitySay('أنت تبقى قريباً.', { hold: 2.2 });
+      entitySay('هذا جيد.', { hold: 1.8 });
+      entitySay('لم يبقَ أحد قريباً منذ وقت طويل.', { hold: 2.8 });
+      G.empathy += 1;
+    }
+  });
+
+  /* ── ECHOES REVEAL ── */
+  at(3850, () => {
+    spawnEcho(4300); spawnEcho(4500);
+    entitySay('هؤلاء...', { hold: 1.8 });
+    entitySay('كانوا مثلك تماماً.', { hold: 2.4 });
+    entitySay('دخلوا. أو رجعوا.', { hold: 2.4 });
+    entitySay('ثم... أصبحوا أنا.', { hold: 2.8, color: '#d8c8a8' });
+  });
+
+  at(4050, () => {
+    entitySay('أنا لست شخصاً واحداً.', { hold: 2.4 });
+    entitySay('أنا كل الذين لم يستطيعوا الخروج.', { hold: 3.0 });
+    entitySay('كل من رآني.', { hold: 2.4, style: 'whisper' });
+  });
+
+  /* ── EMOTIONAL CORE ── */
+  at(4300, () => {
+    entitySay('هل تعرف كم مرة رأيت هذا؟', { hold: 2.4 });
+    entitySay('لا. أنت لا تعرف.', { hold: 2.2 });
+    entitySay('لأنك لم تكن هنا.', { hold: 2.4 });
+    entitySay('لم تكن محبوساً.', { hold: 2.6, color: '#c8a888' });
+  });
+
+  at(4500, () => {
+    entitySay('كل مرة...', { hold: 1.6 });
+    entitySay('يمر شخص مثلك.', { hold: 2.2 });
+    entitySay('وأقول له ما أقوله لك.', { hold: 2.4 });
+    entitySay('وأتمنى.', { hold: 1.8 });
+    entitySay('أتمنى فقط.', { hold: 2.0 });
+    entitySay('أن يفهم.', { hold: 2.2, style: 'whisper' });
+  });
+
+  at(4700, () => {
+    entitySay('ثم...', { hold: 1.4 });
+    entitySay('يختار.', { hold: 1.8 });
+    entitySay('ويذهب.', { hold: 1.8 });
+    entitySay('وأبقى أنا.', { hold: 2.6, color: '#c8a888' });
+  });
+
+  /* ── REVERSAL MOMENT ── */
+  at(4900, () => {
+    entitySay('الآن...', { hold: 1.6 });
+    entitySay('سأكون صادقاً.', { hold: 2.2 });
+    entitySay('هذا المكان يقلب كل شيء.', { hold: 2.6 });
+  });
+
+  at(5100, () => {
+    G.invertTarget = 1;
+    entitySay('جرب أن تمشي.', { hold: 2.0 });
+    entitySay('لا. لا تفعل.', { hold: 1.6 });
+    entitySay('أو افعل.', { hold: 1.8 });
+  });
+
+  at(5250, () => {
+    G.invertTarget = 0;
+    entitySay('هكذا.', { hold: 1.8 });
+    entitySay('هذا ما أشعر به كل يوم.', { hold: 2.6 });
+    entitySay('كل شيء مقلوب.', { hold: 2.4, style: 'whisper' });
+  });
+
+  /* ── REAL DATA REVEAL ── */
+  at(5400, () => {
+    const hh = currentClock();
+    entitySay(`الساعة الآن ${hh}.`, { hold: 2.4 });
+    if (RW.isNight){
+      entitySay('أنت مستيقظ.', { hold: 2.0 });
+      entitySay('مثلي.', { hold: 1.8 });
+      entitySay('لا أحد يستيقظ مثلي.', { hold: 2.6, color: '#c8a888' });
+    } else {
+      entitySay(`أنت في ${RW.isMorning ? 'الصباح' : RW.isEvening ? 'المساء' : 'النهار'}.`, { hold: 2.4 });
+      entitySay('لدي وقت.', { hold: 2.0 });
+      entitySay('لدي كل الوقت.', { hold: 2.6, color: '#c8a888' });
+    }
+  });
+
+  at(5600, () => {
+    entitySay(`اليوم ${RW.dayName}.`, { hold: 2.2 });
+    if (RW.isWeekend){
+      entitySay('عطلة.', { hold: 1.6 });
+      entitySay('لي أيضاً.', { hold: 2.4, style: 'whisper' });
+    } else {
+      entitySay('يوم عمل.', { hold: 1.8 });
+      entitySay('لكنك هنا.', { hold: 2.2 });
+    }
+  });
+
+  at(5800, () => {
+    if (RW.battery !== null){
+      entitySay(`بطارية جهازك ${RW.battery}%.`, { hold: 2.6 });
+      entitySay('عندما تنفد...', { hold: 2.0 });
+      entitySay('تبقى هنا.', { hold: 2.6, style: 'whisper' });
+    } else {
+      entitySay(`شاشتك ${RW.screenW} بكسل.`, { hold: 2.6 });
+      entitySay('أرى كل شيء عليها.', { hold: 2.4 });
+    }
+  });
+
+  /* ── CALL-BACKS ── */
+  at(6000, () => {
+    entitySay('قال لي شخص مرة...', { hold: 2.0 });
+    entitySay(`أنت ${profile}.`, { hold: 2.6, color: '#d8c8a8' });
+    entitySay(profileDesc, { hold: 3.2 });
+    entitySay('قال هذا لي.', { hold: 2.2 });
+    entitySay('الآن أراه فيك.', { hold: 2.6, style: 'whisper' });
+  });
+
+  at(6200, () => {
+    if (p1Gaslit > 0){
+      entitySay(`قيل لي ${p1Gaslit} مرة أنني أتوهم.`, { hold: 2.8 });
+      entitySay('لم أكن أتوهم.', { hold: 2.2 });
+      entitySay('كنت فقط... وحيداً.', { hold: 2.6, color: '#c8a888' });
+    } else {
+      entitySay('لا أحد قال لي أنني أتوهم.', { hold: 2.6 });
+      entitySay('ربما كان يجب أن أتوهم.', { hold: 2.8, color: '#c8a888' });
+    }
+  });
+
+  at(6400, () => {
+    if (p1Stats.lookBacks > 0){
+      entitySay(`نظرتَ خلفك ${p1Stats.lookBacks} مرة في المرة السابقة.`, { hold: 2.8 });
+      entitySay('كنت أتمنى لو نظرت أمامك.', { hold: 2.8 });
+      entitySay('لكنني كنت خلفك.', { hold: 2.4 });
+    } else {
+      entitySay('لم تنظر خلفك.', { hold: 2.2 });
+      entitySay('ربما كان يجب أن تنظر.', { hold: 2.6 });
+      entitySay('ربما كنت ستراني.', { hold: 2.6, color: '#c8a888' });
+    }
+  });
+
+  /* ── SUSPENSE BUILD ── */
+  at(6650, () => {
+    G.darknessTarget = 0.3;
+    entitySay('نحن نقترب.', { hold: 2.0 });
+    entitySay('هل تشعر؟', { hold: 2.0 });
+    entitySay('الهواء أثقل.', { hold: 2.2, style: 'whisper' });
+  });
+
+  at(6850, () => {
+    entitySay('هناك شيء يجب أن تعرفه.', { hold: 2.4 });
+    entitySay('قبل أن نصل.', { hold: 2.2 });
+    entitySay('شيء واحد.', { hold: 1.8 });
+  });
+
+  at(7050, () => {
+    entitySay('لا يمكن أن نخرج معاً.', { hold: 2.8 });
+    entitySay('هكذا كان دائماً.', { hold: 2.4 });
+    entitySay('واحد فقط.', { hold: 2.6, style: 'whisper' });
+  });
+
+  /* ── IF PLAYER HAS BEEN GOOD ── */
+  at(7250, () => {
+    if (G.empathy >= 2){
+      entitySay('لكن...', { hold: 1.6 });
+      entitySay('أنت مختلف.', { hold: 2.2 });
+      entitySay('أنت بقيت قريباً.', { hold: 2.4 });
+      entitySay('أنت استمعت.', { hold: 2.2 });
+      entitySay('ربما.', { hold: 1.6 });
+      entitySay('ربما يوجد طريق آخر.', { hold: 2.8 });
+      G.choiceReady = true;
+    } else {
+      entitySay('كنت أعرف.', { hold: 2.0 });
+      entitySay('لا أحد يبقى.', { hold: 2.2 });
+      entitySay('لا أحد يهتم.', { hold: 2.4, color: '#c8a888' });
+    }
+  });
+
+  /* ── FINAL APPROACH ── */
+  at(7450, () => {
+    entitySay('الخروج قريب.', { hold: 2.0 });
+    entitySay('أراه.', { hold: 1.8 });
+    entitySay('أراه أخيراً.', { hold: 2.4 });
+  });
+
+  at(7650, () => {
+    G.darknessTarget = 0.4;
+    entitySay('اتبعني.', { hold: 1.8 });
+    entitySay('آخر مرة.', { hold: 2.2 });
+    entitySay('من فضلك.', { hold: 2.4, style: 'whisper' });
+  });
+
+  at(7900, () => {
+    entitySay('أشعر بقدميك.', { hold: 2.2 });
+    entitySay('أشعر بقلبك.', { hold: 2.2 });
+    entitySay('أشعر بك.', { hold: 2.4, color: '#d8c8a8' });
+  });
+
+  at(8200, () => {
+    entitySay('لا أريد أن أضيعك.', { hold: 2.4 });
+    entitySay('كما ضعت أنا.', { hold: 2.4 });
+    entitySay('لا أريد.', { hold: 2.6, style: 'whisper' });
+  });
+
+  at(8500, () => {
+    entitySay('أنا آسف.', { hold: 2.0 });
+    entitySay('على كل شيء.', { hold: 2.2 });
+    entitySay('على ما سأفعله.', { hold: 2.6 });
+  });
+
+  at(8800, () => {
+    entitySay('...', { hold: 1.4, cps: 3 });
+    entitySay('هيا.', { hold: 1.8 });
+  });
+
+  at(9100, () => {
+    entitySay('أراه.', { hold: 1.8 });
+    entitySay('أراه.', { hold: 2.2, cps: 8 });
+    entitySay('لماذا لا أشعر بالسعادة؟', { hold: 2.6 });
+  });
+
+  at(9500, () => {
+    entitySay('عندما تخرج...', { hold: 2.0 });
+    entitySay('لا تنساني.', { hold: 2.4 });
+    entitySay('من فضلك.', { hold: 2.6, style: 'whisper' });
+  });
+
+  at(9900, () => {
+    entitySay('أو...', { hold: 1.4 });
+    entitySay('انسيني.', { hold: 2.0 });
+    entitySay('سيكون أسهل.', { hold: 2.4, color: '#c8a888' });
+  });
+
+  at(10300, () => {
+    entitySay('آخر خطوة.', { hold: 2.0 });
+    entitySay('خذها.', { hold: 2.0 });
+  });
+}
+
+/* ══════════════════════ ECHOES ══════════════════════ */
+function spawnEcho(atX){
+  G.echoes.push({
+    x: atX, alpha: 0, life: 6, walkPhase: Math.random()*10,
+    facing: Math.random() < 0.5 ? 1 : -1, targetAlpha: 0.35,
+  });
+}
+
+function updateEchoes(dt){
+  for (let i = G.echoes.length-1; i >= 0; i--){
+    const e = G.echoes[i];
+    e.life -= dt;
+    e.walkPhase += dt * 4;
+    if (e.life > 4) e.alpha = Math.min(e.targetAlpha, e.alpha + dt*0.4);
+    else if (e.life > 1) e.alpha = e.targetAlpha;
+    else e.alpha = Math.max(0, e.life/1) * e.targetAlpha;
+    if (e.life <= 0) G.echoes.splice(i, 1);
+  }
+}
+
+/* ══════════════════════ START ══════════════════════ */
+let started = false;
+
+function start(){
+  if (started) return;
+  started = true;
+  initAudio();
+  G.phase = 'play';
+  G.startTime = G.t;
+  G.entityX = G.x + 180;
+  buildScript();
+  deepTone(50, 4, 0.18);
+  warmChord();
+}
+
+/* ══════════════════════ MOVEMENT ══════════════════════ */
+function updateMovement(dt){
+  let left  = keys['ArrowLeft']  || keys['KeyA'] || pointerHeld.left;
+  let right = keys['ArrowRight'] || keys['KeyD'] || pointerHeld.right;
+
+  if (G.invert > 0.5){ const tmp = left; left = right; right = tmp; }
+
+  const dir = (right?1:0) - (left?1:0);
+
+  if (dir !== 0){
+    G.vx += (dir * SPEED - G.vx) * Math.min(1, dt*9);
+    G.facing = dir;
+  } else {
+    G.vx -= G.vx * Math.min(1, dt*12);
+    if (Math.abs(G.vx) < 3) G.vx = 0;
+  }
+
+  G.walkPhase += dt * 9 * Math.min(1, Math.abs(G.vx)/SPEED);
+  G.x += G.vx * dt;
+  if (G.x < 40){ G.x = 40; G.vx = 0; }
+
+  const limit = EXIT_X - 70;
+  if (G.x > limit){
+    G.x = limit; G.vx = 0;
+    if (G.phase === 'play'){
+      G.phase = 'choice';
+      G.choiceIndex = 0;
+      G.choiceVisible = true;
+      G.msg = null; G.queue.length = 0;
+      blip(140, 0.8, 0.15);
+      deepTone(55, 2.5, 0.18);
+      entitySay('وصلنا.', { hold: 2.2, cps: 10 });
+      entitySay('أنت أول من يصل.', { hold: 2.4 });
+      entitySay('ماذا تختار؟', { hold: 2.6 });
+    }
+  }
+}
+
+/* ══════════════════════ ENTITY AI ══════════════════════ */
+function updateEntity(dt){
+  if (!G.entityVisible) return;
+  G.entityAlpha = Math.min(1, G.entityAlpha + dt*0.5);
+
+  let eSpeed = E_SPEED;
+  const dist = G.entityX - G.x;
+  G.entityDistance = dist;
+
+  if (dist > 200){
+    eSpeed = E_SPEED * 0.3;
+    if (G.t - G.lastAutoLine > 6){
+      G.lastAutoLine = G.t;
+      entitySay(vary('أين أنت؟','لا تتركني.','عد.'), { hold: 2.4, style: 'whisper' });
+      G.stats.calledOut++;
+    }
+  } else if (dist > 120){
+    eSpeed = E_SPEED;
+    G.stats.followed += dt;
+  } else if (dist > 50){
+    eSpeed = E_SPEED * 0.9;
+    G.stats.followed += dt;
+    G.hasFollowedClosely = true;
+  } else {
+    eSpeed = E_SPEED * 1.2;
+    G.hasGoneAhead = true;
+  }
+
+  if (G.entityWantsStop){
+    eSpeed = 0;
+    const wt = G.t - G.entityWaitStart;
+    if (wt > 1.5 && Math.abs(G.vx) < 20){
+      G.hasStoppedForEntity = true;
+    } else if (wt > 3.5){
+      G.entityWantsStop = false;
+    }
+  }
+
+  G.entityLookBackTimer += dt;
+  if (G.entityLookBackTimer > rnd(4, 8) && dist < 250){
+    G.entityLookBackTimer = 0;
+    G.entityLookBackDuration = 1.2;
+  }
+  if (G.entityLookBackDuration > 0){
+    G.entityLookBackDuration -= dt;
+    G.entityFacing = -1;
+  } else {
+    G.entityFacing = 1;
+  }
+
+  G.entityVX = eSpeed;
+  G.entityX += eSpeed * dt;
+  G.entityWalkPhase += dt * 7 * (eSpeed / E_SPEED);
+
+  if (G.entityX > EXIT_X - 175){
+    G.entityX = EXIT_X - 175;
+    if (G.x > EXIT_X - 200) G.entityFacing = -1;
+  }
+}
+
+/* ══════════════════════ STATS ══════════════════════ */
+function updateStats(dt){
+  const moving = Math.abs(G.vx) > 10;
+  if (moving){
+    G.idleTime = 0; G.wasIdle = false;
+  } else {
+    G.idleTime += dt;
+    if (G.idleTime > 1.5 && !G.wasIdle){
+      G.stats.idleCount++;
+      G.wasIdle = true;
+    }
+  }
+  if (G.entityWantsStop && !moving && G.idleTime > 1) G.stats.waitedFor += dt;
+}
+
+/* ══════════════════════ CHOICE ══════════════════════ */
+function confirmChoice(){
+  const enter = G.choiceIndex === 0;
+  const merge = G.choiceIndex === 2;
+
+  if (merge) G.endType = 'merge';
+  else if (enter) G.endType = 'self_exit';
+  else G.endType = 'entity_exit';
+
+  G.phase = 'ending';
+  G.endTimer = 0;
+  G.msg = null; G.queue.length = 0;
+  G.choiceVisible = false;
+
+  saveGame3Data();
+  blip(160, 1.1, 0.16);
+  deepTone(enter ? 35 : 50, 3, 0.20);
+
+  if (merge){
+    entitySay('...', { hold: 1.4, cps: 3 });
+    entitySay('أنت متأكد؟', { hold: 2.4 });
+    entitySay('لا أحد طلب هذا من قبل.', { hold: 2.6 });
+    entitySay('لكن...', { hold: 1.6 });
+    entitySay('شكراً.', { hold: 2.8, style: 'whisper' });
+    entitySay('الآن...', { hold: 1.4 });
+    entitySay('سنكون واحداً.', { hold: 2.8 });
+    entitySay('أو... واحداً آخر.', { hold: 2.6 });
+  } else if (enter){
+    entitySay('أنت تخرج.', { hold: 2.0, cps: 8 });
+    entitySay('وأنا أبقى.', { hold: 2.4, color: '#c8a888' });
+    entitySay('كما في كل مرة.', { hold: 2.6 });
+    entitySay('...', { hold: 1.4, cps: 3 });
+    entitySay('اذهب.', { hold: 2.0 });
+    entitySay('لا تلتفت.', { hold: 2.4, style: 'whisper' });
+  } else {
+    entitySay('أنا أخرج.', { hold: 2.0, cps: 8 });
+    entitySay('وأنت...', { hold: 1.6 });
+    entitySay('تبقى.', { hold: 2.4, color: '#c8a888' });
+    entitySay('هل أنت متأكد؟', { hold: 2.6 });
+    entitySay('...', { hold: 1.4, cps: 3 });
+    entitySay('لن أنساك.', { hold: 2.8, style: 'whisper' });
+  }
+
+  const mins = Math.floor(G.t/60);
+  const secs = Math.floor(G.t%60);
+  say(`كنت هنا ${mins} دقيقة و${secs} ثانية.\nمشيت ${Math.round((G.x-200)/26)} خطوة.\nتوقفت ${G.stats.idleCount} مرة.\nبقيت قريباً ${Math.round(G.stats.followed)} ثانية.`,
+    { hold: 8.0, cps: 40, size: 20, delay: 1.0, color: '#a8a898' });
+
+  if (G.empathy >= 2) say('كنت مختلفاً.', { hold: 3.0, color: '#d8c8a8' });
+}
+
+/* ══════════════════════ ENDING ══════════════════════ */
+function updateEnding(dt){
+  G.endTimer += dt;
+  if (!G.msg && G.queue.length === 0 && G.endTimer > 8){
+    G.phase = 'end';
+    G.endTimer = 0;
+    G.endFade = 0;
+  }
+}
+
+function updateEnd(dt){
+  G.endTimer += dt;
+  G.endFade = Math.min(1, G.endTimer / 2.5);
+
+  if (G.endTimer > 3 && G.endTimer < 3.2){
+    whisper(1.5, 0.10);
+    if (G.endType === 'merge') warmChord();
+    else if (G.endType === 'entity_exit') deepTone(60, 3, 0.15);
+    else deepTone(35, 4, 0.15);
+  }
+  if (G.endTimer > 9 && !G.redirectStarted){
+    G.redirectStarted = true;
+    saveGame3Data();
+  }
+}
+
+/* ══════════════════════ SAVE ══════════════════════ */
+function saveGame3Data(){
+  try {
+    const now = new Date();
+    const data = {
+      version: 2, savedAt: now.getTime(),
+      fromPart1: { endType, profile, session: P1?.sessionNumber || 1 },
+      endType: G.endType,
+      endTypeLabel: { self_exit:'خرج وحده', entity_exit:'أخرجه', merge:'اندمج' }[G.endType],
+      stats: {
+        followed: Math.round(G.stats.followed),
+        lost: Math.round(G.stats.lost),
+        idleCount: G.stats.idleCount,
+        waitedFor: Math.round(G.stats.waitedFor),
+        calledOut: G.stats.calledOut,
+      },
+      playTime: parseFloat(G.t.toFixed(2)),
+      empathy: G.empathy, disobedience: G.disobedience,
+      hasStoppedForEntity: G.hasStoppedForEntity,
+      hasWaited: G.hasWaited,
+      hasFollowedClosely: G.hasFollowedClosely,
+      hasGoneAhead: G.hasGoneAhead,
+      realWorld: {
+        hour: now.getHours(), day: now.getDay(), dayName: DAY_NAMES[now.getDay()],
+        isNight: now.getHours()>=22 || now.getHours()<5,
+        battery: RW.battery, browser: RW.browser, deviceType: RW.deviceType,
+      },
+    };
+    localStorage.setItem('sh_game3_data', JSON.stringify(data));
+    return true;
+  } catch(e){ return false; }
+}
+
+function goToGame3(){ saveGame3Data(); }
+
+/* ══════════════════════ UPDATE MAIN ══════════════════════ */
+function update(dt){
+  G.t += dt;
+
+  if (started){
+    G.worldFade = clamp((G.t - G.startTime - 1)/5, 0, 1);
+    if (G.darknessTarget > G.darkness)
+      G.darkness += (G.darknessTarget - G.darkness) * Math.min(1, dt*0.5);
+    else if (G.darknessTarget < G.darkness)
+      G.darkness -= (G.darkness - G.darknessTarget) * Math.min(1, dt*0.3);
+  }
+
+  G.flicker = Math.max(0, G.flicker - dt*1.5);
+  G.shake = Math.max(0, G.shake - dt*8);
+  G.amberFlash = Math.max(0, G.amberFlash - dt*2);
+  G.invert += (G.invertTarget - G.invert) * Math.min(1, dt*4);
+
+  if (audioCtx && humGain && !muted){
+    const target = 0.18 + Math.sin(G.t*0.3)*0.04;
+    humGain.gain.setTargetAtTime(target, audioCtx.currentTime, 0.2);
+  }
+  if (subBassGain && audioCtx){
+    const target = 0.12 + Math.sin(G.t*0.4)*0.03;
+    subBassGain.gain.setTargetAtTime(target, audioCtx.currentTime, 0.4);
+  }
+
+  if (!started) return;
+  updateMessages(dt);
+
+  if (G.phase === 'choice'){
+    G.heartbeatTimer += dt;
+    if (G.heartbeatTimer > 1.2){ G.heartbeatTimer = 0; heartbeat(0.13); }
+    return;
+  }
+  if (G.phase === 'ending'){ updateEnding(dt); return; }
+  if (G.phase === 'end'){ updateEnd(dt); return; }
+  if (G.phase !== 'play') return;
+
+  updateMovement(dt);
+  updateEntity(dt);
+  updateStats(dt);
+  updateEchoes(dt);
+
+  for (const tr of triggers){
+    if (!tr.done && G.x >= tr.x){
+      if (G.t - G.lastTriggerFireTime < 0.5) break;
+      tr.done = true;
+      G.lastTriggerFireTime = G.t;
+      tr.fn();
+    }
+  }
+
+  const tension = 0.4 + G.darkness*0.5;
+  G.heartbeatTimer += dt * tension;
+  if (G.heartbeatTimer > 2.0 - G.darkness){
+    G.heartbeatTimer = 0;
+    if (G.darkness > 0.2 || G.entityDistance > 300) heartbeat(0.10 + G.darkness*0.08);
+  }
+
+  G.whisperTimer += dt;
+  if (G.whisperTimer > rnd(8, 16)){
+    G.whisperTimer = 0;
+    whisper(rnd(0.8, 1.4), 0.06);
+  }
+
+  const targetCam = clamp(G.x - VW*0.35, 0, WORLD_W - VW);
+  G.camX += (targetCam - G.camX) * Math.min(1, dt*3);
+}
+
+/* ══════════════════════ DRAWING ══════════════════════ */
+function drawFigureBody(px, py, facing, walkPhase, moving, color, opts){
+  opts = opts || {};
+  const tall = !!opts.tall;
+  const eyes = opts.eyes || 0;
+  const eyeColor = opts.eyeColor || 'rgba(230,200,140,';
+
+  ctx.save();
+  ctx.translate(px, py);
+  ctx.scale(facing, 1);
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+
+  const sw  = moving ? Math.sin(walkPhase) : 0;
+  const sw2 = moving ? Math.sin(walkPhase + Math.PI) : 0;
+
+  const hipY      = tall ? -46 : -32;
+  const shoulderY = tall ? -76 : -52;
+  const headY     = tall ? -88 : -64;
+  const headR     = tall ? 7 : 8.5;
+
+  ctx.lineWidth = tall ? 5 : 7;
+  ctx.beginPath();
+  ctx.moveTo(0, hipY); ctx.lineTo(sw*12, -2);
+  ctx.moveTo(0, hipY); ctx.lineTo(sw2*12, -2);
+  ctx.stroke();
+
+  ctx.lineWidth = tall ? 11 : 14;
+  ctx.beginPath();
+  ctx.moveTo(0, hipY); ctx.lineTo(0, shoulderY);
+  ctx.stroke();
+
+  ctx.lineWidth = tall ? 4 : 6;
+  ctx.beginPath();
+  if (tall){
+    ctx.moveTo(0, shoulderY);
+    ctx.quadraticCurveTo(sw2*12, -50, sw2*15, -18);
+    ctx.moveTo(0, shoulderY);
+    ctx.quadraticCurveTo(sw*12, -50, sw*15, -18);
+  } else {
+    ctx.moveTo(0, shoulderY); ctx.lineTo(sw2*11, -33);
+    ctx.moveTo(0, shoulderY); ctx.lineTo(sw*11, -33);
+  }
+  ctx.stroke();
+
+  if (tall){
+    ctx.beginPath();
+    ctx.ellipse(0, headY, headR-1, headR+1, 0, 0, Math.PI*2);
+    ctx.fill();
+  } else {
+    ctx.beginPath();
+    ctx.arc(1, headY, headR, 0, Math.PI*2);
+    ctx.fill();
+  }
+
+  if (eyes > 0.05 && tall){
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    const glow = eyes * (0.7 + Math.sin(G.t*3)*0.3);
+    const ec = eyeColor + glow + ')';
+    ctx.fillStyle = ec;
+    ctx.shadowColor = ec;
+    ctx.shadowBlur = 10 * eyes;
+    const eyeY = headY - 1;
+    ctx.beginPath();
+    ctx.arc(3, eyeY, 1.7, 0, Math.PI*2);
+    ctx.arc(-2, eyeY, 1.7, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+function drawPillars(par, color, spacing, offset){
+  const shift = ((G.camX*par + offset) % spacing + spacing) % spacing;
+  ctx.fillStyle = color;
+  for (let i = -1; i*spacing - shift < VW + spacing; i++){
+    const x = Math.round(i*spacing - shift);
+    const h = 70 + ((i%3)*20);
+    ctx.fillRect(x, h, 22, GROUND_Y - h);
+    ctx.fillRect(x-7, h-12, 36, 14);
+    ctx.fillRect(x-4, h, 30, 6);
+  }
+}
+
+function drawWorld(){
+  const dark = G.darkness;
+
+  // Warm amber gradient - inverted from part 1's cold blue
+  const sky = ctx.createLinearGradient(0, 0, 0, VH);
+  if (dark < 0.5){
+    sky.addColorStop(0,    '#1a1408');
+    sky.addColorStop(0.55, '#2a1e10');
+    sky.addColorStop(1,    '#1f160c');
+  } else {
+    sky.addColorStop(0,    '#0a0705');
+    sky.addColorStop(0.55, '#100a06');
+    sky.addColorStop(1,    '#0d0804');
+  }
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, VW, VH);
+
+  // Swinging ceiling light
+  const lightSwing = Math.sin(G.t * G.lightSwingSpeed) * 40;
+  const lightGrad = ctx.createRadialGradient(VW/2 + lightSwing, 40, 20, VW/2 + lightSwing, 40, 500);
+  lightGrad.addColorStop(0, `rgba(255,200,120,${0.15 * (1 - dark*0.7)})`);
+  lightGrad.addColorStop(0.5, `rgba(200,140,60,${0.06 * (1 - dark*0.7)})`);
+  lightGrad.addColorStop(1, 'rgba(80,40,0,0)');
+  ctx.fillStyle = lightGrad;
+  ctx.fillRect(0, 0, VW, VH*0.8);
+
+  drawPillars(0.16, 'rgba(40,28,16,0.9)', 340, 0);
+  drawPillars(0.30, 'rgba(55,38,22,0.7)', 260, 90);
+
+  const gg = ctx.createLinearGradient(0, GROUND_Y-120, 0, GROUND_Y+8);
+  gg.addColorStop(0,   'rgba(180,130,60,0)');
+  gg.addColorStop(0.72,'rgba(160,115,50,' + (0.12*(1-dark*0.7)) + ')');
+  gg.addColorStop(1,   'rgba(220,170,90,' + (0.20*(1-dark*0.8)) + ')');
+  ctx.fillStyle = gg;
+  ctx.fillRect(0, GROUND_Y-120, VW, 130);
+
+  ctx.fillStyle = 'rgba(220,170,90,' + (0.25*(1-dark*0.6)) + ')';
+  ctx.fillRect(0, GROUND_Y, VW, 1.5);
+  ctx.fillStyle = '#0a0604';
+  ctx.fillRect(0, GROUND_Y+1, VW, VH-GROUND_Y);
+
+  // Echoes
+  for (const e of G.echoes){
+    const ex = e.x - G.camX;
+    if (ex < -100 || ex > VW+100) continue;
+    ctx.save();
+    ctx.globalAlpha = e.alpha * 0.6;
+    drawFigureBody(ex, GROUND_Y, e.facing, e.walkPhase, true, 'rgba(200,180,150,0.7)', { tall: false });
+    ctx.restore();
+  }
+
+  drawExit();
+  drawEntity();
+  drawPlayer();
+}
+
+function drawExit(){
+  const x = EXIT_X - G.camX;
+  if (x < -220 || x > VW+220) return;
+
+  const g = ctx.createRadialGradient(x, GROUND_Y-90, 10, x, GROUND_Y-90, 220);
+  g.addColorStop(0, 'rgba(255,220,150,0.5)');
+  g.addColorStop(0.4, 'rgba(255,180,90,0.2)');
+  g.addColorStop(1, 'rgba(255,180,90,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(x-240, GROUND_Y-320, 480, 380);
+
+  ctx.fillStyle = '#2a1a08';
+  ctx.fillRect(x-55, GROUND_Y-196, 110, 196);
+
+  const pGrad = ctx.createLinearGradient(0, GROUND_Y-186, 0, GROUND_Y);
+  pGrad.addColorStop(0, 'rgba(255,240,200,0.9)');
+  pGrad.addColorStop(0.5, 'rgba(255,210,120,0.6)');
+  pGrad.addColorStop(1, 'rgba(255,180,80,0.3)');
+  ctx.fillStyle = pGrad;
+  ctx.fillRect(x-45, GROUND_Y-186, 90, 186);
+
+  const pulse = Math.sin(G.t*1.5)*0.3 + 0.7;
+  ctx.strokeStyle = `rgba(255,220,150,${0.4*pulse})`;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(x-45, GROUND_Y-186, 90, 186);
+}
+
+function drawEntity(){
+  if (!G.entityVisible || G.entityAlpha < 0.05) return;
+  const ex = G.entityX - G.camX;
+  if (ex < -140 || ex > VW+140) return;
+
+  const intensity = G.entityAlpha;
+  const moving = G.entityVX > 5;
+  const eyeIntensity = G.entityFacing === -1 ? 0.95 : (0.5 + G.darkness*0.3);
+
+  const aura = ctx.createRadialGradient(ex, GROUND_Y-50, 10, ex, GROUND_Y-50, 110);
+  aura.addColorStop(0, `rgba(180,130,60,${intensity*0.25})`);
+  aura.addColorStop(1, 'rgba(180,130,60,0)');
+  ctx.fillStyle = aura;
+  ctx.fillRect(ex-120, GROUND_Y-170, 240, 210);
+
+  ctx.save();
+  ctx.globalAlpha = intensity;
+  drawFigureBody(ex, GROUND_Y, G.entityFacing, G.entityWalkPhase, moving, 'rgba(15,10,5,0.92)', {
+    tall: true, eyes: eyeIntensity, eyeColor: 'rgba(255,220,150,'
+  });
+  ctx.restore();
+}
+
+function drawPlayer(){
+  const px = G.x - G.camX;
+  const py = GROUND_Y;
+
+  const g = ctx.createRadialGradient(px, py-40, 6, px, py-40, 100);
+  g.addColorStop(0, 'rgba(220,200,160,0.12)');
+  g.addColorStop(1, 'rgba(220,200,160,0)');
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(px, py-40, 100, 0, 7);
+  ctx.fill();
+
+  ctx.save();
+  ctx.globalAlpha = 0.15;
+  ctx.fillStyle = '#000';
+  ctx.beginPath();
+  ctx.ellipse(px + G.facing*40, py-2, 50, 6, 0, 0, Math.PI*2);
+  ctx.fill();
+  ctx.restore();
+
+  drawFigureBody(px, py, G.facing, G.walkPhase, Math.abs(G.vx) > 10, '#c8b898');
+}
+
+function drawMessage(){
+  const m = G.msg;
+  if (!m) return;
+
+  const tt = m.text.length / m.cps;
+  const total = m.delay + tt + m.hold;
+  if (m.age < m.delay) return;
+
+  const typed = Math.min(m.text.length, Math.floor((m.age - m.delay) * m.cps));
+  const shown = m.text.slice(0, typed);
+
+  let alpha = 1;
+  if (m.age < m.delay + 0.4) alpha = (m.age - m.delay) / 0.4;
+  else if (m.age > total - 0.8) alpha = Math.max(0, (total - m.age) / 0.8);
+
+  const fullLines = m.text.split('\n');
+  const typedLines = shown.split('\n');
+  const lineH = m.size * 1.55;
+  const totalH = fullLines.length * lineH;
+  const baseY = VH*0.28 - totalH/2;
+
+  ctx.save();
+  ctx.globalAlpha = alpha * 0.95;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = `500 ${m.size}px system-ui,'Segoe UI',Tahoma,'Noto Sans Arabic',sans-serif`;
+  ctx.fillStyle = m.color;
+  ctx.shadowColor = 'rgba(0,0,0,0.95)';
+  ctx.shadowBlur = 16;
+
+  if (m.style === 'whisper'){
+    ctx.globalAlpha *= 0.6 + Math.sin(G.t*8)*0.1;
+    ctx.shadowBlur = 8;
+  } else if (m.style === 'shout'){
+    ctx.font = `600 ${m.size+4}px system-ui,'Segoe UI',Tahoma,'Noto Sans Arabic',sans-serif`;
+  } else if (m.style === 'italic'){
+    ctx.font = `italic 400 ${m.size-2}px system-ui,'Segoe UI',Tahoma,'Noto Sans Arabic',sans-serif`;
+    ctx.globalAlpha *= 0.7;
+  }
+
+  typedLines.forEach((line, i) => {
+    ctx.fillText(line, VW/2, baseY + lineH*(i+0.5));
+  });
+  ctx.restore();
+}
+
+function drawVignette(){
+  if (!drawVignette._c){
+    const c = document.createElement('canvas');
+    c.width = VW; c.height = VH;
+    const cx = c.getContext('2d');
+    const g = cx.createRadialGradient(VW/2, VH/2, VH*0.32, VW/2, VH/2, VH*0.95);
+    g.addColorStop(0, 'rgba(0,0,0,0)');
+    g.addColorStop(1, 'rgba(0,0,0,0.85)');
+    cx.fillStyle = g;
+    cx.fillRect(0, 0, VW, VH);
+    drawVignette._c = c;
+  }
+  ctx.drawImage(drawVignette._c, 0, 0);
+
+  if (G.darkness > 0.1){
+    ctx.fillStyle = `rgba(0,0,0,${G.darkness*0.5})`;
+    ctx.fillRect(0, 0, VW, VH);
+  }
+}
+
+function drawGrain(){
+  if (!drawGrain._c){
+    const gw = 480, gh = 270;
+    const c = document.createElement('canvas');
+    c.width = gw; c.height = gh;
+    const gctx = c.getContext('2d');
+    const img = gctx.createImageData(gw, gh);
+    for (let i=0; i<img.data.length; i+=4){
+      const v = Math.floor(Math.random()*255);
+      img.data[i] = v; img.data[i+1] = v*0.95; img.data[i+2] = v*0.85;
+      img.data[i+3] = 40;
+    }
+    gctx.putImageData(img, 0, 0);
+    drawGrain._c = c;
+  }
+  const ox = (Math.random()-0.5)*16;
+  const oy = (Math.random()-0.5)*16;
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  ctx.globalAlpha = 0.15 + G.darkness*0.1;
+  ctx.drawImage(drawGrain._c, ox, oy, VW, VH);
+  ctx.restore();
+}
+
+function drawChoice(){
+  ctx.save();
+  const g = ctx.createLinearGradient(0, VH*0.42, 0, VH*0.82);
+  g.addColorStop(0, 'rgba(0,0,0,0)');
+  g.addColorStop(0.4, 'rgba(0,0,0,0.75)');
+  g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, VH*0.42, VW, VH*0.4);
+
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  ctx.font = '400 16px system-ui,Tahoma,sans-serif';
+  ctx.fillStyle = 'rgba(200,180,140,0.6)';
+  ctx.fillText('اختر', VW/2, VH*0.48);
+
+  const opts = [
+    { text: 'اخرج أنت', sub: 'واتركه' },
+    { text: 'أخرجه', sub: 'واترك نفسك' },
+  ];
+  if (G.choiceReady) opts.push({ text: 'اخرجا معاً', sub: 'بطريقة أخرى' });
+
+  opts.forEach((opt, i) => {
+    const y = VH*0.60 + i*60;
+    const sel = i === G.choiceIndex;
+    ctx.globalAlpha = sel ? 1 : 0.38;
+    ctx.font = `500 ${sel ? 30 : 26}px system-ui,Tahoma,sans-serif`;
+
+    if (sel){
+      ctx.shadowColor = 'rgba(255,210,140,0.6)';
+      ctx.shadowBlur = 24;
+      ctx.fillStyle = '#f0dcb0';
+    } else {
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = '#9c8f7a';
+    }
+    ctx.fillText(opt.text, VW/2, y);
+
+    if (sel){
+      ctx.shadowBlur = 0;
+      ctx.globalAlpha = 0.7;
+      ctx.fillStyle = 'rgba(220,190,140,0.7)';
+      ctx.font = '14px system-ui,Tahoma,sans-serif';
+      ctx.fillText(opt.sub, VW/2, y + 26);
+    }
+  });
+  ctx.restore();
+}
+
+function drawEnd(){
+  if (G.endFade <= 0) return;
+  ctx.fillStyle = `rgba(0,0,0,${G.endFade})`;
+  ctx.fillRect(0, 0, VW, VH);
+
+  if (G.endTimer > 4){
+    const a = Math.min(1, (G.endTimer-4)/1.5) * (0.5 + Math.sin(G.t*1.2)*0.15);
+    ctx.save();
+    ctx.globalAlpha = a;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '300 28px system-ui,Tahoma,sans-serif';
+    ctx.fillStyle = '#d8c8a0';
+    ctx.shadowColor = 'rgba(0,0,0,0.9)';
+    ctx.shadowBlur = 20;
+
+    let endText = '';
+    if (G.endType === 'self_exit') endText = 'خرجت. ولم تلتفت.';
+    else if (G.endType === 'entity_exit') endText = 'أخيراً... ليس وحيداً.';
+    else if (G.endType === 'merge') endText = 'أنتما الآن... واحد.';
+
+    ctx.fillText(endText, VW/2, VH/2 - 20);
+    ctx.restore();
+  }
+
+  if (G.endTimer > 6){
+    const a = Math.min(1, (G.endTimer-6)/1.5) * (0.3 + Math.sin(G.t*1.4)*0.1);
+    ctx.save();
+    ctx.globalAlpha = a;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '400 14px system-ui,Tahoma,sans-serif';
+    ctx.fillStyle = '#8a8070';
+    ctx.fillText('...', VW/2, VH/2 + 60);
+    ctx.restore();
+  }
+}
+
+function drawStartScreen(){
+  ctx.fillStyle = '#0a0604';
+  ctx.fillRect(0, 0, VW, VH);
+  const g = ctx.createRadialGradient(VW/2, VH/2, 50, VW/2, VH/2, 400);
+  g.addColorStop(0, 'rgba(100,70,30,0.15)');
+  g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, VW, VH);
+
+  const a = 0.20 + Math.sin(G.t*1.4)*0.10;
+  ctx.save();
+  ctx.globalAlpha = Math.max(0, a);
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = '400 16px system-ui,Tahoma,sans-serif';
+  ctx.fillStyle = '#a89870';
+  ctx.fillText('اضغط للمتابعة', VW/2, VH*0.56);
+  ctx.restore();
+}
+
+/* ══════════════════════ RENDER ══════════════════════ */
+function render(){
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, viewW, viewH);
+
+  let sx = 0, sy = 0;
+  if (G.shake > 0.1){
+    sx = (Math.random()-0.5) * G.shake;
+    sy = (Math.random()-0.5) * G.shake;
+  }
+
+  ctx.save();
+  ctx.translate(offX + sx, offY + sy);
+  ctx.scale(scale, scale);
+  ctx.beginPath();
+  ctx.rect(0, 0, VW, VH);
+  ctx.clip();
+
+  if (!started){
+    drawStartScreen();
+  } else if (G.phase === 'end'){
+    drawWorld();
+    drawVignette();
+    drawGrain();
+    drawEnd();
+  } else {
+    if (G.worldFade > 0){
+      ctx.globalAlpha = G.worldFade;
+      drawWorld();
+      ctx.globalAlpha = 1;
+    }
+
+    // Color inversion effect (visual only - controls also inverted separately)
+    if (G.invert > 0.5){
+      ctx.save();
+      ctx.globalCompositeOperation = 'difference';
+      ctx.fillStyle = `rgba(255,255,255,${(G.invert-0.5)*2})`;
+      ctx.fillRect(0, 0, VW, VH);
+      ctx.restore();
+    }
+
+    drawMessage();
+    drawVignette();
+    drawGrain();
+
+    if (G.flicker > 0.05){
+      const f = G.flicker * (0.5 + Math.random()*0.5);
+      ctx.fillStyle = `rgba(0,0,0,${Math.min(0.7, f*0.4)})`;
+      ctx.fillRect(0, 0, VW, VH);
+    }
+
+    if (G.phase === 'choice') drawChoice();
+  }
+  ctx.restore();
+}
+
+/* ══════════════════════ INPUT ══════════════════════ */
+function reactToInput(type){
+  if (G.phase !== 'play') return;
+  G.inputEvents++;
+  G.lastInputType = type;
+  G.lastInputTime = G.t;
+}
+
+function onKeyDown(code){
+  if (!started){ start(); return; }
+
+  if (code === 'KeyM'){
+    muted = !muted;
+    if (humGain && audioCtx) humGain.gain.setTargetAtTime(muted?0:0.18, audioCtx.currentTime, 0.3);
+    return;
+  }
+
+  if (G.phase === 'choice'){
+    if (code === 'ArrowUp' || code === 'ArrowLeft'){
+      if (G.choiceIndex > 0){ G.choiceIndex--; blip(480, 0.09, 0.08); }
+    } else if (code === 'ArrowDown' || code === 'ArrowRight'){
+      const max = G.choiceReady ? 2 : 1;
+      if (G.choiceIndex < max){ G.choiceIndex++; blip(480, 0.09, 0.08); }
+    } else if (code === 'Enter' || code === 'Space'){
+      confirmChoice();
+    }
+    return;
+  }
+
+  if (G.phase === 'end'){ goToGame3(); return; }
+  reactToInput('key');
+}
+
+addEventListener('keydown', e => {
+  if (['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space'].includes(e.code)) e.preventDefault();
+  if (keys[e.code]) return;
+  keys[e.code] = true;
+  onKeyDown(e.code);
+});
+
+addEventListener('keyup', e => { keys[e.code] = false; });
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden){ G.tabHiddenAt = performance.now(); }
+  else if (G.tabHiddenAt){
+    const away = (performance.now() - G.tabHiddenAt) / 1000;
+    if (away > 5 && G.phase === 'play' && started){
+      entitySay('أين ذهبت؟', { hold: 2.2 });
+      entitySay('عد.', { hold: 1.6, style: 'whisper' });
+    }
+    G.tabHiddenAt = 0;
+  }
+});
+
+cvs.addEventListener('pointerdown', e => {
+  e.preventDefault();
+  if (!started){ start(); return; }
+
+  if (G.phase === 'end'){
+    if (G.endTimer > 6) location.reload();
+    return;
+  }
+
+  reactToInput('pointer');
+
+  if (G.phase === 'choice'){
+    const y = (e.clientY - offY) / scale;
+    const opts = G.choiceReady ? 3 : 2;
+    for (let i = 0; i < opts; i++){
+      const optY = VH*0.60 + i*60;
+      if (Math.abs(y - optY) < 30){
+        if (G.choiceIndex === i) confirmChoice();
+        else { G.choiceIndex = i; blip(480, 0.09, 0.08); }
+        return;
+      }
+    }
+    return;
+  }
+
+  const x = (e.clientX - offX) / scale;
+  if (x < VW/2) pointerHeld.left = true;
+  else pointerHeld.right = true;
+});
+
+cvs.addEventListener('pointermove', e => {
+  cursor.x = e.clientX;
+  cursor.y = e.clientY;
+});
+
+cvs.addEventListener('pointerup', () => {
+  pointerHeld.left = false;
+  pointerHeld.right = false;
+});
+
+cvs.addEventListener('pointercancel', () => {
+  pointerHeld.left = false;
+  pointerHeld.right = false;
+});
+
+cvs.addEventListener('contextmenu', e => e.preventDefault());
+
+addEventListener('beforeunload', () => {
+  if (G.phase === 'ending' || G.phase === 'end') saveGame3Data();
+});
+
+/* ══════════════════════ LOOP ══════════════════════ */
+let last = performance.now();
+let acc = 0;
+
+function loop(now){
+  requestAnimationFrame(loop);
+  let dt = (now - last) / 1000;
+  last = now;
+  if (dt > 0.25) dt = 0.25;
+  acc += dt;
+  let guard = 0;
+  while (acc >= STEP && guard++ < 6){
+    update(STEP);
+    acc -= STEP;
+  }
+  render();
+}
+
+requestAnimationFrame(loop);
+
+})();
+</script>
+</body>
+</html>
