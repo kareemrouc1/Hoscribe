@@ -3,24 +3,85 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title data-i18n="title">هوسكرايب</title>
-    <meta name="description" data-i18n="meta-description" content="هوسكرايب — محتوى وثائقي عالمي بسيط وأنيق." />
-    <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://hoscribe.netlify.app/" />
 
+    <!-- Mark JS as available early to avoid FOUC and to gate animations -->
+    <script>document.documentElement.classList.add('js');</script>
+
+    <!-- Primary SEO -->
+    <title data-i18n="title">هوسكرايب | محتوى وثائقي عالمي — كريم محمد إسماعيل</title>
+    <meta name="description" data-i18n="meta-description"
+        content="هوسكرايب (Hoscribe) — قناة ومحتوى وثائقي عالمي يقدّم قصصاً وحقائق من كل مكان بأسلوب بسيط وجذاب. تعرّف على القناة، سناب شات، والمسابقة السنوية." />
+    <meta name="author" content="كريم محمد إسماعيل" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="theme-color" content="#fafafa" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- Canonical & i18n alternates -->
+    <link id="canonical-link" rel="canonical" href="https://hoscribe.vercel.app/" />
+    <link rel="alternate" hreflang="ar" href="https://hoscribe.vercel.app/" />
+    <link rel="alternate" hreflang="en" href="https://hoscribe.vercel.app/?lang=en" />
+    <link rel="alternate" hreflang="x-default" href="https://hoscribe.vercel.app/" />
+
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" data-i18n="og-title" content="هوسكرايب" />
-    <meta property="og:description" data-i18n="og-description" content="محتوى وثائقي عالمي بسيط وأنيق." />
-    <meta property="og:image" content="logo.png" />
+    <meta property="og:site_name" content="Hoscribe" />
+    <meta property="og:locale" content="ar_AR" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:url" content="https://hoscribe.vercel.app/" />
+    <meta property="og:title" data-i18n="og-title" content="هوسكرايب | محتوى وثائقي عالمي" />
+    <meta property="og:description" data-i18n="og-description"
+        content="قصص وحقائق من كل مكان بأسلوب بسيط. تعرّف على هوسكرايب، قناته، والمسابقة السنوية." />
+    <meta property="og:image" content="https://hoscribe.vercel.app/logo.png" />
+    <meta property="og:image:alt" content="شعار هوسكرايب" />
 
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" data-i18n="og-title" content="هوسكرايب | محتوى وثائقي عالمي" />
+    <meta name="twitter:description" data-i18n="og-description"
+        content="قصص وحقائق من كل مكان بأسلوب بسيط. تعرّف على هوسكرايب، قناته، والمسابقة السنوية." />
+    <meta name="twitter:image" content="https://hoscribe.vercel.app/logo.png" />
+
+    <!-- Icons -->
     <link rel="icon" href="logo.png" type="image/png" />
     <link rel="apple-touch-icon" href="logo.png" />
 
+    <!-- Performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preload" href="logo.png" as="image" fetchpriority="high" />
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://hoscribe.vercel.app/#website",
+          "url": "https://hoscribe.vercel.app/",
+          "name": "Hoscribe",
+          "alternateName": "هوسكرايب",
+          "description": "محتوى وثائقي عالمي — قصص وحقائق من كل مكان.",
+          "inLanguage": "ar",
+          "publisher": { "@id": "https://hoscribe.vercel.app/#person" }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://hoscribe.vercel.app/#person",
+          "name": "كريم محمد إسماعيل",
+          "alternateName": "Karim Mohamed Ismail",
+          "url": "https://hoscribe.vercel.app/",
+          "jobTitle": "صانع محتوى وثائقي",
+          "sameAs": [
+            "https://youtube.com/@Hoscribe",
+            "https://www.snapchat.com/add/hoscribe"
+          ]
+        }
+      ]
+    }
+    </script>
 
     <style>
         /* ——————————————————————————————
@@ -454,9 +515,15 @@
         }
 
         /* ——————————————————————————————
-           Reveal – Ultra-smooth
+           Reveal – SEO-safe: content visible without JS.
+           Animations only activate when .js is present on <html>.
            —————————————————————————————— */
         .reveal {
+            opacity: 1;
+            transform: none;
+        }
+
+        html.js .reveal {
             opacity: 0;
             transform: translateY(18px);
             transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
@@ -464,14 +531,13 @@
             will-change: opacity, transform;
         }
 
-        .reveal.visible {
+        html.js .reveal.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
         /* ——————————————————————————————
-           Responsive – always two columns for cta-row,
-           competition remains single row
+           Responsive
            —————————————————————————————— */
         @media (max-width: 640px) {
             body {
@@ -484,7 +550,6 @@
                 font-size: 0.85rem;
             }
 
-            /* Always keep two columns, even on small screens */
             .cta-row {
                 grid-template-columns: 1fr 1fr;
                 gap: 0.8rem;
@@ -526,7 +591,6 @@
                 gap: 0.6rem 1.2rem;
             }
 
-            /* Keep border for last cta-row */
             .cta-row:last-of-type {
                 border-bottom: none;
             }
@@ -535,7 +599,6 @@
                 border-radius: var(--radius) var(--radius) var(--radius) var(--radius);
             }
 
-            /* Competition card stays single row */
             .competition-card {
                 padding: 1rem 1.2rem;
                 min-height: 140px;
@@ -650,15 +713,15 @@
     <div class="container">
 
         <!-- Language Switcher -->
-        <div class="lang-switcher">
+        <nav class="lang-switcher" aria-label="Language selector">
             <button class="lang-btn" data-lang="ar" aria-label="العربية">عربي</button>
             <button class="lang-btn" data-lang="en" aria-label="English">English</button>
-        </div>
+        </nav>
 
         <!-- Hero -->
         <header class="hero reveal">
             <div class="logo-wrap">
-                <img src="logo.png" alt="هوسكرايب" loading="eager" fetchpriority="high" width="76" height="76" onerror="this.style.background='#f0efe8'; this.alt='Hoscribe';" />
+                <img src="logo.png" alt="شعار هوسكرايب — Hoscribe" loading="eager" fetchpriority="high" width="76" height="76" onerror="this.style.background='#f0efe8'; this.alt='Hoscribe';" />
             </div>
             <h1 data-i18n="brand-name">هوسكرايب</h1>
             <p class="sub"><span class="real" data-i18n="brand-owner">كريم محمد إسماعيل</span> <span style="color:var(--text-tertiary);">·</span> <span data-i18n="brand-sub">Hoscribe</span></p>
@@ -680,7 +743,7 @@
                 <span class="label" data-i18n="yt-label">القناة</span>
                 <h2 data-i18n="yt-title">هوسكرايب</h2>
                 <p data-i18n="yt-desc">قناة تقدم محتوى وثائقياً عالمياً، قصص وحقائق من جميع أنحاء العالم بأسلوب بسيط وجذاب.</p>
-                <a href="https://youtube.com/@Hoscribe" target="_blank" rel="noopener" class="btn btn--primary">
+                <a href="https://youtube.com/@Hoscribe" target="_blank" rel="noopener noreferrer" class="btn btn--primary">
                     <span data-i18n="yt-btn">زيارة القناة</span>
                 </a>
             </section>
@@ -689,7 +752,7 @@
                 <span class="label" data-i18n="snap-label">سناب شات</span>
                 <h2 data-i18n="snap-title">@hoscribe</h2>
                 <p data-i18n="snap-desc">محتوى يومي، خلف الكواليس، ولحظات ممتعة على سناب شات.</p>
-                <a href="https://www.snapchat.com/add/hoscribe" target="_blank" rel="noopener" class="btn btn--ghost">
+                <a href="https://www.snapchat.com/add/hoscribe" target="_blank" rel="noopener noreferrer" class="btn btn--ghost">
                     <span data-i18n="snap-btn">تابعنا على سناب</span>
                 </a>
             </section>
@@ -737,9 +800,7 @@
             </section>
         </div>
 
-        <!-- ——————————————————————————————
-             COMPETITION CARD – Single row always
-             —————————————————————————————— -->
+        <!-- Competition -->
         <div class="competition-row reveal">
             <div class="competition-card">
                 <span class="label" data-i18n="comp-label">🏆 المسابقة</span>
@@ -753,8 +814,8 @@
         <section class="quick-links reveal">
             <div class="links">
                 <a href="/" data-i18n="link-home">الرئيسية</a>
-                <a href="https://youtube.com/@Hoscribe" target="_blank" data-i18n="link-youtube">يوتيوب</a>
-                <a href="https://www.snapchat.com/add/hoscribe" target="_blank" data-i18n="link-snapchat">سناب شات</a>
+                <a href="https://youtube.com/@Hoscribe" target="_blank" rel="noopener noreferrer" data-i18n="link-youtube">يوتيوب</a>
+                <a href="https://www.snapchat.com/add/hoscribe" target="_blank" rel="noopener noreferrer" data-i18n="link-snapchat">سناب شات</a>
                 <a href="ads.html" data-i18n="link-ads">تواصل</a>
                 <a href="excretion.html" data-i18n="link-feedback">اقتراحات</a>
                 <a href="me.html" data-i18n="link-me">من أكون</a>
@@ -772,18 +833,20 @@
     </div>
 
     <!-- ==========================================================
-    Script – i18n + reveal – Non-blocking
+    Script – i18n + reveal + URL sync – Non-blocking
     ========================================================== -->
     <script>
         (function() {
             'use strict';
 
+            const SITE_URL = 'https://hoscribe.vercel.app/';
+
             const translations = {
                 ar: {
-                    'title': 'هوسكرايب',
-                    'meta-description': 'هوسكرايب — محتوى وثائقي عالمي بسيط وأنيق.',
-                    'og-title': 'هوسكرايب',
-                    'og-description': 'محتوى وثائقي عالمي بسيط وأنيق.',
+                    'title': 'هوسكرايب | محتوى وثائقي عالمي — كريم محمد إسماعيل',
+                    'meta-description': 'هوسكرايب (Hoscribe) — قناة ومحتوى وثائقي عالمي يقدّم قصصاً وحقائق من كل مكان بأسلوب بسيط وجذاب. تعرّف على القناة، سناب شات، والمسابقة السنوية.',
+                    'og-title': 'هوسكرايب | محتوى وثائقي عالمي',
+                    'og-description': 'قصص وحقائق من كل مكان بأسلوب بسيط. تعرّف على هوسكرايب، قناته، والمسابقة السنوية.',
                     'brand-name': 'هوسكرايب',
                     'brand-owner': 'كريم محمد إسماعيل',
                     'brand-sub': 'Hoscribe',
@@ -830,10 +893,10 @@
                     'footer-credit': '© 2025 Hoscribe · هوسكرايب — كريم محمد إسماعيل',
                 },
                 en: {
-                    'title': 'Hoscribe',
-                    'meta-description': 'Hoscribe — simple and elegant global documentary content.',
-                    'og-title': 'Hoscribe',
-                    'og-description': 'Simple and elegant global documentary content.',
+                    'title': 'Hoscribe | Global Documentary Content — Karim Mohamed Ismail',
+                    'meta-description': 'Hoscribe — a global documentary channel sharing stories and facts from everywhere in a simple, engaging style. Discover the channel, Snapchat, and the annual competition.',
+                    'og-title': 'Hoscribe | Global Documentary Content',
+                    'og-description': 'Stories and facts from everywhere, told simply. Discover Hoscribe, its channel, and annual competition.',
                     'brand-name': 'Hoscribe',
                     'brand-owner': 'Karim Mohamed Ismail',
                     'brand-sub': 'Hoscribe',
@@ -885,66 +948,83 @@
             const metaDescription = document.querySelector('meta[name="description"]');
             const ogTitle = document.querySelector('meta[property="og:title"]');
             const ogDescription = document.querySelector('meta[property="og:description"]');
+            const ogLocale = document.querySelector('meta[property="og:locale"]');
+            const canonicalLink = document.getElementById('canonical-link');
             const htmlEl = document.documentElement;
             const langBtns = document.querySelectorAll('.lang-btn');
 
-            function setLanguage(lang) {
+            function setLanguage(lang, updateUrl) {
                 const dict = translations[lang];
                 if (!dict) return;
 
                 i18nElements.forEach(el => {
                     const key = el.getAttribute('data-i18n');
                     if (dict[key] !== undefined) {
-                        if (key === 'quick-links') return;
                         el.innerHTML = dict[key];
                     }
                 });
 
-                document.querySelectorAll('.quick-links .links a').forEach(link => {
-                    const key = link.getAttribute('data-i18n');
-                    if (key && dict[key] !== undefined) {
-                        link.textContent = dict[key];
-                    }
-                });
-
-                if (metaDescription && dict['meta-description'] !== undefined) {
+                if (metaDescription && dict['meta-description']) {
                     metaDescription.setAttribute('content', dict['meta-description']);
                 }
-                if (ogTitle && dict['og-title'] !== undefined) {
+                if (ogTitle && dict['og-title']) {
                     ogTitle.setAttribute('content', dict['og-title']);
                 }
-                if (ogDescription && dict['og-description'] !== undefined) {
+                if (ogDescription && dict['og-description']) {
                     ogDescription.setAttribute('content', dict['og-description']);
+                }
+                if (ogLocale) {
+                    ogLocale.setAttribute('content', lang === 'ar' ? 'ar_AR' : 'en_US');
                 }
 
                 htmlEl.setAttribute('lang', lang);
                 htmlEl.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
 
                 langBtns.forEach(btn => {
-                    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+                    const isActive = btn.getAttribute('data-lang') === lang;
+                    btn.classList.toggle('active', isActive);
+                    btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
                 });
 
-                localStorage.setItem('hoscribe-lang', lang);
+                if (canonicalLink) {
+                    canonicalLink.href = lang === 'ar' ? SITE_URL : SITE_URL + '?lang=en';
+                }
+
+                try { localStorage.setItem('hoscribe-lang', lang); } catch (e) {}
+
+                if (updateUrl) {
+                    const url = new URL(window.location.href);
+                    if (lang === 'ar') {
+                        url.searchParams.delete('lang');
+                    } else {
+                        url.searchParams.set('lang', lang);
+                    }
+                    history.replaceState({}, '', url.toString());
+                }
             }
 
             function getPreferredLanguage() {
-                const stored = localStorage.getItem('hoscribe-lang');
+                const urlLang = new URLSearchParams(window.location.search).get('lang');
+                if (urlLang === 'ar' || urlLang === 'en') return urlLang;
+                let stored = null;
+                try { stored = localStorage.getItem('hoscribe-lang'); } catch (e) {}
                 if (stored === 'ar' || stored === 'en') return stored;
-                const browserLang = navigator.language || navigator.languages?.[0] || '';
-                if (browserLang.startsWith('ar')) return 'ar';
-                if (browserLang.startsWith('en')) return 'en';
+                const browserLang = navigator.language || (navigator.languages && navigator.languages[0]) || '';
+                if (browserLang.toLowerCase().startsWith('ar')) return 'ar';
+                if (browserLang.toLowerCase().startsWith('en')) return 'en';
                 return 'ar';
             }
 
             langBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
                     const lang = this.getAttribute('data-lang');
-                    if (lang) setLanguage(lang);
+                    if (lang) setLanguage(lang, true);
                 });
             });
 
-            setLanguage(getPreferredLanguage());
+            setLanguage(getPreferredLanguage(), false);
 
+            /* Reveal on scroll – only when JS is enabled */
             const revealEls = document.querySelectorAll('.reveal');
             if (revealEls.length && 'IntersectionObserver' in window) {
                 const observer = new IntersectionObserver((entries) => {
@@ -955,13 +1035,16 @@
                         }
                     });
                 }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
+
+                const startObserving = () => revealEls.forEach(el => observer.observe(el));
                 if ('requestIdleCallback' in window) {
-                    requestIdleCallback(() => {
-                        revealEls.forEach(el => observer.observe(el));
-                    });
+                    requestIdleCallback(startObserving);
                 } else {
-                    revealEls.forEach(el => observer.observe(el));
+                    startObserving();
                 }
+
+                /* Safety net: if something fails, reveal everything after 3s */
+                setTimeout(() => revealEls.forEach(el => el.classList.add('visible')), 3000);
             } else {
                 revealEls.forEach(el => el.classList.add('visible'));
             }
