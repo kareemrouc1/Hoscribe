@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>الخارج</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{width:100%;height:100%;overflow:hidden;background:#000;
+    font-family:system-ui,'Segoe UI',Tahoma,'Noto Sans Arabic',sans-serif}
+  canvas{display:block;position:absolute;inset:0;touch-action:none;cursor:none}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+(() => {
+'use strict';
+
+/* ══════════════════════ CANVAS ══════════════════════ */
+const cvs = document.getElementById('c');
+const ctx = cvs.getContext('2d');
+const VW = 960, VH = 540;
+let dpr = 1, scale = 1, offX = 0, offY = 0, viewW = 0, viewH = 0;
+
+function resize(){
+  dpr = Math.min(devicePixelRatio || 1, 2);
+  viewW = innerWidth; viewH = innerHeight;
+  cvs.width  = Math.floor(viewW * dpr);
+  cvs.height = Math.floor(viewH * dpr);
+  cvs.style.width  = viewW + 'px';
+  cvs.style.height = viewH + 'px';
+  scale = Math.min(viewW / VW, viewH / VH);
+  offX = (viewW - VW * scale) / 2;
+  offY = (viewH - VH * scale) / 2;
+}
+addEventListener('resize', resize); resize();
+ctx.direction = 'rtl';
+
+const clamp = (v,a,b) => v < a ? a : v > b ? b : v;
+const rnd = (a,b) => a + Math.random()*(b-a);
+const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+const vary = (...args) => pick(args);
+
+/* ══════════════════════ DATA LOAD ══════════════════════ */
+let D3 = null;
+try { D3 = JSON.parse(localStorage.getItem('sh_game3_data') || 'null'); } catch(e){}
+const hasPlayedPart2 = !!(D3 && D3.readyForPart3 === true);
+
+const P1 = (D3 && D3.part1) || {};
+const P2 = (D3 && D3.part2) || {};
+const RW = (D3 && D3.realWorld) || {};
+
+const endType1 = P1.endType || 'enter';
+const endType2 = P2.endType || 'self_exit';
+const profile  = P1.profile || 'فضولي';
+const profileDesc = P1.profileDesc || 'أنت هنا الآن. هذا يكفي.';
+const p2Empathy = P2.empathy || 0;
+const p2Disobedience = P2.disobedience || 0;
+const p2Flags = P2.behaviorFlags || {};
+const p1Gaslit = P1.gaslitCount || 0;
+const p1Stats  = P1.stats || {};
+
+const unityAvailable = p2Empathy >= 2 || endType2 === 'merge';
+const loopNumber = (D3 && D3.cycleNumber) || 1;
+
+const endLabel2Map = { self_exit:'خرج وحده', entity_exit:'أخرجه', merge:'اندمج' };
+const endLabel1Map = { enter:'دخل', return:'رجع' };
+
+/* ══════════════════════ CONSTANTS ══════════════════════ */
+const GROUND_Y = 432;
+const WORLD_W  = 4400;
+const EXIT_X   = 4200;
+const SPEED    = 100;
+const STEP     = 1/60;
+
+/* ══════════════════════ AUDIO ══════════════════════ */
+let audioCtx = null, humGain = null, muted = false, masterGain = null, subBassGain = null;
+
+function initAudio(){
+  if (audioCtx) return;
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    audioCtx = new AC();
+    masterGain = audioCtx.createGain(); masterGain.gain.value = 1.0;
+    masterGain.connect(audioCtx.destination);
+
+    humGain = audioCtx.createGain(); humGain.gain.value = 0;
+    humGain.connect(masterGain);
+
+    const osc = (type, freq, g) => {
+      const o = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+      o.type = type; o.frequency.value = freq; gain.gain.value = g;
+      o.connect(gain); gain.connect(humGain); o.start();
+    };
+    osc('sine', 58, 0.5);
+    osc('sine', 58.3, 0.4);
+    osc('triangle', 87, 0.15);
+
+    subBassGain = audioCtx.createGain(); subBassGain.gain.value = 0.10;
+    subBassGain.connect(masterGain);
+    const sub = audioCtx.createOscillator(); sub.type='sine'; sub.frequency.value=32;
+    sub.connect(subBassGain); sub.start();
+
+    humGain.gain.linearRampToValueAtTime(0.16, audioCtx.currentTime + 6);
+  } catch(e){}
+}
+
+function blip(freq=280, dur=0.14, vol=0.10){
+  if (!audioCtx || muted) return;
+  const t = audioCtx.currentTime;
+  const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+  o.type='sine';
+  o.frequency.setValueAtTime(freq, t);
+  o.frequency.exponentialRampToValueAtTime(freq*0.6, t+dur);
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(vol, t+0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+  o.connect(g); g.connect(masterGain);
+  o.start(t); o.stop(t+dur+0.02);
+}
+
+function whisper(dur=0.9, vol=0.12){
+  if (!audioCtx || muted) return;
+  try {
+    const t = audioCtx.currentTime;
+    const size = Math.floor(audioCtx.sampleRate * dur);
+    const buf = audioCtx.createBuffer(1, size, audioCtx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i=0;i<size;i++){
+      const env = Math.sin(i/size * Math.PI);
+      d[i] = (Math.random()*2-1) * env * 0.5;
+    }
+    const src = audioCtx.createBufferSource(); src.buffer = buf;
+    const f = audioCtx.createBiquadFilter();
+    f.type='bandpass'; f.frequency.value = 500 + Math.random()*800; f.Q.value = 4;
+    const g = audioCtx.createGain();
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol, t+0.05);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+    src.connect(f); f.connect(g); g.connect(masterGain);
+    src.start(t); src.stop(t+dur+0.05);
+  } catch(e){}
+}
+
+function heartbeat(vol=0.18, rate=0.15){
+  if (!audioCtx || muted) return;
+  const t = audioCtx.currentTime;
+  [0, rate].forEach((offset, i) => {
+    const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+    o.type='sine';
+    o.frequency.setValueAtTime(66, t+offset);
+    o.frequency.exponentialRampToValueAtTime(26, t+offset+0.12);
+    g.gain.setValueAtTime(0, t+offset);
+    g.gain.linearRampToValueAtTime(vol*(i===0?1:0.7), t+offset+0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+offset+0.18);
+    o.connect(g); g.connect(masterGain);
+    o.start(t+offset); o.stop(t+offset+0.22);
+  });
+}
+
+function deepTone(freq=40, dur=2.0, vol=0.18){
+  if (!audioCtx || muted) return;
+  const t = audioCtx.currentTime;
+  const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+  o.type='sine';
+  o.frequency.setValueAtTime(freq, t);
+  o.frequency.linearRampToValueAtTime(freq*0.7, t+dur);
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(vol, t+0.15);
+  g.gain.linearRampToValueAtTime(0, t+dur);
+  o.connect(g); g.connect(masterGain);
+  o.start(t); o.stop(t+dur+0.1);
+}
+
+function warmChord(){
+  if (!audioCtx || muted) return;
+  const t = audioCtx.currentTime;
+  [196, 247, 294, 392].forEach((freq, i) => {
+    const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+    o.type='sine'; o.frequency.value = freq;
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(0.045, t+0.3+i*0.12);
+    g.gain.linearRampToValueAtTime(0, t+4.2);
+    o.connect(g); g.connect(masterGain);
+    o.start(t); o.stop(t+4.5);
+  });
+}
+
+function voidTone(){
+  if (!audioCtx || muted) return;
+  const t = audioCtx.currentTime;
+  const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+  o.type='sine'; o.frequency.setValueAtTime(70, t);
+  o.frequency.exponentialRampToValueAtTime(18, t+5);
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(0.15, t+0.3);
+  g.gain.linearRampToValueAtTime(0, t+5);
+  o.connect(g); g.connect(masterGain);
+  o.start(t); o.stop(t+5.2);
+}
+
+/* ══════════════════════ STATE ══════════════════════ */
+const G = {
+  phase: 'intro',
+  t: 0, startTime: 0,
+  x: 200, vx: 0, facing: 1, walkPhase: 0, camX: 0,
+
+  darkness: 0.15, darknessTarget: 0.15,
+  worldFade: 0,
+  lightSwing: 0,
+
+  msg: null, queue: [],
+
+  memories: [],
+  reflections: [],
+
+  choiceIndex: 0, choiceVisible: false, choiceReady: false,
+  finalEndType: '',
+
+  endTimer: 0, endFade: 0, savedFinal: false, restartReady: false,
+
+  shake: 0, invert: 0, invertTarget: 0,
+  heartbeatTimer: 0, whisperTimer: 0,
+
+  // إحصاءات داخلية
+  idleTime: 0, wasIdle: false, idleCount: 0,
+  stepsWalked: 0,
+  lastAutoLine: -99,
+
+  empathy: p2Empathy,
+  disobedience: p2Disobedience,
+};
+
+const keys = {};
+const pointerHeld = { left:false, right:false };
+
+/* ══════════════════════ MESSAGES ══════════════════════ */
+function say(text, o = {}){
+  G.queue.push({
+    text, delay: o.delay ?? 0.15, cps: o.cps ?? 24, hold: o.hold ?? 2.2,
+    size: o.size ?? 26, color: o.color ?? '#e8dcc0', style: o.style ?? 'normal',
+    speaker: o.speaker ?? null,
+    age: 0, audio: o.audio !== false,
+  });
+}
+function shadowSay(text, o = {}){
+  say(text, Object.assign({ color:'#c8b898', speaker:'The Shadow' }, o));
+}
+function innerSay(text, o = {}){
+  say(text, Object.assign({ color:'#a8b0c0', style:'italic', speaker:'You' }, o));
+}
+function memorySay(text, o = {}){
+  say(text, Object.assign({ color:'#b8a888', style:'whisper', speaker:'...' }, o));
+}
+
+function updateMessages(dt){
+  if (!G.msg && G.queue.length){
+    G.msg = G.queue.shift();
+    G.msg.age = 0;
+    if (G.msg.audio){
+      if (G.msg.style === 'whisper') whisper(1.0, 0.09);
+      else blip(220 + Math.random()*100, 0.14, 0.08);
+    }
+  }
+  if (G.msg){
+    G.msg.age += dt;
+    const tt = G.msg.text.length / G.msg.cps;
+    const total = G.msg.delay + tt + G.msg.hold;
+    if (G.msg.age >= total) G.msg = null;
+  }
+}
+
+/* ══════════════════════ SCRIPT ══════════════════════ */
+const triggers = [];
+function at(x, fn){ triggers.push({ x, done:false, fn }); }
+
+function buildScript(){
+  triggers.length = 0;
+
+  /* ─── الافتتاحية ─── */
+  at(0, () => {
+    say('...', { hold: 1.4, cps: 3, delay: 1.2 });
+
+    if (!D3){
+      say('لا أعرف كيف وصلت إلى هنا.', { hold: 2.2, cps: 10 });
+      say('لكن...', { hold: 1.4 });
+      say('الباب لا يزال هناك.', { hold: 2.4 });
+      say('مفتوحاً.', { hold: 2.2, color:'#d8c8a8' });
+    } else if (endType2 === 'self_exit'){
+      say('خرجت.', { hold: 2.0, cps: 8 });
+      say('ولم تلتفت.', { hold: 2.4 });
+      say('لكن...', { hold: 1.6 });
+      say('أين أنت الآن؟', { hold: 2.6 });
+      say('المكان الذي خرجت إليه...', { hold: 2.6 });
+      say('ليس خارجه.', { hold: 2.6, color:'#d8c8a8' });
+      say('الباب الذي خرجت منه...', { hold: 2.4 });
+      say('لا يزال أمامك.', { hold: 2.6 });
+      say('وهو مفتوح.', { hold: 2.6, color:'#d8c8a8' });
+    } else if (endType2 === 'entity_exit'){
+      say('أخرجته.', { hold: 2.0, cps: 8 });
+      say('وبقيت أنت.', { hold: 2.4 });
+      say('قلت "لن أنساك".', { hold: 2.6 });
+      say('لكن...', { hold: 1.6 });
+      say('الآن...', { hold: 1.6 });
+      say('أنا فيك.', { hold: 2.6, color:'#d8c8a8' });
+      say('صوتي صار صوتك.', { hold: 2.6 });
+      say('ومكاني...', { hold: 1.8 });
+      say('صار مكانك.', { hold: 2.6, color:'#d8c8a8' });
+    } else {
+      say('أنتما الآن واحد.', { hold: 2.4, cps: 8 });
+      say('أو...', { hold: 1.6 });
+      say('واحد آخر.', { hold: 2.4 });
+      say('تسمع صوته في رأسك.', { hold: 2.6 });
+      say('تسمع نفسك.', { hold: 2.4 });
+      say('لا تعرف من يتكلم.', { hold: 2.6, color:'#d8c8a8' });
+      say('الظل وأنت.', { hold: 2.2 });
+      say('الآن...', { hold: 1.6 });
+      say('لا فرق.', { hold: 2.6, color:'#d8c8a8' });
+    }
+  });
+
+  /* ─── البداية ─── */
+  at(140, () => {
+    say('امشِ.', { hold: 2.0, cps: 10 });
+    say('لا يوجد طريق آخر.', { hold: 2.4 });
+    say('لم يكن هناك طريق آخر أبداً.', { hold: 2.8, style:'whisper' });
+  });
+
+  /* ─── الذكرى الأولى: الباب الأول ─── */
+  at(380, () => {
+    spawnReflection(520, 'door');
+    memorySay('...', { hold: 1.4, cps: 3 });
+    memorySay('هذا...', { hold: 1.6 });
+    memorySay('هذا أنا.', { hold: 2.2 });
+    memorySay('في البداية.', { hold: 2.4 });
+    say('كنت هنا من قبل.', { hold: 2.4, color:'#d8c8a8' });
+    say('لم تكن تعرف.', { hold: 2.4, style:'whisper' });
+  });
+
+  /* ─── الذكرى الثانية: الظل ─── */
+  at(780, () => {
+    spawnReflection(920, 'shadow');
+    memorySay('...', { hold: 1.4, cps: 3 });
+    memorySay('وهذا...', { hold: 1.6 });
+    memorySay('هذا هو.', { hold: 2.2 });
+    memorySay('الظل.', { hold: 2.2, color:'#d8c8a8' });
+    if (endType2 === 'self_exit'){
+      say('الذي تركته خلفك.', { hold: 2.6, color:'#c8a888' });
+    } else if (endType2 === 'entity_exit'){
+      say('الذي أخرجته.', { hold: 2.6 });
+      say('الذي... تركني.', { hold: 2.6, color:'#c8a888', style:'whisper' });
+    } else {
+      say('الذي صار أنت.', { hold: 2.6, color:'#d8c8a8' });
+      say('الذي... أنا.', { hold: 2.6, style:'whisper' });
+    }
+  });
+
+  /* ─── الاعتراف ─── */
+  at(1200, () => {
+    say('كل هذا كان أنت.', { hold: 2.6, cps: 10 });
+    say('الباب.', { hold: 1.8 });
+    say('الظل.', { hold: 1.8 });
+    say('الطريق.', { hold: 1.8 });
+    say('كله...', { hold: 1.6 });
+    say('أنت.', { hold: 2.8, color:'#d8c8a8' });
+  });
+
+  /* ─── المرآة ─── */
+  at(1600, () => {
+    G.darknessTarget = 0.30;
+    say('الباب لم يكن باباً.', { hold: 2.8, cps: 10 });
+    say('كان مرآة.', { hold: 2.8, color:'#d8c8a8' });
+    say('كل مرة دخلت.', { hold: 2.4 });
+    say('كنت ترى نفسك.', { hold: 2.6 });
+    say('وكل مرة خرجت.', { hold: 2.4 });
+    say('كنت ترى نفسك.', { hold: 2.6 });
+    say('وهكذا...', { hold: 1.8 });
+    say('دائماً.', { hold: 2.8, color:'#c8a888', style:'whisper' });
+  });
+
+  /* ─── الوعي ─── */
+  at(2050, () => {
+    say('لكن...', { hold: 1.6, cps: 10 });
+    if (endType2 === 'self_exit'){
+      say('لماذا تركتني؟', { hold: 2.6, color:'#c8a888' });
+      say('لماذا لم تلتفت؟', { hold: 2.6 });
+    } else if (endType2 === 'entity_exit'){
+      say('لماذا أخرجتني؟', { hold: 2.6, color:'#c8a888' });
+      say('لماذا... أنقذتني؟', { hold: 2.6 });
+    } else {
+      say('لماذا... قبلتني؟', { hold: 2.6, color:'#c8a888' });
+      say('لماذا لم تخف مني؟', { hold: 2.6 });
+    }
+    say('كنت أظن...', { hold: 1.8 });
+    say('أنني سأكون وحيداً.', { hold: 2.6, color:'#c8a888' });
+  });
+
+  /* ─── الظهور ─── */
+  at(2450, () => {
+    spawnReflection(2900, 'figure');
+    say('لكنني لم أكن.', { hold: 2.4, cps: 10 });
+    say('أنت كنت هناك.', { hold: 2.6 });
+    say('دائماً.', { hold: 2.6, color:'#d8c8a8' });
+    say('حتى عندما لم أرَك.', { hold: 2.8, style:'whisper' });
+  });
+
+  /* ─── الاستعداد للنهاية ─── */
+  at(2900, () => {
+    G.darknessTarget = 0.42;
+    say('اقتربنا.', { hold: 2.0, cps: 10 });
+    say('الباب.', { hold: 1.6 });
+    say('مرة أخرى.', { hold: 2.4 });
+    say('لكن هذه المرة...', { hold: 2.0 });
+    say('أنت من يقرر.', { hold: 2.6, color:'#d8c8a8' });
+  });
+
+  /* ─── الاعتراف الأخير ─── */
+  at(3300, () => {
+    say('سأقول لك شيئاً.', { hold: 2.2, cps: 10 });
+    say('لم أقله لأحد من قبل.', { hold: 2.6 });
+    say('كل من مر من هنا...', { hold: 2.4 });
+    say('كل من اخترت.', { hold: 2.2 });
+    say('كل من أنقذت.', { hold: 2.2 });
+    say('كل من... تركت.', { hold: 2.4, color:'#c8a888' });
+    say('كلهم...', { hold: 1.8 });
+    say('أنا.', { hold: 2.8, color:'#d8c8a8' });
+    say('وكلهم...', { hold: 1.8 });
+    say('أنت.', { hold: 2.8, color:'#d8c8a8' });
+  });
+
+  /* ─── الانكشاف ─── */
+  at(3600, () => {
+    say('الباب الأخير.', { hold: 2.4, cps: 10 });
+    say('ليس باباً.', { hold: 2.0 });
+    say('هو...', { hold: 1.8 });
+    say('شخص.', { hold: 2.6, color:'#d8c8a8' });
+    say('على الجهة الأخرى.', { hold: 2.6 });
+    say('ينتظر.', { hold: 2.2 });
+    say('مثلك تماماً.', { hold: 2.6 });
+    say('قبل أن تدخل.', { hold: 2.6, style:'whisper' });
+  });
+
+  /* ─── التهيئة للاختيار ─── */
+  at(3900, () => {
+    say('ماذا تفعل؟', { hold: 2.8, cps: 12, color:'#d8c8a8' });
+  });
+}
+
+/* ══════════════════════ REFLECTIONS (ذكريات بصرية) ══════════════════════ */
+function spawnReflection(atX, kind){
+  G.reflections.push({
+    x: atX, kind,
+    alpha: 0, targetAlpha: kind === 'figure' ? 0.6 : 0.45,
+    life: 5.5, walkPhase: Math.random()*10,
+    facing: kind === 'shadow' ? -1 : 1,
+  });
+}
+
+function updateReflections(dt){
+  for (let i = G.reflections.length-1; i >= 0; i--){
+    const r = G.reflections[i];
+    r.life -= dt;
+    r.walkPhase += dt * 3;
+    if (r.life > 4.5) r.alpha = Math.min(r.targetAlpha, r.alpha + dt*0.5);
+    else if (r.life > 1) r.alpha = r.targetAlpha;
+    else r.alpha = Math.max(0, r.life/1) * r.targetAlpha;
+    if (r.life <= 0) G.reflections.splice(i, 1);
+  }
+}
+
+/* ══════════════════════ START ══════════════════════ */
+let started = false;
+
+function start(){
+  if (started) return;
+  if (!hasPlayedPart2) return;
+  started = true;
+  initAudio();
+  G.phase = 'play';
+  G.startTime = G.t;
+  buildScript();
+  deepTone(45, 4, 0.16);
+  warmChord();
+}
+
+/* ══════════════════════ MOVEMENT ══════════════════════ */
+function updateMovement(dt){
+  let left  = keys['ArrowLeft']  || keys['KeyA'] || pointerHeld.left;
+  let right = keys['ArrowRight'] || keys['KeyD'] || pointerHeld.right;
+
+  if (G.invert > 0.5){ const tmp = left; left = right; right = tmp; }
+
+  const dir = (right?1:0) - (left?1:0);
+
+  if (dir !== 0){
+    G.vx += (dir * SPEED - G.vx) * Math.min(1, dt*9);
+    G.facing = dir;
+  } else {
+    G.vx -= G.vx * Math.min(1, dt*12);
+    if (Math.abs(G.vx) < 3) G.vx = 0;
+  }
+
+  G.walkPhase += dt * 9 * Math.min(1, Math.abs(G.vx)/SPEED);
+  const before = G.x;
+  G.x += G.vx * dt;
+  G.stepsWalked += Math.abs(G.x - before) / 26;
+
+  if (G.x < 40){ G.x = 40; G.vx = 0; }
+
+  const limit = EXIT_X - 60;
+  if (G.x > limit){
+    G.x = limit; G.vx = 0;
+    if (G.phase === 'play'){
+      G.phase = 'choice';
+      G.choiceIndex = 0;
+      G.choiceVisible = true;
+      G.msg = null; G.queue.length = 0;
+      blip(140, 0.8, 0.15);
+      deepTone(50, 2.5, 0.18);
+      say('...', { hold: 1.2, cps: 3, delay: 0.3 });
+      say('وصلت.', { hold: 2.0, cps: 10 });
+      say('مثلي.', { hold: 2.2, color:'#d8c8a8' });
+      say('لكن هذه المرة...', { hold: 2.0 });
+      say('لديك خيار.', { hold: 2.6, color:'#d8c8a8' });
+    }
+  }
+}
+
+/* ══════════════════════ STATS ══════════════════════ */
+function updateStats(dt){
+  const moving = Math.abs(G.vx) > 10;
+  if (moving){ G.idleTime = 0; G.wasIdle = false; }
+  else {
+    G.idleTime += dt;
+    if (G.idleTime > 1.5 && !G.wasIdle){
+      G.idleCount++;
+      G.wasIdle = true;
+    }
+  }
+}
+
+/* ══════════════════════ CHOICE ══════════════════════ */
+function confirmChoice(){
+  if (G.choiceIndex === 0) G.finalEndType = 'void';
+  else if (G.choiceIndex === 1) G.finalEndType = 'loop';
+  else G.finalEndType = 'unity';
+
+  G.phase = 'ending';
+  G.endTimer = 0;
+  G.msg = null; G.queue.length = 0;
+  G.choiceVisible = false;
+
+  saveFinalEnding();
+
+  if (G.finalEndType === 'void'){
+    blip(120, 1.2, 0.16);
+    voidTone();
+    say('...', { hold: 1.2, cps: 3 });
+    say('لا.', { hold: 2.0, cps: 8 });
+    say('لا.', { hold: 2.0 });
+    say('لن تدخل.', { hold: 2.6, color:'#d8c8a8' });
+    say('لن تكون أنا.', { hold: 2.6 });
+    say('...', { hold: 1.4, cps: 3 });
+    say('هذه المرة...', { hold: 2.0 });
+    say('آخر مرة.', { hold: 2.6, style:'whisper' });
+  } else if (G.finalEndType === 'loop'){
+    blip(200, 0.8, 0.12);
+    deepTone(30, 3, 0.16);
+    say('...', { hold: 1.2, cps: 3 });
+    say('لا شيء.', { hold: 2.0, cps: 8 });
+    say('أتركه يدخل.', { hold: 2.4 });
+    say('كما تُركت أنا.', { hold: 2.6, color:'#c8a888' });
+    say('هكذا...', { hold: 1.8 });
+    say('كان دائماً.', { hold: 2.8 });
+    say('هكذا...', { hold: 1.8 });
+    say('سيكون.', { hold: 2.8, color:'#d8c8a8' });
+  } else {
+    blip(260, 0.6, 0.12);
+    warmChord();
+    say('...', { hold: 1.2, cps: 3 });
+    say('يدي.', { hold: 1.8, cps: 8 });
+    say('أمدها.', { hold: 2.0 });
+    say('وكأنها...', { hold: 1.8 });
+    say('ليست يدي.', { hold: 2.4 });
+    say('يدي ويدك.', { hold: 2.4 });
+    say('أيدينا.', { hold: 2.6, color:'#d8c8a8' });
+    say('...', { hold: 1.4, cps: 3 });
+    say('نخرج.', { hold: 2.4 });
+    say('أخيراً.', { hold: 3.0, style:'whisper' });
+  }
+
+  const mins = Math.floor(G.t/60);
+  const secs = Math.floor(G.t%60);
+  say(
+    `كنت هنا ${mins} دقيقة و${secs} ثانية.\nمشيت ${Math.round(G.stepsWalked)} خطوة.\nتوقفت ${G.idleCount} مرة.`,
+    { hold: 7.0, cps: 40, size: 20, delay: 1.0, color:'#a8a898' }
+  );
+
+  if (G.empathy >= 2){
+    say('كنت مختلفاً.', { hold: 2.8, color:'#d8c8a8' });
+  }
+}
+
+/* ══════════════════════ ENDING ══════════════════════ */
+function updateEnding(dt){
+  G.endTimer += dt;
+  if (!G.msg && G.queue.length === 0 && G.endTimer > 7){
+    G.phase = 'end';
+    G.endTimer = 0;
+    G.endFade = 0;
+  }
+}
+
+function updateEnd(dt){
+  G.endTimer += dt;
+  G.endFade = Math.min(1, G.endTimer / 3);
+
+  if (G.endTimer > 2 && G.endTimer < 2.2){
+    if (G.finalEndType === 'void') voidTone();
+    else if (G.finalEndType === 'unity') warmChord();
+    else deepTone(30, 4, 0.14);
+  }
+
+  if (G.endTimer > 14 && !G.restartReady){
+    G.restartReady = true;
+  }
+}
+
+/* ══════════════════════ SAVE FINAL ENDING ══════════════════════ */
+function saveFinalEnding(){
+  try {
+    const now = new Date();
+    const existing = D3 || {};
+    const cycles = (existing.cycleNumber || 0) + 1;
+
+    const data = {
+      ...existing,
+      part3: {
+        endType: G.finalEndType,
+        endTypeLabel: { loop:'الحلقة', void:'الفراغ', unity:'الوحدة' }[G.finalEndType],
+        playTime: parseFloat(G.t.toFixed(2)),
+        playTimeMinutes: Math.floor(G.t/60),
+        playTimeSeconds: Math.floor(G.t%60),
+        choiceMade: G.choiceIndex,
+        stepsWalked: Math.round(G.stepsWalked),
+        idleCount: G.idleCount,
+        unityAvailable,
+        completedAt: now.getTime(),
+      },
+      completed: true,
+      completedAt: now.getTime(),
+      cycleNumber: cycles,
+    };
+
+    localStorage.setItem('sh_game3_data', JSON.stringify(data));
+    localStorage.setItem('sh_game3_completed', 'true');
+    G.savedFinal = true;
+    return true;
+  } catch(e){
+    console.warn('[SHADOW] فشل حفظ النهاية النهائية:', e);
+    return false;
+  }
+}
+
+function restartLoop(){
+  try {
+    localStorage.removeItem('sh_game3_data');
+    localStorage.removeItem('sh_game3_ready');
+    localStorage.removeItem('sh_game3_completed');
+    localStorage.removeItem('sh_game2_data');
+    localStorage.removeItem('sh_last_end_type_part2');
+  } catch(e){}
+  try { window.location.href = 'game1.html'; }
+  catch(e){ try { location.href = 'game1.html'; } catch(_){ location.reload(); } }
+}
+
+/* ══════════════════════ UPDATE MAIN ══════════════════════ */
+function update(dt){
+  G.t += dt;
+
+  if (started){
+    G.worldFade = clamp((G.t - G.startTime - 1)/5, 0, 1);
+    if (G.darknessTarget > G.darkness)
+      G.darkness += (G.darknessTarget - G.darkness) * Math.min(1, dt*0.4);
+    else if (G.darknessTarget < G.darkness)
+      G.darkness -= (G.darkness - G.darknessTarget) * Math.min(1, dt*0.3);
+  }
+
+  G.shake = Math.max(0, G.shake - dt*8);
+  G.invert += (G.invertTarget - G.invert) * Math.min(1, dt*4);
+
+  if (audioCtx && humGain && !muted){
+    const target = 0.16 + Math.sin(G.t*0.25)*0.035;
+    humGain.gain.setTargetAtTime(target, audioCtx.currentTime, 0.25);
+  }
+  if (subBassGain && audioCtx){
+    const target = 0.10 + Math.sin(G.t*0.35)*0.025;
+    subBassGain.gain.setTargetAtTime(target, audioCtx.currentTime, 0.5);
+  }
+
+  if (!started) return;
+  updateMessages(dt);
+
+  if (G.phase === 'choice'){
+    G.heartbeatTimer += dt;
+    if (G.heartbeatTimer > 1.15){ G.heartbeatTimer = 0; heartbeat(0.13); }
+    return;
+  }
+  if (G.phase === 'ending'){ updateEnding(dt); return; }
+  if (G.phase === 'end'){ updateEnd(dt); return; }
+  if (G.phase !== 'play') return;
+
+  updateMovement(dt);
+  updateStats(dt);
+  updateReflections(dt);
+
+  for (const tr of triggers){
+    if (!tr.done && G.x >= tr.x){
+      tr.done = true;
+      tr.fn();
+    }
+  }
+
+  G.heartbeatTimer += dt * (0.4 + G.darkness*0.4);
+  if (G.heartbeatTimer > 2.2 - G.darkness*0.8){
+    G.heartbeatTimer = 0;
+    if (G.darkness > 0.2) heartbeat(0.09 + G.darkness*0.07);
+  }
+
+  G.whisperTimer += dt;
+  if (G.whisperTimer > rnd(9, 17)){
+    G.whisperTimer = 0;
+    whisper(rnd(0.8, 1.3), 0.05);
+  }
+
+  const targetCam = clamp(G.x - VW*0.35, 0, WORLD_W - VW);
+  G.camX += (targetCam - G.camX) * Math.min(1, dt*3);
+}
+
+/* ══════════════════════ DRAWING ══════════════════════ */
+function drawFigureBody(px, py, facing, walkPhase, moving, color, opts){
+  opts = opts || {};
+  const tall = !!opts.tall;
+  const eyes = opts.eyes || 0;
+
+  ctx.save();
+  ctx.translate(px, py);
+  ctx.scale(facing, 1);
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+
+  const sw  = moving ? Math.sin(walkPhase) : 0;
+  const sw2 = moving ? Math.sin(walkPhase + Math.PI) : 0;
+
+  const hipY      = tall ? -46 : -32;
+  const shoulderY = tall ? -76 : -52;
+  const headY     = tall ? -88 : -64;
+  const headR     = tall ? 7 : 8.5;
+
+  ctx.lineWidth = tall ? 5 : 7;
+  ctx.beginPath();
+  ctx.moveTo(0, hipY); ctx.lineTo(sw*12, -2);
+  ctx.moveTo(0, hipY); ctx.lineTo(sw2*12, -2);
+  ctx.stroke();
+
+  ctx.lineWidth = tall ? 11 : 14;
+  ctx.beginPath();
+  ctx.moveTo(0, hipY); ctx.lineTo(0, shoulderY);
+  ctx.stroke();
+
+  ctx.lineWidth = tall ? 4 : 6;
+  ctx.beginPath();
+  if (tall){
+    ctx.moveTo(0, shoulderY);
+    ctx.quadraticCurveTo(sw2*12, -50, sw2*15, -18);
+    ctx.moveTo(0, shoulderY);
+    ctx.quadraticCurveTo(sw*12, -50, sw*15, -18);
+  } else {
+    ctx.moveTo(0, shoulderY); ctx.lineTo(sw2*11, -33);
+    ctx.moveTo(0, shoulderY); ctx.lineTo(sw*11, -33);
+  }
+  ctx.stroke();
+
+  if (tall){
+    ctx.beginPath();
+    ctx.ellipse(0, headY, headR-1, headR+1, 0, 0, Math.PI*2);
+    ctx.fill();
+  } else {
+    ctx.beginPath();
+    ctx.arc(1, headY, headR, 0, Math.PI*2);
+    ctx.fill();
+  }
+
+  if (eyes > 0.05 && tall){
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    const glow = eyes * (0.7 + Math.sin(G.t*3)*0.3);
+    const ec = 'rgba(255,220,150,' + glow + ')';
+    ctx.fillStyle = ec;
+    ctx.shadowColor = ec;
+    ctx.shadowBlur = 10 * eyes;
+    const eyeY = headY - 1;
+    ctx.beginPath();
+    ctx.arc(3, eyeY, 1.7, 0, Math.PI*2);
+    ctx.arc(-2, eyeY, 1.7, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+function drawNameTag(text, x, y, alpha, color){
+  ctx.save();
+  ctx.direction = 'ltr';
+  ctx.globalAlpha = alpha;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = '600 11px Georgia,"Times New Roman",serif';
+  ctx.fillStyle = color || '#e8dcc0';
+  ctx.shadowColor = 'rgba(0,0,0,0.9)';
+  ctx.shadowBlur = 8;
+  ctx.fillText(text, x, y);
+  ctx.restore();
+}
+
+function drawPillars(par, color, spacing, offset){
+  const shift = ((G.camX*par + offset) % spacing + spacing) % spacing;
+  ctx.fillStyle = color;
+  for (let i = -1; i*spacing - shift < VW + spacing; i++){
+    const x = Math.round(i*spacing - shift);
+    const h = 60 + ((i%4)*18);
+    ctx.fillRect(x, h, 20, GROUND_Y - h);
+    ctx.fillRect(x-6, h-10, 32, 12);
+  }
+}
+
+function drawWorld(){
+  const dark = G.darkness;
+
+  const sky = ctx.createLinearGradient(0, 0, 0, VH);
+  sky.addColorStop(0,    dark < 0.4 ? '#0e0a06' : '#060403');
+  sky.addColorStop(0.55, dark < 0.4 ? '#181008' : '#0a0603');
+  sky.addColorStop(1,    dark < 0.4 ? '#100a06' : '#080402');
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, VW, VH);
+
+  const lightSwing = Math.sin(G.t * 0.35) * 30;
+  const lightGrad = ctx.createRadialGradient(VW/2 + lightSwing, 50, 20, VW/2 + lightSwing, 50, 500);
+  lightGrad.addColorStop(0, `rgba(255,190,110,${0.10 * (1 - dark*0.6)})`);
+  lightGrad.addColorStop(0.5, `rgba(180,120,50,${0.04 * (1 - dark*0.6)})`);
+  lightGrad.addColorStop(1, 'rgba(60,30,0,0)');
+  ctx.fillStyle = lightGrad;
+  ctx.fillRect(0, 0, VW, VH*0.8);
+
+  drawPillars(0.14, 'rgba(30,22,14,0.9)', 380, 0);
+  drawPillars(0.28, 'rgba(45,32,20,0.6)', 280, 70);
+
+  const gg = ctx.createLinearGradient(0, GROUND_Y-100, 0, GROUND_Y+8);
+  gg.addColorStop(0,   'rgba(160,115,55,0)');
+  gg.addColorStop(0.7, 'rgba(150,105,45,' + (0.10*(1-dark*0.6)) + ')');
+  gg.addColorStop(1,   'rgba(200,150,80,' + (0.16*(1-dark*0.7)) + ')');
+  ctx.fillStyle = gg;
+  ctx.fillRect(0, GROUND_Y-100, VW, 108);
+
+  ctx.fillStyle = 'rgba(200,150,80,' + (0.20*(1-dark*0.6)) + ')';
+  ctx.fillRect(0, GROUND_Y, VW, 1.5);
+  ctx.fillStyle = '#080503';
+  ctx.fillRect(0, GROUND_Y+1, VW, VH-GROUND_Y);
+
+  // الانعكاسات / الذكريات
+  for (const r of G.reflections){
+    const rx = r.x - G.camX;
+    if (rx < -200 || rx > VW+200) continue;
+
+    if (r.kind === 'door'){
+      const g = ctx.createRadialGradient(rx, GROUND_Y-90, 10, rx, GROUND_Y-90, 160);
+      g.addColorStop(0, `rgba(255,220,140,${r.alpha*0.4})`);
+      g.addColorStop(1, 'rgba(255,180,80,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(rx-180, GROUND_Y-250, 360, 280);
+
+      ctx.save();
+      ctx.globalAlpha = r.alpha;
+      ctx.fillStyle = '#221508';
+      ctx.fillRect(rx-38, GROUND_Y-160, 76, 160);
+      const pg = ctx.createLinearGradient(0, GROUND_Y-150, 0, GROUND_Y);
+      pg.addColorStop(0, 'rgba(255,235,180,0.8)');
+      pg.addColorStop(1, 'rgba(255,190,90,0.3)');
+      ctx.fillStyle = pg;
+      ctx.fillRect(rx-30, GROUND_Y-150, 60, 150);
+      ctx.restore();
+    } else if (r.kind === 'shadow' || r.kind === 'figure'){
+      ctx.save();
+      ctx.globalAlpha = r.alpha;
+      const bodyColor = r.kind === 'shadow'
+        ? 'rgba(20,14,8,0.9)'
+        : 'rgba(180,150,100,0.7)';
+      drawFigureBody(rx, GROUND_Y, r.facing, r.walkPhase, true, bodyColor,
+        { tall: r.kind === 'shadow', eyes: r.kind === 'shadow' ? 0.7 : 0 });
+      ctx.restore();
+      if (r.kind === 'shadow'){
+        drawNameTag('The Shadow', rx, GROUND_Y - 112, r.alpha*0.6, '#ffd27a');
+      }
+    }
+  }
+
+  drawFinalDoor();
+  drawPlayer();
+}
+
+function drawFinalDoor(){
+  const x = EXIT_X - G.camX;
+  if (x < -260 || x > VW+260) return;
+
+  const g = ctx.createRadialGradient(x, GROUND_Y-100, 10, x, GROUND_Y-100, 260);
+  g.addColorStop(0, 'rgba(255,220,150,0.55)');
+  g.addColorStop(0.4, 'rgba(255,180,90,0.2)');
+  g.addColorStop(1, 'rgba(255,180,90,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(x-280, GROUND_Y-340, 560, 400);
+
+  // الإطار
+  ctx.fillStyle = '#1f140a';
+  ctx.fillRect(x-70, GROUND_Y-230, 140, 230);
+
+  // الضوء داخل الباب
+  const pGrad = ctx.createLinearGradient(0, GROUND_Y-220, 0, GROUND_Y);
+  pGrad.addColorStop(0, 'rgba(255,240,200,0.95)');
+  pGrad.addColorStop(0.45, 'rgba(255,215,140,0.7)');
+  pGrad.addColorStop(1, 'rgba(255,190,90,0.35)');
+  ctx.fillStyle = pGrad;
+  ctx.fillRect(x-58, GROUND_Y-220, 116, 220);
+
+  // نبض
+  const pulse = Math.sin(G.t*1.2)*0.3 + 0.7;
+  ctx.strokeStyle = `rgba(255,220,150,${0.35*pulse})`;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(x-58, GROUND_Y-220, 116, 220);
+
+  // الشكل داخل الباب (الشخص الآخر)
+  const figureAlpha = G.phase === 'play'
+    ? 0.25 + Math.max(0, (G.x - 3200)/1000) * 0.5
+    : 0.8;
+  if (figureAlpha > 0.05){
+    ctx.save();
+    ctx.globalAlpha = figureAlpha * (0.8 + Math.sin(G.t*1.5)*0.15);
+    drawFigureBody(x, GROUND_Y, 1, 0, false, 'rgba(40,25,12,0.9)', { tall: false });
+    ctx.restore();
+  }
+}
+
+function drawPlayer(){
+  const px = G.x - G.camX;
+  const py = GROUND_Y;
+
+  const g = ctx.createRadialGradient(px, py-40, 6, px, py-40, 100);
+  g.addColorStop(0, 'rgba(220,200,160,0.12)');
+  g.addColorStop(1, 'rgba(220,200,160,0)');
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(px, py-40, 100, 0, 7);
+  ctx.fill();
+
+  drawFigureBody(px, py, G.facing, G.walkPhase, Math.abs(G.vx) > 10, '#c8b898');
+  drawNameTag('You', px, py - 90, 0.65, '#e8dcc0');
+}
+
+function drawMessage(){
+  const m = G.msg;
+  if (!m) return;
+
+  const tt = m.text.length / m.cps;
+  const total = m.delay + tt + m.hold;
+  if (m.age < m.delay) return;
+
+  const typed = Math.min(m.text.length, Math.floor((m.age - m.delay) * m.cps));
+  const shown = m.text.slice(0, typed);
+
+  let alpha = 1;
+  if (m.age < m.delay + 0.4) alpha = (m.age - m.delay) / 0.4;
+  else if (m.age > total - 0.8) alpha = Math.max(0, (total - m.age) / 0.8);
+
+  const fullLines = m.text.split('\n');
+  const typedLines = shown.split('\n');
+  const lineH = m.size * 1.55;
+  const totalH = fullLines.length * lineH;
+  const baseY = VH*0.28 - totalH/2;
+
+  ctx.save();
+  ctx.globalAlpha = alpha * 0.95;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = `500 ${m.size}px system-ui,'Segoe UI',Tahoma,'Noto Sans Arabic',sans-serif`;
+  ctx.fillStyle = m.color;
+  ctx.shadowColor = 'rgba(0,0,0,0.95)';
+  ctx.shadowBlur = 16;
+
+  if (m.style === 'whisper'){
+    ctx.globalAlpha *= 0.6 + Math.sin(G.t*8)*0.1;
+    ctx.shadowBlur = 8;
+  } else if (m.style === 'italic'){
+    ctx.font = `italic 400 ${m.size-2}px system-ui,'Segoe UI',Tahoma,'Noto Sans Arabic',sans-serif`;
+    ctx.globalAlpha *= 0.72;
+  }
+
+  if (m.speaker && typed > 0){
+    ctx.save();
+    ctx.globalAlpha *= 0.85;
+    ctx.direction = 'ltr';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '600 13px Georgia,"Times New Roman",serif';
+    ctx.fillStyle = m.color;
+    ctx.shadowColor = 'rgba(0,0,0,0.95)';
+    ctx.shadowBlur = 10;
+    ctx.fillText(m.speaker, VW/2, baseY - 16);
+    ctx.restore();
+  }
+
+  typedLines.forEach((line, i) => {
+    ctx.fillText(line, VW/2, baseY + lineH*(i+0.5));
+  });
+  ctx.restore();
+}
+
+function drawVignette(){
+  if (!drawVignette._c){
+    const c = document.createElement('canvas');
+    c.width = VW; c.height = VH;
+    const cx = c.getContext('2d');
+    const g = cx.createRadialGradient(VW/2, VH/2, VH*0.32, VW/2, VH/2, VH*0.95);
+    g.addColorStop(0, 'rgba(0,0,0,0)');
+    g.addColorStop(1, 'rgba(0,0,0,0.88)');
+    cx.fillStyle = g;
+    cx.fillRect(0, 0, VW, VH);
+    drawVignette._c = c;
+  }
+  ctx.drawImage(drawVignette._c, 0, 0);
+
+  if (G.darkness > 0.1){
+    ctx.fillStyle = `rgba(0,0,0,${G.darkness*0.5})`;
+    ctx.fillRect(0, 0, VW, VH);
+  }
+}
+
+function drawGrain(){
+  if (!drawGrain._c){
+    const gw = 480, gh = 270;
+    const c = document.createElement('canvas');
+    c.width = gw; c.height = gh;
+    const gctx = c.getContext('2d');
+    const img = gctx.createImageData(gw, gh);
+    for (let i=0; i<img.data.length; i+=4){
+      const v = Math.floor(Math.random()*255);
+      img.data[i] = v; img.data[i+1] = v*0.95; img.data[i+2] = v*0.85;
+      img.data[i+3] = 40;
+    }
+    gctx.putImageData(img, 0, 0);
+    drawGrain._c = c;
+  }
+  const ox = (Math.random()-0.5)*16;
+  const oy = (Math.random()-0.5)*16;
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  ctx.globalAlpha = 0.14 + G.darkness*0.1;
+  ctx.drawImage(drawGrain._c, ox, oy, VW, VH);
+  ctx.restore();
+}
+
+function drawChoice(){
+  ctx.save();
+
+  const g = ctx.createLinearGradient(0, VH*0.40, 0, VH*0.85);
+  g.addColorStop(0, 'rgba(0,0,0,0)');
+  g.addColorStop(0.4, 'rgba(0,0,0,0.78)');
+  g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, VH*0.40, VW, VH*0.45);
+
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  ctx.font = '400 16px system-ui,Tahoma,sans-serif';
+  ctx.fillStyle = 'rgba(200,180,140,0.6)';
+  ctx.fillText('ماذا تفعل؟', VW/2, VH*0.46);
+
+  const opts = [
+    { text: 'احذره',   sub: 'كسر الحلقة. ثم اختفِ.' },
+    { text: 'اسكت',    sub: 'دعه يأخذ مكانك.' },
+  ];
+  if (unityAvailable) opts.push({ text: 'خذ بيده', sub: 'اخرجا. أخيراً.' });
+
+  opts.forEach((opt, i) => {
+    const y = VH*0.58 + i*62;
+    const sel = i === G.choiceIndex;
+    ctx.globalAlpha = sel ? 1 : 0.38;
+    ctx.font = `500 ${sel ? 30 : 26}px system-ui,Tahoma,sans-serif`;
+
+    if (sel){
+      ctx.shadowColor = 'rgba(255,210,140,0.6)';
+      ctx.shadowBlur = 24;
+      ctx.fillStyle = '#f0dcb0';
+    } else {
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = '#9c8f7a';
+    }
+    ctx.fillText(opt.text, VW/2, y);
+
+    if (sel){
+      ctx.shadowBlur = 0;
+      ctx.globalAlpha = 0.7;
+      ctx.fillStyle = 'rgba(220,190,140,0.7)';
+      ctx.font = '14px system-ui,Tahoma,sans-serif';
+      ctx.fillText(opt.sub, VW/2, y + 26);
+    }
+  });
+  ctx.restore();
+}
+
+function drawEnd(){
+  if (G.endFade <= 0) return;
+  ctx.fillStyle = `rgba(0,0,0,${G.endFade})`;
+  ctx.fillRect(0, 0, VW, VH);
+
+  // اسم النهاية
+  if (G.endTimer > 3){
+    const a = Math.min(1, (G.endTimer-3)/1.5) * (0.6 + Math.sin(G.t*1.0)*0.1);
+    ctx.save();
+    ctx.globalAlpha = a;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    let label = '', sub = '', color = '#d8c8a0', subColor = '#a89870';
+    if (G.finalEndType === 'void'){
+      label = 'الفراغ';
+      sub = 'لا باب. لا ظل. لا شيء. أنت.';
+      color = '#c8d8e8';
+      subColor = '#8a98b0';
+    } else if (G.finalEndType === 'loop'){
+      label = 'الحلقة';
+      sub = 'الباب لا يزال هناك. لشخص آخر.';
+      color = '#d8b898';
+    } else {
+      label = 'الوحدة';
+      sub = 'كلّك. أخيراً. اكتملت.';
+      color = '#e8d0a0';
+      subColor = '#d8b880';
+    }
+
+    ctx.font = '300 44px system-ui,Tahoma,"Noto Sans Arabic",sans-serif';
+    ctx.fillStyle = color;
+    ctx.shadowColor = 'rgba(255,200,120,0.35)';
+    ctx.shadowBlur = 28;
+    ctx.fillText(label, VW/2, VH/2 - 40);
+
+    if (G.endTimer > 5){
+      const a2 = Math.min(1, (G.endTimer-5)/1.5) * 0.9;
+      ctx.globalAlpha = a2;
+      ctx.font = '400 20px system-ui,Tahoma,"Noto Sans Arabic",sans-serif';
+      ctx.fillStyle = subColor;
+      ctx.shadowBlur = 16;
+      ctx.fillText(sub, VW/2, VH/2 + 20);
+    }
+
+    if (G.endTimer > 7){
+      const a3 = Math.min(1, (G.endTimer-7)/1.5) * 0.5;
+      ctx.globalAlpha = a3;
+      ctx.fillStyle = '#6a6050';
+      ctx.font = '400 14px system-ui,Tahoma,sans-serif';
+      ctx.fillText(`— الحلقة ${loopNumber} —`, VW/2, VH/2 + 70);
+    }
+    ctx.restore();
+  }
+
+  // "شكراً" + إعادة البدء
+  if (G.endTimer > 10){
+    const a = Math.min(1, (G.endTimer-10)/1.5) * (0.7 + Math.sin(G.t*1.3)*0.15);
+    ctx.save();
+    ctx.globalAlpha = a;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '300 26px system-ui,Tahoma,"Noto Sans Arabic",sans-serif';
+    ctx.fillStyle = '#b8a888';
+    ctx.shadowColor = 'rgba(0,0,0,0.9)';
+    ctx.shadowBlur = 16;
+    ctx.fillText('شكراً لأنك لعبت.', VW/2, VH*0.85);
+    ctx.restore();
+  }
+
+  if (G.restartReady && G.endTimer > 14){
+    const a = Math.min(1, (G.endTimer-14)/1.5) * (0.5 + Math.sin(G.t*1.4)*0.15);
+    ctx.save();
+    ctx.globalAlpha = a;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '400 16px system-ui,Tahoma,sans-serif';
+    ctx.fillStyle = '#8a8068';
+    ctx.shadowColor = 'rgba(0,0,0,0.9)';
+    ctx.shadowBlur = 10;
+    ctx.fillText('الباب لا يزال هناك. اضغط لتبدأ من جديد.', VW/2, VH*0.93);
+    ctx.restore();
+  }
+}
+
+function drawStartScreen(){
+  ctx.fillStyle = '#060403';
+  ctx.fillRect(0, 0, VW, VH);
+  const g = ctx.createRadialGradient(VW/2, VH/2, 50, VW/2, VH/2, 400);
+  g.addColorStop(0, 'rgba(90,60,25,0.15)');
+  g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, VW, VH);
+
+  ctx.save();
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  if (!hasPlayedPart2){
+    ctx.font = '500 26px system-ui,Tahoma,sans-serif';
+    ctx.fillStyle = '#a89870';
+    ctx.globalAlpha = 0.9;
+    ctx.fillText('لا يمكنك الخروج من هنا.', VW/2, VH/2 - 40);
+
+    ctx.font = '400 16px system-ui,Tahoma,sans-serif';
+    ctx.fillStyle = '#7a7058';
+    ctx.globalAlpha = 0.7;
+    ctx.fillText('الجزء الثاني هو الطريق.', VW/2, VH/2 + 10);
+    ctx.fillText('ارجع إليه... ثم عد.', VW/2, VH/2 + 40);
+
+    const hg = ctx.createRadialGradient(VW/2, VH*0.30, 20, VW/2, VH*0.30, 180);
+    hg.addColorStop(0, 'rgba(180,120,40,0.3)');
+    hg.addColorStop(1, 'rgba(180,120,40,0)');
+    ctx.globalAlpha = 0.15 + Math.sin(G.t*1.1)*0.06;
+    ctx.fillStyle = hg;
+    ctx.fillRect(0, 0, VW, VH);
+    ctx.restore();
+    return;
+  }
+
+  const a = 0.20 + Math.sin(G.t*1.4)*0.10;
+  ctx.globalAlpha = Math.max(0, a);
+  ctx.font = '400 16px system-ui,Tahoma,sans-serif';
+  ctx.fillStyle = '#a89870';
+  ctx.fillText('اضغط للمتابعة', VW/2, VH*0.56);
+  ctx.restore();
+}
+
+/* ══════════════════════ RENDER ══════════════════════ */
+function render(){
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, viewW, viewH);
+
+  let sx = 0, sy = 0;
+  if (G.shake > 0.1){
+    sx = (Math.random()-0.5) * G.shake;
+    sy = (Math.random()-0.5) * G.shake;
+  }
+
+  ctx.save();
+  ctx.translate(offX + sx, offY + sy);
+  ctx.scale(scale, scale);
+  ctx.beginPath();
+  ctx.rect(0, 0, VW, VH);
+  ctx.clip();
+
+  if (!started){
+    drawStartScreen();
+  } else if (G.phase === 'end'){
+    drawWorld();
+    drawVignette();
+    drawGrain();
+    drawEnd();
+  } else {
+    if (G.worldFade > 0){
+      ctx.globalAlpha = G.worldFade;
+      drawWorld();
+      ctx.globalAlpha = 1;
+    }
+
+    if (G.invert > 0.5){
+      ctx.save();
+      ctx.globalCompositeOperation = 'difference';
+      ctx.fillStyle = `rgba(255,255,255,${(G.invert-0.5)*2})`;
+      ctx.fillRect(0, 0, VW, VH);
+      ctx.restore();
+    }
+
+    drawMessage();
+    drawVignette();
+    drawGrain();
+
+    if (G.phase === 'choice') drawChoice();
+  }
+  ctx.restore();
+}
+
+/* ══════════════════════ INPUT ══════════════════════ */
+function onKeyDown(code){
+  if (!started){ start(); return; }
+  if (!hasPlayedPart2) return;
+
+  if (code === 'KeyM'){
+    muted = !muted;
+    if (humGain && audioCtx) humGain.gain.setTargetAtTime(muted?0:0.16, audioCtx.currentTime, 0.3);
+    return;
+  }
+
+  if (G.phase === 'choice'){
+    if (code === 'ArrowUp' || code === 'ArrowLeft'){
+      if (G.choiceIndex > 0){ G.choiceIndex--; blip(480, 0.09, 0.08); }
+    } else if (code === 'ArrowDown' || code === 'ArrowRight'){
+      const max = unityAvailable ? 2 : 1;
+      if (G.choiceIndex < max){ G.choiceIndex++; blip(480, 0.09, 0.08); }
+    } else if (code === 'Enter' || code === 'Space'){
+      confirmChoice();
+    }
+    return;
+  }
+
+  if (G.phase === 'end'){
+    if (G.restartReady && G.endTimer > 14) restartLoop();
+    return;
+  }
+}
+
+addEventListener('keydown', e => {
+  if (['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space'].includes(e.code)) e.preventDefault();
+  if (keys[e.code]) return;
+  keys[e.code] = true;
+  onKeyDown(e.code);
+});
+
+addEventListener('keyup', e => { keys[e.code] = false; });
+
+cvs.addEventListener('pointerdown', e => {
+  e.preventDefault();
+  if (!started){ start(); return; }
+  if (!hasPlayedPart2) return;
+
+  if (G.phase === 'end'){
+    if (G.restartReady && G.endTimer > 14) restartLoop();
+    return;
+  }
+
+  if (G.phase === 'choice'){
+    const y = (e.clientY - offY) / scale;
+    const opts = unityAvailable ? 3 : 2;
+    for (let i = 0; i < opts; i++){
+      const optY = VH*0.58 + i*62;
+      if (Math.abs(y - optY) < 30){
+        if (G.choiceIndex === i) confirmChoice();
+        else { G.choiceIndex = i; blip(480, 0.09, 0.08); }
+        return;
+      }
+    }
+    return;
+  }
+
+  const x = (e.clientX - offX) / scale;
+  if (x < VW/2) pointerHeld.left = true;
+  else pointerHeld.right = true;
+});
+
+cvs.addEventListener('pointerup', () => {
+  pointerHeld.left = false;
+  pointerHeld.right = false;
+});
+cvs.addEventListener('pointercancel', () => {
+  pointerHeld.left = false;
+  pointerHeld.right = false;
+});
+cvs.addEventListener('contextmenu', e => e.preventDefault());
+
+addEventListener('beforeunload', () => {
+  if (G.phase === 'ending' || G.phase === 'end') saveFinalEnding();
+});
+
+/* ══════════════════════ LOOP ══════════════════════ */
+let last = performance.now();
+let acc = 0;
+
+function loop(now){
+  requestAnimationFrame(loop);
+  let dt = (now - last) / 1000;
+  last = now;
+  if (dt > 0.25) dt = 0.25;
+  acc += dt;
+  let guard = 0;
+  while (acc >= STEP && guard++ < 6){
+    update(STEP);
+    acc -= STEP;
+  }
+  render();
+}
+
+requestAnimationFrame(loop);
+
+})();
+</script>
+</body>
+</html>
