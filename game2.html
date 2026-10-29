@@ -240,6 +240,7 @@ const G = {
   choiceIndex: 0, choiceVisible: false, choiceReady: false,
 
   endTimer: 0, endFade: 0, endType: '', redirectStarted: false,
+  savedForPart3: false,
 
   hasStoppedForEntity: false, hasIgnoredEntity: false,
   hasWaited: false, hasFollowedClosely: false, hasGoneAhead: false,
@@ -296,7 +297,6 @@ function at(x, fn){ triggers.push({ x, done: false, fn }); }
 function buildScript(){
   triggers.length = 0;
 
-  /* ── OPENING ── */
   at(0, () => {
     say('...', { hold: 1.4, cps: 3, delay: 1.5 });
 
@@ -358,7 +358,6 @@ function buildScript(){
     entitySay('أنا فقط... أحتاجك.', { hold: 2.8, style: 'whisper' });
   });
 
-  /* ── ECHOES INTRO ── */
   at(1300, () => {
     spawnEcho(1700); spawnEcho(1900);
     entitySay('هل تراهم؟', { hold: 2.2 });
@@ -387,7 +386,6 @@ function buildScript(){
     entitySay('الآن... أنا أتقدم.', { hold: 2.6, color: '#d8c8a8' });
   });
 
-  /* ── REVEAL: PREVIOUS PLAYER ── */
   at(2150, () => {
     entitySay('أنا كنت مثلك.', { hold: 2.4 });
     entitySay('وصلت إلى الباب.', { hold: 2.2 });
@@ -414,7 +412,6 @@ function buildScript(){
     entitySay('فقط... اتبعني.', { hold: 2.4 });
   });
 
-  /* ── WAIT MOMENT ── */
   at(2750, () => {
     entitySay('توقف.', { hold: 1.6, style: 'shout' });
     G.entityWantsStop = true;
@@ -438,7 +435,6 @@ function buildScript(){
     G.entityWantsStop = false;
   });
 
-  /* ── DEEPER REVELATION ── */
   at(3250, () => {
     entitySay('هل تعرف ما هو هذا المكان؟', { hold: 2.4 });
     entitySay('هذا هو الباب.', { hold: 2.0 });
@@ -464,7 +460,6 @@ function buildScript(){
     }
   });
 
-  /* ── ECHOES REVEAL ── */
   at(3850, () => {
     spawnEcho(4300); spawnEcho(4500);
     entitySay('هؤلاء...', { hold: 1.8 });
@@ -479,7 +474,6 @@ function buildScript(){
     entitySay('كل من رآني.', { hold: 2.4, style: 'whisper' });
   });
 
-  /* ── EMOTIONAL CORE ── */
   at(4300, () => {
     entitySay('هل تعرف كم مرة رأيت هذا؟', { hold: 2.4 });
     entitySay('لا. أنت لا تعرف.', { hold: 2.2 });
@@ -503,7 +497,6 @@ function buildScript(){
     entitySay('وأبقى أنا.', { hold: 2.6, color: '#c8a888' });
   });
 
-  /* ── REVERSAL MOMENT ── */
   at(4900, () => {
     entitySay('الآن...', { hold: 1.6 });
     entitySay('سأكون صادقاً.', { hold: 2.2 });
@@ -524,7 +517,6 @@ function buildScript(){
     entitySay('كل شيء مقلوب.', { hold: 2.4, style: 'whisper' });
   });
 
-  /* ── REAL DATA REVEAL ── */
   at(5400, () => {
     const hh = currentClock();
     entitySay(`الساعة الآن ${hh}.`, { hold: 2.4 });
@@ -561,7 +553,6 @@ function buildScript(){
     }
   });
 
-  /* ── CALL-BACKS ── */
   at(6000, () => {
     entitySay('قال لي شخص مرة...', { hold: 2.0 });
     entitySay(`أنت ${profile}.`, { hold: 2.6, color: '#d8c8a8' });
@@ -593,7 +584,6 @@ function buildScript(){
     }
   });
 
-  /* ── SUSPENSE BUILD ── */
   at(6650, () => {
     G.darknessTarget = 0.3;
     entitySay('نحن نقترب.', { hold: 2.0 });
@@ -613,7 +603,6 @@ function buildScript(){
     entitySay('واحد فقط.', { hold: 2.6, style: 'whisper' });
   });
 
-  /* ── IF PLAYER HAS BEEN GOOD ── */
   at(7250, () => {
     if (G.empathy >= 2){
       entitySay('لكن...', { hold: 1.6 });
@@ -630,7 +619,6 @@ function buildScript(){
     }
   });
 
-  /* ── FINAL APPROACH ── */
   at(7450, () => {
     entitySay('الخروج قريب.', { hold: 2.0 });
     entitySay('أراه.', { hold: 1.8 });
@@ -854,7 +842,9 @@ function confirmChoice(){
   G.msg = null; G.queue.length = 0;
   G.choiceVisible = false;
 
+  // 🔻 حفظ فوري في localStorage
   saveGame3Data();
+
   blip(160, 1.1, 0.16);
   deepTone(enter ? 35 : 50, 3, 0.20);
 
@@ -911,46 +901,115 @@ function updateEnd(dt){
     else if (G.endType === 'entity_exit') deepTone(60, 3, 0.15);
     else deepTone(35, 4, 0.15);
   }
-  if (G.endTimer > 9 && !G.redirectStarted){
-    G.redirectStarted = true;
+
+  // 🔻 حفظ تلقائي بعد بدء شاشة النهاية
+  if (!G.savedForPart3 && G.endTimer > 1.5){
+    G.savedForPart3 = true;
     saveGame3Data();
+  }
+
+  // 🔻 إعادة توجيه تلقائية إلى game3.html
+  if (G.endTimer > 16 && !G.redirectStarted){
+    G.redirectStarted = true;
+    goToGame3();
   }
 }
 
-/* ══════════════════════ SAVE ══════════════════════ */
+/* ══════════════════════ SAVE FOR GAME 3 ══════════════════════ */
+/*
+ * يُحفظ كل ما قد يحتاجه game3.html في localStorage تحت المفتاح 'sh_game3_data'.
+ * المفاتيح المحفوظة:
+ *   sh_game3_data   → البيانات الكاملة (P1 + P2 + realWorld)
+ *   sh_game3_ready  → 'true' عند الجاهزية
+ */
 function saveGame3Data(){
   try {
     const now = new Date();
+    const p1 = P1 || {};
     const data = {
-      version: 2, savedAt: now.getTime(),
-      fromPart1: { endType, profile, session: P1?.sessionNumber || 1 },
-      endType: G.endType,
-      endTypeLabel: { self_exit:'خرج وحده', entity_exit:'أخرجه', merge:'اندمج' }[G.endType],
-      stats: {
-        followed: Math.round(G.stats.followed),
-        lost: Math.round(G.stats.lost),
-        idleCount: G.stats.idleCount,
-        waitedFor: Math.round(G.stats.waitedFor),
-        calledOut: G.stats.calledOut,
+      version: 3,
+      savedAt: now.getTime(),
+      sessionNumber: p1.sessionNumber || 1,
+
+      // ── الجزء الأول ──
+      part1: {
+        endType: p1.endType || endType,
+        endTypeLabel: p1.endTypeLabel || '',
+        profile: p1.profile || profile,
+        profileDesc: p1.profileDesc || profileDesc,
+        stats: p1.stats || p1Stats,
+        gaslitCount: p1.gaslitCount || p1Gaslit,
+        isReturningPlayer: p1.isReturningPlayer || false,
+        realWorld: p1.realWorld || {},
+        playTime: p1.playTime || 0,
+        playTimeMinutes: p1.playTimeMinutes || 0,
+        playTimeSeconds: p1.playTimeSeconds || 0,
       },
-      playTime: parseFloat(G.t.toFixed(2)),
-      empathy: G.empathy, disobedience: G.disobedience,
-      hasStoppedForEntity: G.hasStoppedForEntity,
-      hasWaited: G.hasWaited,
-      hasFollowedClosely: G.hasFollowedClosely,
-      hasGoneAhead: G.hasGoneAhead,
+
+      // ── الجزء الثاني (هذه اللعبة) ──
+      part2: {
+        endType: G.endType,
+        endTypeLabel: { self_exit:'خرج وحده', entity_exit:'أخرجه', merge:'اندمج' }[G.endType] || '',
+        stats: {
+          followed: Math.round(G.stats.followed),
+          lost: Math.round(G.stats.lost),
+          idleCount: G.stats.idleCount,
+          waitedFor: Math.round(G.stats.waitedFor),
+          calledOut: G.stats.calledOut,
+        },
+        playTime: parseFloat(G.t.toFixed(2)),
+        playTimeMinutes: Math.floor(G.t / 60),
+        playTimeSeconds: Math.floor(G.t % 60),
+        empathy: G.empathy,
+        disobedience: G.disobedience,
+        behaviorFlags: {
+          hasStoppedForEntity: G.hasStoppedForEntity,
+          hasWaited: G.hasWaited,
+          hasFollowedClosely: G.hasFollowedClosely,
+          hasGoneAhead: G.hasGoneAhead,
+        },
+      },
+
+      // ── لقطة العالم الحقيقي عند النهاية ──
       realWorld: {
-        hour: now.getHours(), day: now.getDay(), dayName: DAY_NAMES[now.getDay()],
+        hour: now.getHours(),
+        minute: now.getMinutes(),
+        day: now.getDay(),
+        dayName: DAY_NAMES[now.getDay()],
         isNight: now.getHours()>=22 || now.getHours()<5,
-        battery: RW.battery, browser: RW.browser, deviceType: RW.deviceType,
+        isMorning: now.getHours()>=5 && now.getHours()<12,
+        isEvening: now.getHours()>=17 && now.getHours()<22,
+        isWeekend: now.getDay()===5 || now.getDay()===6,
+        battery: RW.battery,
+        browser: RW.browser,
+        deviceType: RW.deviceType,
+        touch: RW.touch,
+        screenW: RW.screenW,
       },
+
+      clockAtEnd: currentClock(),
+      readyForPart3: true,
     };
+
     localStorage.setItem('sh_game3_data', JSON.stringify(data));
+    localStorage.setItem('sh_game3_ready', 'true');
+    localStorage.setItem('sh_last_end_type_part2', G.endType);
     return true;
-  } catch(e){ return false; }
+  } catch(e){
+    console.warn('[SHADOW] فشل حفظ بيانات الجزء الثالث:', e);
+    return false;
+  }
 }
 
-function goToGame3(){ saveGame3Data(); }
+function goToGame3(){
+  saveGame3Data();
+  try {
+    window.location.href = 'game3.html';
+  } catch(e){
+    // احتياطي: إعادة تحميل
+    try { location.href = 'game3.html'; } catch(_){ location.reload(); }
+  }
+}
 
 /* ══════════════════════ UPDATE MAIN ══════════════════════ */
 function update(dt){
@@ -1095,7 +1154,6 @@ function drawFigureBody(px, py, facing, walkPhase, moving, color, opts){
   ctx.restore();
 }
 
-/* ────── اسم فوق الشخصية (name tag) ────── */
 function drawNameTag(text, x, y, alpha, color){
   ctx.save();
   ctx.direction = 'ltr';
@@ -1224,7 +1282,6 @@ function drawEntity(){
   });
   ctx.restore();
 
-  // ← اسم فوق الشخصية: The Shadow
   drawNameTag('The Shadow', ex, GROUND_Y - 112, intensity * 0.75, '#ffd27a');
 }
 
@@ -1250,7 +1307,6 @@ function drawPlayer(){
 
   drawFigureBody(px, py, G.facing, G.walkPhase, Math.abs(G.vx) > 10, '#c8b898');
 
-  // ← اسم فوق الشخصية: You
   drawNameTag('You', px, py - 90, 0.65, '#e8dcc0');
 }
 
@@ -1294,7 +1350,6 @@ function drawMessage(){
     ctx.globalAlpha *= 0.7;
   }
 
-  // ══ اسم المتحدث فوق النص (You / The Shadow) ══
   if (m.speaker && typed > 0){
     ctx.save();
     ctx.globalAlpha *= 0.85;
@@ -1413,6 +1468,7 @@ function drawEnd(){
   ctx.fillStyle = `rgba(0,0,0,${G.endFade})`;
   ctx.fillRect(0, 0, VW, VH);
 
+  // نص النهاية الأول
   if (G.endTimer > 4){
     const a = Math.min(1, (G.endTimer-4)/1.5) * (0.5 + Math.sin(G.t*1.2)*0.15);
     ctx.save();
@@ -1429,11 +1485,11 @@ function drawEnd(){
     else if (G.endType === 'entity_exit') endText = 'أخيراً... ليس وحيداً.';
     else if (G.endType === 'merge') endText = 'أنتما الآن... واحد.';
 
-    ctx.fillText(endText, VW/2, VH/2 - 30);
+    ctx.fillText(endText, VW/2, VH/2 - 50);
     ctx.restore();
   }
 
-  // ══ THE END ══
+  // "الطريق يستمر" بدلاً من "The END"
   if (G.endTimer > 8){
     const a = Math.min(1, (G.endTimer-8)/2) * 0.9;
     const pulse = 0.85 + Math.sin(G.t*0.9)*0.15;
@@ -1441,30 +1497,48 @@ function drawEnd(){
     ctx.globalAlpha = a * pulse;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font = '300 46px Georgia,"Times New Roman",serif';
+    ctx.font = '300 42px system-ui,Tahoma,"Noto Sans Arabic",sans-serif';
     ctx.fillStyle = '#e8d8b0';
     ctx.shadowColor = 'rgba(255,200,120,0.45)';
     ctx.shadowBlur = 32;
-    ctx.direction = 'ltr';
-    ctx.fillText('The END', VW/2, VH/2 + 70);
+    ctx.fillText('الطريق يستمر', VW/2, VH/2 + 30);
+    ctx.restore();
 
-    const w = 100;
-    ctx.shadowBlur = 0;
-    ctx.globalAlpha = a * 0.35;
+    const w = 120;
+    ctx.save();
+    ctx.globalAlpha = a * 0.4;
     ctx.fillStyle = '#a89060';
-    ctx.fillRect(VW/2 - w/2, VH/2 + 112, w, 1);
+    ctx.fillRect(VW/2 - w/2, VH/2 + 70, w, 1);
     ctx.restore();
   }
 
-  if (G.endTimer > 12){
-    const a = Math.min(1, (G.endTimer-12)/2) * (0.3 + Math.sin(G.t*1.4)*0.1);
+  // رسالة الانتقال للجزء الثالث
+  if (G.endTimer > 10){
+    const a = Math.min(1, (G.endTimer-10)/1.5) * (0.5 + Math.sin(G.t*1.6)*0.15);
     ctx.save();
     ctx.globalAlpha = a;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font = '400 13px system-ui,Tahoma,sans-serif';
-    ctx.fillStyle = '#8a8070';
-    ctx.fillText('انتهى كل شيء.', VW/2, VH - 60);
+    ctx.font = '400 18px system-ui,Tahoma,"Noto Sans Arabic",sans-serif';
+    ctx.fillStyle = '#b0a890';
+    ctx.shadowColor = 'rgba(0,0,0,0.9)';
+    ctx.shadowBlur = 14;
+    ctx.fillText('الجزء الثالث ينتظرك...', VW/2, VH/2 + 120);
+    ctx.fillText('اضغط للمتابعة', VW/2, VH/2 + 155);
+    ctx.restore();
+  }
+
+  // حفظ مؤشر
+  if (G.endTimer > 10){
+    const a = Math.min(1, (G.endTimer-10)/2) * 0.5;
+    ctx.save();
+    ctx.globalAlpha = a;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '400 12px system-ui,Tahoma,sans-serif';
+    ctx.fillStyle = '#7a7060';
+    ctx.direction = 'ltr';
+    ctx.fillText('Data saved → sh_game3_data', VW/2, VH - 30);
     ctx.restore();
   }
 }
@@ -1598,7 +1672,11 @@ function onKeyDown(code){
     return;
   }
 
-  if (G.phase === 'end'){ goToGame3(); return; }
+  // 🔻 الانتقال للجزء الثالث عند الضغط في شاشة النهاية
+  if (G.phase === 'end'){
+    if (G.endTimer > 10){ goToGame3(); }
+    return;
+  }
   reactToInput('key');
 }
 
@@ -1628,8 +1706,9 @@ cvs.addEventListener('pointerdown', e => {
   if (!started){ start(); return; }
   if (!hasPlayedPart1) return;
 
+  // 🔻 الانتقال للجزء الثالث عند النقر في شاشة النهاية
   if (G.phase === 'end'){
-    if (G.endTimer > 12) location.reload();
+    if (G.endTimer > 10){ goToGame3(); }
     return;
   }
 
