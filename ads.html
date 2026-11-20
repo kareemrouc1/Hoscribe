@@ -1,733 +1,403 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="title">الشراكات والإعلانات | هوسكرايب</title>
-    <meta name="description" data-i18n="meta-description" content="فرص التعاون والإعلانات مع هوسكرايب — محتوى وثائقي عالمي بسيط وأنيق.">
-    <link rel="canonical" href="https://hoscribe.netlify.app/ads.html">
-    <link rel="icon" href="logo.png" type="image/png">
-    <link rel="apple-touch-icon" href="logo.png">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title data-i18n="title">الشراكات والإعلانات | هوسكرايب</title>
+<meta name="description" data-i18n="md" content="شراكات الشركات مع هوسكرايب: محتوى مدمج، حلقات برعاية العلامة، حملات مغامرات ميدانية وشراكات سنوية." />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#FFD400" />
+<link rel="canonical" href="https://hoscribe.vercel.app/ads.html" />
+<link rel="icon" href="logo.png" type="image/png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--y:#FFD400;--y-deep:#FFC400;--y-soft:#FFF6C2;--ink:#17150C;--ink-2:#2A2716;--muted:#5C5840;--bg:#FFFDF2;--r:14px;--ease:.25s cubic-bezier(.2,.7,.2,1)}
+html{scroll-behavior:smooth;scroll-padding-top:84px;-webkit-font-smoothing:antialiased}
+body{font-family:'IBM Plex Sans Arabic','Cairo',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.75;text-wrap:pretty}
+h1,h2,h3{font-family:'Cairo',sans-serif;line-height:1.25;font-weight:800;text-wrap:balance}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1160px;margin:0 auto;padding-inline:1.5rem}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px;border-radius:6px}
+::selection{background:var(--ink);color:var(--y)}
+.skip{position:absolute;inset-inline-start:1rem;top:-60px;background:var(--ink);color:var(--y);padding:.5rem 1rem;border-radius:8px;z-index:100}
+.skip:focus{top:1rem}
+.nav{position:sticky;top:0;z-index:50;background:var(--y);border-bottom:2px solid var(--ink)}
+.nav .wrap{display:flex;align-items:center;gap:1.2rem;height:68px}
+.brand{display:flex;align-items:center;gap:.7rem;font:900 1.25rem 'Cairo'}
+.brand img{width:42px;height:42px;border-radius:50%;border:2px solid var(--ink);background:#fff;object-fit:cover}
+.menu{display:flex;gap:.3rem;margin-inline-start:auto}
+.menu a{padding:.4rem .85rem;border-radius:99px;font-weight:600;font-size:.95rem;transition:background var(--ease)}
+.menu a:hover{background:rgba(23,21,12,.12)}
+.lang{display:flex;border:2px solid var(--ink);border-radius:99px;overflow:hidden}
+.lang button{font:600 .8rem 'IBM Plex Sans Arabic',sans-serif;background:transparent;border:0;padding:.3rem .8rem;cursor:pointer;color:var(--ink)}
+.lang button.active{background:var(--ink);color:var(--y)}
+.burger{display:none;width:44px;height:44px;border:2px solid var(--ink);border-radius:50%;background:transparent;cursor:pointer;place-items:center}
+.burger i,.burger i::before,.burger i::after{display:block;width:18px;height:2px;background:var(--ink);border-radius:2px;position:relative;transition:transform var(--ease),top var(--ease),background var(--ease)}
+.burger i::before,.burger i::after{content:"";position:absolute;inset-inline-start:0}
+.burger i::before{top:-6px}.burger i::after{top:6px}
+.burger[aria-expanded=true] i{background:transparent}
+.burger[aria-expanded=true] i::before{top:0;transform:rotate(45deg)}.burger[aria-expanded=true] i::after{top:0;transform:rotate(-45deg)}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.6rem;border-radius:99px;font:700 1rem 'Cairo',sans-serif;border:2px solid var(--ink);transition:transform var(--ease),box-shadow var(--ease),background var(--ease),color var(--ease);cursor:pointer}
+.btn--dark{background:var(--ink);color:var(--y)}.btn--dark:hover{transform:translateY(-2px);box-shadow:0 6px 0 rgba(23,21,12,.25)}
+.btn--yellow{background:var(--y);color:var(--ink)}.btn--yellow:hover{transform:translateY(-2px);box-shadow:0 6px 0 var(--ink)}
+.btn--line{background:transparent;color:var(--ink)}.btn--line:hover{background:var(--ink);color:var(--y)}
+.btn:active{transform:translateY(1px);box-shadow:none}
+section{padding-block:5.5rem}
+.head{max-width:40rem;margin-bottom:3rem}
+.head h2{font-size:clamp(1.8rem,3.6vw,2.6rem);margin-bottom:.8rem}
+.head p{color:var(--muted);font-size:1.08rem}
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+/* Hero */
+.hero{background:var(--y);position:relative;overflow:hidden;border-bottom:2px solid var(--ink);padding:0}
+.hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(23,21,12,.17) 1.5px,transparent 1.7px);background-size:26px 26px;-webkit-mask-image:linear-gradient(#000,transparent 85%);mask-image:linear-gradient(#000,transparent 85%);pointer-events:none}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1.2fr .8fr;gap:3rem;align-items:center;padding-block:5.5rem 6rem}
+.tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.4rem}
+.tags span{background:var(--ink);color:var(--y);padding:.25rem .9rem;border-radius:99px;font:700 .85rem 'Cairo'}
+.hero h1{font-size:clamp(2.1rem,4.8vw,3.7rem);font-weight:900;margin-bottom:1.2rem}
+.hero .lead{font-size:1.15rem;max-width:34em;color:var(--ink-2);margin-bottom:2rem}
+.actions{display:flex;flex-wrap:wrap;gap:.9rem}
+.hero .wrap>div:first-child>*,.dial{animation:rise .8s both cubic-bezier(.2,.7,.2,1)}
+.hero .wrap>div:first-child>:nth-child(2){animation-delay:.08s}.hero .wrap>div:first-child>:nth-child(3){animation-delay:.16s}.hero .wrap>div:first-child>:nth-child(4){animation-delay:.24s}.dial{animation-delay:.2s}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}}
+.dial{position:relative;aspect-ratio:1;max-width:400px;margin-inline:auto;width:100%}
+.dial svg{width:100%;height:100%}
+.dial .badge{position:absolute;inset-inline-start:-4%;bottom:6%;background:var(--ink);color:var(--y);padding:.6rem 1.1rem;border-radius:12px;font:800 .95rem 'Cairo';transform:rotate(-4deg)}
+.dial .brandtag{position:absolute;inset-inline-end:2%;top:4%;background:#fff;border:2px solid var(--ink);padding:.35rem .9rem;border-radius:99px;font:800 .85rem 'Cairo';box-shadow:4px 4px 0 var(--ink)}
+.spin{transform-origin:200px 200px;animation:spin 40s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#needle{transform-origin:200px 200px;transition:transform .25s ease-out}
 
-    <style>
-        /* ——————————————————————————————
-           Reset & Base – مطابق للرئيسية
-           —————————————————————————————— */
-        *,
-        *::before,
-        *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+/* Marquee */
+.strip{background:var(--ink);color:var(--y);overflow:hidden;white-space:nowrap;padding:.9rem 0;direction:ltr}
+.strip .track{display:inline-flex;gap:3rem;animation:slide 34s linear infinite;font:800 1.1rem 'Cairo'}
+.strip span::after{content:"◆";margin-inline-start:3rem;font-size:.7rem;vertical-align:middle}
+.strip:hover .track{animation-play-state:paused}
+@keyframes slide{to{transform:translateX(-50%)}}
 
-        :root {
-            --bg: #fafafa;
-            --surface: #ffffff;
-            --text-primary: #1a1a1a;
-            --text-secondary: #6e6e73;
-            --text-tertiary: #8e8e93;
-            --gold: #b8953a;
-            --border: #e5e5ea;
-            --radius: 16px;
-            --transition: 0.25s cubic-bezier(0.25, 0.1, 0.15, 1);
-        }
+/* Why */
+.why{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.why article{padding:2rem;border-radius:var(--r);background:#fff;border:2px solid var(--ink);transition:transform var(--ease),box-shadow var(--ease)}
+.why article:first-child{background:var(--y)}
+.why article:hover{transform:translate(-3px,-3px);box-shadow:6px 6px 0 var(--ink)}
+.why svg{width:44px;height:44px;margin-bottom:1.2rem}
+.why h3{font-size:1.4rem;margin-bottom:.5rem}
+.why p{color:var(--ink-2)}
 
-        html {
-            scroll-behavior: smooth;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
+/* Formats ladder */
+.formats{background:var(--y-soft);border-block:2px solid var(--ink)}
+.ladder{border:2px solid var(--ink);border-radius:var(--r);background:#fff;overflow:hidden;list-style:none}
+.ladder li{display:grid;grid-template-columns:1fr auto;gap:1.5rem;align-items:center;padding:1.6rem 2rem;border-bottom:2px solid var(--ink);transition:background var(--ease)}
+.ladder li:last-child{border:0;background:var(--ink);color:#fff}
+.ladder li:not(:last-child):hover{background:var(--y-soft)}
+.ladder h3{font-size:1.3rem}
+.ladder p{color:var(--muted)}.ladder li:last-child p{color:#D9D5BC}.ladder li:last-child h3{color:var(--y)}
+.meter{display:flex;flex-direction:column;align-items:flex-end;gap:.35rem;font:700 .8rem 'Cairo'}
+.meter div{display:flex;gap:.3rem}
+.meter i{width:26px;height:12px;border:2px solid currentColor;border-radius:3px}
+.meter i.on{background:var(--y);border-color:var(--ink)}
+.ladder li:last-child .meter i.on{border-color:var(--y)}
 
-        body {
-            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
-            color: var(--text-primary);
-            line-height: 1.7;
-            min-height: 100vh;
-            padding: 2.8rem 1.8rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+/* Planner */
+.planner{display:grid;grid-template-columns:.9fr 1.1fr;gap:1.2rem;align-items:stretch}
+.goals{display:grid;gap:.8rem;align-content:start}
+.goal{font:700 1.05rem 'Cairo';text-align:start;padding:1.1rem 1.4rem;border:2px solid var(--ink);border-radius:var(--r);background:#fff;color:var(--ink);cursor:pointer;transition:transform var(--ease),box-shadow var(--ease),background var(--ease)}
+.goal:hover{transform:translate(-3px,-3px);box-shadow:5px 5px 0 var(--ink)}
+.goal[aria-pressed=true]{background:var(--y);box-shadow:5px 5px 0 var(--ink);transform:translate(-3px,-3px)}
+.result{background:var(--ink);color:#fff;border:2px solid var(--ink);border-radius:var(--r);padding:2.4rem;display:flex;flex-direction:column;gap:1rem;align-items:flex-start;min-height:260px}
+.result h3{color:var(--y);font-size:1.9rem}
+.result p{color:#D9D5BC;max-width:30em}
+.result .btn{margin-top:auto}
+.result[data-k]{animation:pop .35s both}
+@keyframes pop{from{opacity:.4;transform:translateY(8px)}}
 
-        .container {
-            max-width: 640px;
-            width: 100%;
-            margin: 0 auto;
-        }
+/* Process */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);counter-reset:s;border:2px solid var(--ink);border-radius:var(--r);background:#fff;overflow:hidden}
+.step{padding:1.8rem 1.5rem;border-inline-end:2px solid var(--ink);transition:background var(--ease)}
+.step:last-child{border:0}.step:hover{background:var(--y-soft)}
+.step::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--y);border:2px solid var(--ink);font:900 1.1rem 'Cairo';margin-bottom:1rem}
+.step h3{font-size:1.15rem;margin-bottom:.35rem}
+.step p{font-size:.95rem;color:var(--muted)}
 
-        /* ——————————————————————————————
-           Lang Switcher
-           —————————————————————————————— */
-        .lang-switcher {
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.2rem;
-            margin-bottom: 2.4rem;
-        }
+/* Contact */
+.contact{background:var(--ink);color:#fff}
+.contact .wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:3rem;align-items:start}
+.contact h2{color:var(--y);font-size:clamp(1.8rem,3.6vw,2.6rem);margin-bottom:.8rem}
+.contact .sub{color:#D9D5BC;margin-bottom:2rem;max-width:34em}
+form{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.f{display:flex;flex-direction:column;gap:.35rem}.f.full{grid-column:1/-1}
+label{font:700 .9rem 'Cairo';color:var(--y)}
+input,select,textarea{font:inherit;color:var(--ink);background:#fff;border:2px solid var(--y);border-radius:10px;padding:.7rem .9rem;width:100%}
+textarea{min-height:110px;resize:vertical}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--y);outline-offset:2px}
+.contact :focus-visible{outline-color:var(--y)}
+.status{grid-column:1/-1;font-size:.95rem;color:#D9D5BC;min-height:1.6em}
+.side{display:grid;gap:1rem}
+.side a{display:block;border:2px solid var(--y);border-radius:var(--r);padding:1.4rem 1.6rem;transition:background var(--ease),color var(--ease)}
+.side a:hover{background:var(--y);color:var(--ink)}
+.side h3{font-size:1.25rem;color:var(--y);transition:color var(--ease)}.side a:hover h3{color:var(--ink)}
+.side p{font-size:.95rem;color:#D9D5BC}.side a:hover p{color:var(--ink-2)}
 
-        .lang-btn {
-            background: transparent;
-            border: none;
-            padding: 0.2rem 0.9rem;
-            font-family: 'Cairo', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 400;
-            color: var(--text-tertiary);
-            cursor: pointer;
-            border-radius: 30px;
-            transition: var(--transition);
-            letter-spacing: 0.03em;
-        }
+footer{background:var(--y);border-top:2px solid var(--ink);padding-block:3rem 2rem}
+.fgrid{display:flex;flex-wrap:wrap;gap:2rem;justify-content:space-between;align-items:flex-start}
+.fgrid nav{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;font-weight:600}
+.fgrid nav a:hover{text-decoration:underline;text-underline-offset:4px}
+.copy{margin-top:2rem;padding-top:1.2rem;border-top:2px solid var(--ink);font-size:.9rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
 
-        .lang-btn:hover {
-            color: var(--text-primary);
-            background: var(--border);
-        }
-
-        .lang-btn.active {
-            color: var(--text-primary);
-            background: var(--surface);
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
-            font-weight: 600;
-        }
-
-        /* ——————————————————————————————
-           Hero
-           —————————————————————————————— */
-        .hero {
-            text-align: center;
-            padding: 1.6rem 0 2.4rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .logo-wrap {
-            display: inline-block;
-            margin-bottom: 1.4rem;
-        }
-
-        .logo-wrap img {
-            width: 76px;
-            height: 76px;
-            border-radius: 50%;
-            object-fit: cover;
-            display: block;
-            background: #f0efe8;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
-        }
-
-        .hero h1 {
-            font-size: 2.4rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            line-height: 1.1;
-            color: var(--text-primary);
-            margin-bottom: 0.1rem;
-        }
-
-        .hero .sub {
-            font-size: 0.9rem;
-            font-weight: 300;
-            color: var(--text-secondary);
-            margin-top: 0.1rem;
-        }
-
-        .hero .sub .real {
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .hero .tagline {
-            font-size: 0.85rem;
-            font-weight: 300;
-            color: var(--text-tertiary);
-            margin-top: 0.6rem;
-            max-width: 440px;
-            margin-left: auto;
-            margin-right: auto;
-            letter-spacing: 0.02em;
-        }
-
-        /* ——————————————————————————————
-           Cards – بدون أيقونات، أنيقة
-           —————————————————————————————— */
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
-            padding: 2.4rem 0 2rem;
-            border-top: 1px solid var(--border);
-            margin-top: 0.2rem;
-        }
-
-        .card {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 1.6rem 1.2rem;
-            border: 1px solid var(--border);
-            transition: var(--transition);
-            text-align: center;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
-        }
-
-        .card h3 {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 0.3rem;
-        }
-
-        .card p {
-            font-size: 0.8rem;
-            font-weight: 300;
-            color: var(--text-secondary);
-            line-height: 1.7;
-        }
-
-        /* ——————————————————————————————
-           Contact Section - New Form Style
-           —————————————————————————————— */
-        .contact-section {
-            padding: 2.4rem 0 2rem;
-            border-top: 1px solid var(--border);
-            text-align: center;
-        }
-
-        .contact-section h2 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 0.2rem;
-        }
-
-        .contact-section .sub-text {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            font-weight: 300;
-            max-width: 420px;
-            margin: 0 auto 1.8rem;
-            line-height: 1.8;
-        }
-
-        /* Form Styles */
-        .contact-form {
-            text-align: right;
-            max-width: 480px;
-            margin: 0 auto;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-            text-align: right;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 0.2rem;
-            letter-spacing: 0.03em;
-            text-transform: uppercase;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.7rem 1rem;
-            font-family: 'Cairo', sans-serif;
-            font-size: 0.9rem;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            transition: var(--transition);
-            color: var(--text-primary);
-            outline: none;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            border-color: var(--text-primary);
-            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.03);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.8rem;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.6rem 2.2rem;
-            border-radius: 40px;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            font-size: 0.85rem;
-            text-decoration: none;
-            background: transparent;
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: var(--transition);
-            line-height: 1.4;
-            letter-spacing: 0.02em;
-            width: 100%;
-        }
-
-        .btn:hover {
-            background: var(--text-primary);
-            color: #fff;
-            border-color: var(--text-primary);
-            transform: scale(0.97);
-        }
-
-        .btn:active {
-            transform: scale(0.95);
-        }
-
-        .btn--primary {
-            background: var(--text-primary);
-            color: #fff;
-            border-color: var(--text-primary);
-        }
-
-        .btn--primary:hover {
-            background: #2a2a2a;
-            border-color: #2a2a2a;
-        }
-
-        .btn--ghost {
-            background: transparent;
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-        }
-
-        .btn--ghost:hover {
-            background: var(--text-primary);
-            color: #fff;
-            border-color: var(--text-primary);
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 1.2rem;
-            color: var(--text-tertiary);
-            text-decoration: none;
-            font-size: 0.8rem;
-            font-weight: 300;
-            transition: color 0.2s ease;
-            letter-spacing: 0.02em;
-        }
-
-        .back-link:hover {
-            color: var(--text-primary);
-        }
-
-        /* Success Message */
-        .form-success {
-            display: none;
-            padding: 1.2rem;
-            background: #f0f7f0;
-            border: 1px solid #b8d9b8;
-            border-radius: var(--radius);
-            color: #2a5e2a;
-            font-size: 0.95rem;
-            margin-top: 1.2rem;
-            text-align: center;
-        }
-
-        .form-success.visible {
-            display: block;
-        }
-
-        /* ——————————————————————————————
-           Footer
-           —————————————————————————————— */
-        .footer {
-            padding: 2.4rem 0 1.2rem;
-            text-align: center;
-            border-top: 1px solid var(--border);
-            margin-top: 0.2rem;
-        }
-
-        .footer .signoff {
-            font-size: 0.85rem;
-            font-weight: 300;
-            color: var(--text-secondary);
-            margin-bottom: 0.2rem;
-        }
-
-        .footer .credit {
-            font-size: 0.65rem;
-            font-weight: 300;
-            color: var(--text-tertiary);
-            margin-top: 0.4rem;
-            letter-spacing: 0.02em;
-        }
-
-        /* ——————————————————————————————
-           Reveal
-           —————————————————————————————— */
-        .reveal {
-            opacity: 0;
-            transform: translateY(16px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* ——————————————————————————————
-           Responsive
-           —————————————————————————————— */
-        @media (max-width: 640px) {
-            body {
-                padding: 1.6rem 1.2rem;
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .hero .sub {
-                font-size: 0.8rem;
-            }
-
-            .cards {
-                grid-template-columns: 1fr;
-                gap: 0.8rem;
-                padding: 1.6rem 0;
-            }
-
-            .card {
-                padding: 1.2rem 1rem;
-            }
-
-            .contact-section h2 {
-                font-size: 1.2rem;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-                gap: 0;
-            }
-
-            .btn {
-                padding: 0.5rem 1.6rem;
-                font-size: 0.8rem;
-            }
-
-            .logo-wrap img {
-                width: 64px;
-                height: 64px;
-            }
-
-            .lang-switcher {
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 400px) {
-            .hero h1 {
-                font-size: 1.6rem;
-            }
-            .contact-section .sub-text {
-                font-size: 0.8rem;
-            }
-        }
-
-        ::-webkit-scrollbar {
-            width: 3px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 10px;
-        }
-    </style>
+@media(max-width:900px){
+ .menu{display:none}.lang{margin-inline-start:auto}.burger{display:grid}
+ .menu.open{display:flex;flex-direction:column;position:absolute;top:100%;inset-inline:0;background:var(--y);border-bottom:2px solid var(--ink);padding:.8rem 1.5rem 1.2rem;gap:.2rem}
+ .menu.open a{padding:.8rem 1rem;font-size:1.05rem}
+ .hero .wrap,.planner,.contact .wrap{grid-template-columns:1fr}
+ .hero .wrap{padding-block:3.5rem 4rem}.dial{max-width:300px}
+ .why{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}
+ .step:nth-child(2){border-inline-end:0}.step:nth-child(-n+2){border-bottom:2px solid var(--ink)}
+ section{padding-block:4rem}
+}
+@media(max-width:560px){.steps{grid-template-columns:1fr}.step{border-inline-end:0;border-bottom:2px solid var(--ink)}.step:last-child{border:0}.brand span{display:none}.ladder li{grid-template-columns:1fr}.meter{align-items:flex-start}form{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
 </head>
 <body>
+<a class="skip" href="#main" data-i18n="skip">تخطَّ إلى المحتوى</a>
+<header class="nav" id="top">
+ <div class="wrap">
+  <a class="brand" href="/" aria-label="Hoscribe"><img src="logo.png" alt="" width="42" height="42" onerror="this.style.visibility='hidden'" /><span>Hoscribe</span></a>
+  <nav class="menu" id="menu" aria-label="Main">
+   <a href="#why" data-i18n="n1">لماذا هوسكرايب</a>
+   <a href="#formats" data-i18n="n2">الصيغ</a>
+   <a href="#plan" data-i18n="n3">حدد هدفك</a>
+   <a href="#flow" data-i18n="n4">آلية العمل</a>
+   <a href="#start" data-i18n="n5">ابدأ</a>
+  </nav>
+  <div class="lang" role="group" aria-label="Language"><button data-lang="ar" aria-pressed="true">عربي</button><button data-lang="en" aria-pressed="false">EN</button></div>
+  <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Menu"><i></i></button>
+ </div>
+</header>
 
-    <div class="container">
+<main id="main">
+<section class="hero">
+ <div class="wrap">
+  <div>
+   <div class="tags"><span data-i18n="t1">شراكات العلامات</span><span data-i18n="t2">حكايات لا فواصل</span></div>
+   <h1 data-i18n="h1">لا نبيعك مساحة إعلانية. نكتب لعلامتك فصلاً داخل الحكاية.</h1>
+   <p class="lead" data-i18n="lead">هوسكرايب قناة وثائقية مرحة ومغامرات ميدانية. نبني مع الشركات شراكات تُروى أمام المشاهد بالأسلوب نفسه الذي اعتاد أن يثق به.</p>
+   <div class="actions">
+    <a class="btn btn--dark" href="#start" data-i18n="c1">ابدأ الشراكة</a>
+    <a class="btn btn--line" href="#formats" data-i18n="c2">استعرض الصيغ</a>
+   </div>
+  </div>
+  <div class="dial" aria-hidden="true">
+   <svg viewBox="0 0 400 400" fill="none" stroke="#17150C" stroke-width="4">
+    <circle cx="200" cy="200" r="185" fill="#fff"/>
+    <circle cx="200" cy="200" r="150" stroke-dasharray="3 12" stroke-linecap="round"/>
+    <g class="spin"><path d="M200 50v30M200 320v30M50 200h30M320 200h30M94 94l21 21M285 285l21 21M306 94l-21 21M115 285l-21 21"/></g>
+    <g id="needle"><path d="M200 90l38 110-38 110-38-110z" fill="#FFD400"/><path d="M200 90l38 110H162z" fill="#17150C"/></g>
+    <circle cx="200" cy="200" r="11" fill="#fff"/>
+   </svg>
+   <div class="brandtag" data-i18n="bt">علامتك</div>
+   <div class="badge" data-i18n="bd">اتجاه واحد: جمهور مهتم</div>
+  </div>
+ </div>
+</section>
 
-        <!-- Language Switcher -->
-        <div class="lang-switcher">
-            <button class="lang-btn" data-lang="ar" aria-label="العربية">عربي</button>
-            <button class="lang-btn" data-lang="en" aria-label="English">English</button>
-        </div>
+<div class="strip" aria-hidden="true"><div class="track">
+ <span data-i18n="m1">شراكات طويلة المدى</span><span data-i18n="m2">رعاية معلنة بوضوح</span><span data-i18n="m3">رسالتك داخل الحكاية</span><span data-i18n="m4">مراجعة قبل النشر</span><span data-i18n="m5">تقرير بعد النشر</span>
+ <span data-i18n="m1">شراكات طويلة المدى</span><span data-i18n="m2">رعاية معلنة بوضوح</span><span data-i18n="m3">رسالتك داخل الحكاية</span><span data-i18n="m4">مراجعة قبل النشر</span><span data-i18n="m5">تقرير بعد النشر</span>
+</div></div>
 
-        <!-- Hero -->
-        <header class="hero reveal">
-            <div class="logo-wrap">
-                <img src="logo.png" alt="هوسكرايب" loading="eager" fetchpriority="high" onerror="this.style.background='#f0efe8'; this.alt='Hoscribe';" />
-            </div>
-            <h1 data-i18n="hero-title">الشراكات والإعلانات</h1>
-            <p class="sub"><span class="real" data-i18n="brand-owner">كريم محمد إسماعيل</span> <span style="color:var(--text-tertiary);">·</span> <span data-i18n="brand-sub">Hoscribe</span></p>
-            <p class="tagline" data-i18n="hero-tagline">فرص تعاون مرنة ومبتكرة تصل بالعلامات التجارية إلى جمهور مهتم بالمحتوى الوثائقي العالمي.</p>
-        </header>
+<section id="why">
+ <div class="wrap">
+  <div class="head"><h2 data-i18n="w-t">لماذا تختار الشركات هوسكرايب</h2><p data-i18n="w-s">ثلاثة أسباب تجعل الحضور هنا مختلفاً عن أي مساحة إعلانية.</p></div>
+  <div class="why">
+   <article><svg viewBox="0 0 44 44" fill="none" stroke="#17150C" stroke-width="3" stroke-linejoin="round"><rect x="5" y="9" width="34" height="26" rx="4"/><path d="M18 17l9 5-9 5z" fill="#17150C"/></svg><h3 data-i18n="y1">انتباه مكتسب</h3><p data-i18n="y1d">المشاهد يأتي ليتعلم ويستمتع، فيبقى مع الحلقة حتى نهايتها بدل أن يتجاوزها.</p></article>
+   <article><svg viewBox="0 0 44 44" fill="none" stroke="#17150C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4l15 6v11c0 9-6 15-15 19C13 36 7 30 7 21V10z"/><path d="M15 22l5 5 9-10"/></svg><h3 data-i18n="y2">ثقة موثقة</h3><p data-i18n="y2d">نبحث ونقارن المصادر قبل أن نروي. هذه الصرامة تنتقل إلى العلامة التي تقف معنا.</p></article>
+   <article><svg viewBox="0 0 44 44" fill="none" stroke="#17150C" stroke-width="3" stroke-linejoin="round"><path d="M3 36L16 12l8 14 5-8 12 18z"/><circle cx="33" cy="9" r="3.5"/></svg><h3 data-i18n="y3">حكاية لا فاصل</h3><p data-i18n="y3d">علامتك تظهر داخل المغامرة نفسها بدور حقيقي في القصة، وليس شعاراً في الزاوية.</p></article>
+  </div>
+ </div>
+</section>
 
-        <!-- Cards – خدمات الشراكة -->
-        <div class="cards reveal">
-            <div class="card">
-                <h3 data-i18n="card1-title">رعاية الفيديو</h3>
-                <p data-i18n="card1-desc">دمج طبيعي للمنتج أو الخدمة داخل المحتوى الوثائقي مع عرض الفوائد العملية للمشاهد، بما يعزز الوعي ويحفز التفاعل.</p>
-            </div>
-            <div class="card">
-                <h3 data-i18n="card2-title">سلاسل مخصصة</h3>
-                <p data-i18n="card2-desc">سلسلة حلقات قصيرة تحكي رسالة العلامة التجارية بأسلوب قصصي وتفاعلي، لبناء علاقة مستدامة مع الجمهور المهتم بالمعرفة.</p>
-            </div>
-            <div class="card">
-                <h3 data-i18n="card3-title">نشر متعدد المنصات</h3>
-                <p data-i18n="card3-desc">ترويج متقاطع عبر يوتيوب، تيك توك، إنستغرام وسناب شات، مع تخصيص الرسالة لتتناسب مع طبيعة كل منصة وجذب شرائح متنوعة.</p>
-            </div>
-        </div>
+<section class="formats" id="formats">
+ <div class="wrap">
+  <div class="head"><h2 data-i18n="f-t">أربع صيغ تعمّق الشراكة تدريجياً</h2><p data-i18n="f-s">ابدأ بالمستوى الذي يناسب هدفك، وارتقِ حين تثبت النتائج.</p></div>
+  <ol class="ladder">
+   <li><div><h3 data-i18n="f1">محتوى مدمج</h3><p data-i18n="f1d">رسالتك داخل حلقة قائمة بأسلوب القناة.</p></div><div class="meter"><span data-i18n="lv">عمق الدمج</span><div><i class="on"></i><i></i><i></i><i></i></div></div></li>
+   <li><div><h3 data-i18n="f2">حلقة برعاية العلامة</h3><p data-i18n="f2d">حلقة كاملة تدور حول فكرة تخدم هدفك.</p></div><div class="meter"><span data-i18n="lv">عمق الدمج</span><div><i class="on"></i><i class="on"></i><i></i><i></i></div></div></li>
+   <li><div><h3 data-i18n="f3">حملة مغامرة ميدانية</h3><p data-i18n="f3d">رحلة مصورة نعيشها بمنتجك أو خدمتك في موقعها الحقيقي.</p></div><div class="meter"><span data-i18n="lv">عمق الدمج</span><div><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div></div></li>
+   <li><div><h3 data-i18n="f4">شراكة سنوية</h3><p data-i18n="f4d">سلسلة حلقات وحضور متكرر على القناة وسناب طوال العام.</p></div><div class="meter"><span data-i18n="lv">عمق الدمج</span><div><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div></li>
+  </ol>
+ </div>
+</section>
 
-        <!-- Contact Section with Form -->
-        <section class="contact-section reveal">
-            <h2 data-i18n="contact-title">بدء التعاون</h2>
-            <p class="sub-text" data-i18n="contact-desc">للاستفسار عن العروض أو مشاركة فكرتك، املأ النموذج أدناه وسنرد عليك في أقرب وقت.</p>
+<section id="plan">
+ <div class="wrap">
+  <div class="head"><h2 data-i18n="p-t">حدد هدفك لنقترح عليك نقطة البداية</h2><p data-i18n="p-s">اختر ما تريد تحقيقه، وسنقترح الصيغة الأنسب.</p></div>
+  <div class="planner">
+   <div class="goals" role="group" aria-label="Goal">
+    <button class="goal" type="button" data-k="1" aria-pressed="true" data-i18n="g1">أريد أن تعرفني شريحة جديدة</button>
+    <button class="goal" type="button" data-k="2" aria-pressed="false" data-i18n="g2">أطلق منتجاً أو خدمة</button>
+    <button class="goal" type="button" data-k="3" aria-pressed="false" data-i18n="g3">أبني ارتباطاً طويل الأمد</button>
+   </div>
+   <div class="result" id="res" aria-live="polite">
+    <h3 id="rt"></h3><p id="rp"></p>
+    <a class="btn btn--yellow" href="#start" id="rb" data-i18n="rb">ابدأ بهذا الخيار</a>
+   </div>
+  </div>
+ </div>
+</section>
 
-            <!-- START: Contact Form -->
-            <!-- IMPORTANT: Replace YOUR_FORM_ID with your actual Formspree form ID -->
-            <form id="contactForm" class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="fullName" data-i18n="form-name">الاسم الكامل</label>
-                        <input type="text" id="fullName" name="name" required placeholder="أحمد محمد" data-i18n-placeholder="form-name-placeholder">
-                    </div>
-                    <div class="form-group">
-                        <label for="email" data-i18n="form-email">البريد الإلكتروني</label>
-                        <input type="email" id="email" name="email" required placeholder="example@mail.com" data-i18n-placeholder="form-email-placeholder">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="subject" data-i18n="form-subject">الموضوع</label>
-                    <input type="text" id="subject" name="subject" required placeholder="استفسار عن رعاية فيديو" data-i18n-placeholder="form-subject-placeholder">
-                </div>
-                <div class="form-group">
-                    <label for="message" data-i18n="form-message">الرسالة</label>
-                    <textarea id="message" name="message" required placeholder="أكتب تفاصيل طلبك هنا..." data-i18n-placeholder="form-message-placeholder"></textarea>
-                </div>
-                <button type="submit" class="btn btn--primary" data-i18n="form-submit">إرسال الطلب</button>
-            </form>
+<section class="formats" id="flow" style="background:var(--y-soft);border-top:2px solid var(--ink)">
+ <div class="wrap">
+  <div class="head"><h2 data-i18n="s-t">كيف تسير الشراكة</h2><p data-i18n="s-s">مراحل واضحة من أول جلسة إلى تقرير النتائج.</p></div>
+  <div class="steps">
+   <div class="step"><h3 data-i18n="s1">جلسة تعريف</h3><p data-i18n="s1d">نفهم هدفك وجمهورك وما لا تريد قوله.</p></div>
+   <div class="step"><h3 data-i18n="s2">فكرة وسيناريو</h3><p data-i18n="s2d">نصيغ حكاية تحمل رسالتك بأسلوب القناة.</p></div>
+   <div class="step"><h3 data-i18n="s3">تصوير ومراجعة</h3><p data-i18n="s3d">ننتج ونعرض عليك النسخة قبل النشر.</p></div>
+   <div class="step"><h3 data-i18n="s4">نشر وتقرير</h3><p data-i18n="s4d">ننشر مع إعلان الرعاية بوضوح ونشاركك النتائج.</p></div>
+  </div>
+ </div>
+</section>
 
-            <div id="formSuccess" class="form-success" data-i18n="form-success-msg">
-                ✓ تم إرسال طلبك بنجاح! سنتواصل معك قريباً.
-            </div>
-            <!-- END: Contact Form -->
-
-            <br>
-            <a href="/" class="back-link" data-i18n="back-link">العودة إلى الرئيسية</a>
-        </section>
-
-        <!-- Footer -->
-        <footer class="footer reveal">
-            <p class="signoff" data-i18n="footer-signoff">— شراكات مؤثرة بروح وثائقية —</p>
-            <p class="credit" data-i18n="footer-credit">© 2026 هوسكرايب · Hoscribe — كريم محمد إسماعيل</p>
-        </footer>
-
+<section class="contact" id="start">
+ <div class="wrap">
+  <div>
+   <h2 data-i18n="k-t">ابدأ بملف قصير</h2>
+   <p class="sub" data-i18n="k-s">أخبرنا عن شركتك وهدفك، وسنجهز لك رسالة جاهزة للإرسال.</p>
+   <form id="frm" novalidate>
+    <div class="f"><label for="co" data-i18n="fc">اسم الشركة</label><input id="co" required autocomplete="organization" /></div>
+    <div class="f"><label for="nm" data-i18n="fn">اسمك</label><input id="nm" required autocomplete="name" /></div>
+    <div class="f"><label for="em" data-i18n="fe">بريدك الإلكتروني</label><input id="em" type="email" required autocomplete="email" dir="ltr" /></div>
+    <div class="f"><label for="fm" data-i18n="fg">الصيغة المهتم بها</label>
+     <select id="fm"><option value="1" data-i18n="f1">محتوى مدمج</option><option value="2" data-i18n="f2">حلقة برعاية العلامة</option><option value="3" data-i18n="f3">حملة مغامرة ميدانية</option><option value="4" data-i18n="f4">شراكة سنوية</option></select></div>
+    <div class="f full"><label for="ms" data-i18n="fx">ما الذي تريد تحقيقه؟</label><textarea id="ms"></textarea></div>
+    <div class="f full" style="flex-direction:row;gap:.8rem;flex-wrap:wrap">
+     <button class="btn btn--yellow" type="submit" data-i18n="fs">جهّز الرسالة</button>
+     <button class="btn btn--line" type="button" id="cp" style="color:var(--y);border-color:var(--y)" data-i18n="fp">نسخ النص</button>
     </div>
+    <p class="status" id="st" role="status"></p>
+   </form>
+  </div>
+  <div class="side">
+   <a href="https://youtube.com/@Hoscribe" target="_blank" rel="noopener noreferrer"><h3 data-i18n="yt">شاهد أعمالنا</h3><p data-i18n="ytd">تعرّف على أسلوب القناة قبل أن نتحدث.</p></a>
+   <a href="https://www.snapchat.com/add/hoscribe" target="_blank" rel="noopener noreferrer"><h3 data-i18n="sn">سناب شات</h3><p data-i18n="snd">كواليس المغامرات ولحظات يومية.</p></a>
+   <a href="me.html"><h3 data-i18n="me">تعرّف على كريم</h3><p data-i18n="med">القصة والرؤية وراء هوسكرايب.</p></a>
+  </div>
+ </div>
+</section>
+</main>
 
-    <!-- ==========================================================
-    Script – i18n + reveal + Form Handler
-    ========================================================== -->
-    <script>
-        (function() {
-            'use strict';
+<footer>
+ <div class="wrap">
+  <div class="fgrid">
+   <div><a class="brand" href="/"><img src="logo.png" alt="" width="42" height="42" onerror="this.style.visibility='hidden'" /><span>Hoscribe</span></a><p style="margin-top:.6rem;max-width:22em" data-i18n="ft">وثائقي مرح ومغامرات من كل مكان.</p></div>
+   <nav aria-label="Footer">
+    <a href="/" data-i18n="l0">الرئيسية</a>
+    <a href="https://youtube.com/@Hoscribe" target="_blank" rel="noopener noreferrer" data-i18n="l1">يوتيوب</a>
+    <a href="https://www.snapchat.com/add/hoscribe" target="_blank" rel="noopener noreferrer" data-i18n="l2">سناب شات</a>
+    <a href="excretion.html" data-i18n="l3">اقتراحات</a>
+    <a href="me.html" data-i18n="l4">من أكون</a>
+   </nav>
+  </div>
+  <div class="copy"><span data-i18n="cp">© 2026 Hoscribe — كريم محمد إسماعيل</span><a href="#top" data-i18n="up">العودة للأعلى</a></div>
+ </div>
+</footer>
 
-            const translations = {
-                ar: {
-                    'title': 'الشراكات والإعلانات | هوسكرايب',
-                    'meta-description': 'فرص التعاون والإعلانات مع هوسكرايب — محتوى وثائقي عالمي بسيط وأنيق.',
-                    'hero-title': 'الشراكات والإعلانات',
-                    'brand-owner': 'كريم محمد إسماعيل',
-                    'brand-sub': 'Hoscribe',
-                    'hero-tagline': 'فرص تعاون مرنة ومبتكرة تصل بالعلامات التجارية إلى جمهور مهتم بالمحتوى الوثائقي العالمي.',
-                    'card1-title': 'رعاية الفيديو',
-                    'card1-desc': 'دمج طبيعي للمنتج أو الخدمة داخل المحتوى الوثائقي مع عرض الفوائد العملية للمشاهد، بما يعزز الوعي ويحفز التفاعل.',
-                    'card2-title': 'سلاسل مخصصة',
-                    'card2-desc': 'سلسلة حلقات قصيرة تحكي رسالة العلامة التجارية بأسلوب قصصي وتفاعلي، لبناء علاقة مستدامة مع الجمهور المهتم بالمعرفة.',
-                    'card3-title': 'نشر متعدد المنصات',
-                    'card3-desc': 'ترويج متقاطع عبر يوتيوب، تيك توك، إنستغرام وسناب شات، مع تخصيص الرسالة لتتناسب مع طبيعة كل منصة وجذب شرائح متنوعة.',
-                    'contact-title': 'بدء التعاون',
-                    'contact-desc': 'للاستفسار عن العروض أو مشاركة فكرتك، املأ النموذج أدناه وسنرد عليك في أقرب وقت.',
-                    'form-name': 'الاسم الكامل',
-                    'form-name-placeholder': 'أحمد محمد',
-                    'form-email': 'البريد الإلكتروني',
-                    'form-email-placeholder': 'example@mail.com',
-                    'form-subject': 'الموضوع',
-                    'form-subject-placeholder': 'استفسار عن رعاية فيديو',
-                    'form-message': 'الرسالة',
-                    'form-message-placeholder': 'أكتب تفاصيل طلبك هنا...',
-                    'form-submit': 'إرسال الطلب',
-                    'form-success-msg': '✓ تم إرسال طلبك بنجاح! سنتواصل معك قريباً.',
-                    'back-link': 'العودة إلى الرئيسية',
-                    'footer-signoff': '— شراكات مؤثرة بروح وثائقية —',
-                    'footer-credit': '© 2026 هوسكرايب · Hoscribe — كريم محمد إسماعيل',
-                },
-                en: {
-                    'title': 'Partnerships & Advertising | Hoscribe',
-                    'meta-description': 'Collaboration and advertising opportunities with Hoscribe — simple and elegant global documentary content.',
-                    'hero-title': 'Partnerships & Advertising',
-                    'brand-owner': 'Karim Mohamed Ismail',
-                    'brand-sub': 'Hoscribe',
-                    'hero-tagline': 'Flexible and innovative collaboration opportunities that connect brands with an audience interested in global documentary content.',
-                    'card1-title': 'Video Sponsorship',
-                    'card1-desc': 'Natural integration of your product or service into the documentary content, highlighting practical benefits to viewers, enhancing awareness and encouraging engagement.',
-                    'card2-title': 'Custom Series',
-                    'card2-desc': 'Short series episodes that convey your brand message through storytelling and interaction, building a lasting relationship with knowledge-seeking audiences.',
-                    'card3-title': 'Multi-Platform Publishing',
-                    'card3-desc': 'Cross-promotion across YouTube, TikTok, Instagram, and Snapchat, with tailored messaging for each platform to attract diverse segments.',
-                    'contact-title': 'Start Collaborating',
-                    'contact-desc': 'For inquiries or to share your idea, fill out the form below and we will get back to you shortly.',
-                    'form-name': 'Full Name',
-                    'form-name-placeholder': 'Ahmed Mohamed',
-                    'form-email': 'Email Address',
-                    'form-email-placeholder': 'example@mail.com',
-                    'form-subject': 'Subject',
-                    'form-subject-placeholder': 'Video sponsorship inquiry',
-                    'form-message': 'Message',
-                    'form-message-placeholder': 'Write your message details here...',
-                    'form-submit': 'Send Request',
-                    'form-success-msg': '✓ Your request has been sent successfully! We will contact you soon.',
-                    'back-link': 'Back to home',
-                    'footer-signoff': '— Impactful partnerships with a documentary spirit —',
-                    'footer-credit': '© 2026 Hoscribe · هوسكرايب — Karim Mohamed Ismail',
-                }
-            };
+<script>
+(function(){
+'use strict';
+var CONTACT_EMAIL='hello@hoscribe.com'; /* غيّره إلى بريد الإعلانات الحقيقي */
+var SITE='https://hoscribe.vercel.app/ads.html';
+var T={ar:{},en:{
+'title':'Partnerships & Advertising | Hoscribe','md':'Brand partnerships with Hoscribe: integrated content, sponsored episodes, field adventure campaigns and annual partnerships.',
+'skip':'Skip to content','n1':'Why Hoscribe','n2':'Formats','n3':'Your goal','n4':'How it works','n5':'Start',
+'t1':'Brand partnerships','t2':'Stories, not breaks',
+'h1':'We don\'t sell you ad space. We write your brand a chapter inside the story.',
+'lead':'Hoscribe is a fun documentary and field-adventure channel. We build partnerships with companies that unfold in front of the viewer, in the same voice they already trust.',
+'c1':'Start a partnership','c2':'Explore formats','bt':'Your brand','bd':'One direction: an engaged audience',
+'m1':'Long-term partnerships','m2':'Clearly disclosed sponsorship','m3':'Your message inside the story','m4':'Review before publishing','m5':'Report after publishing',
+'w-t':'Why companies choose Hoscribe','w-s':'Three reasons being here is different from any ad slot.',
+'y1':'Earned attention','y1d':'Viewers come to learn and enjoy, so they stay to the end of the episode instead of skipping it.',
+'y2':'Documented trust','y2d':'We research and compare sources before we tell a story. That rigor carries over to the brand that stands with us.',
+'y3':'A story, not a break','y3d':'Your brand appears inside the adventure itself with a real role in the story, not a logo in the corner.',
+'f-t':'Four formats that deepen the partnership step by step','f-s':'Start at the level that fits your goal, and move up when results prove it.',
+'f1':'Integrated content','f1d':'Your message inside an existing episode, in the channel\'s style.',
+'f2':'Brand-sponsored episode','f2d':'A full episode built around an idea that serves your goal.',
+'f3':'Field adventure campaign','f3d':'A filmed trip where we live with your product or service in its real setting.',
+'f4':'Annual partnership','f4d':'A series of episodes and a recurring presence on the channel and Snapchat all year.',
+'lv':'Depth of integration',
+'p-t':'Pick your goal and we\'ll suggest where to start','p-s':'Choose what you want to achieve and we\'ll propose the best-fitting format.',
+'g1':'I want a new audience to know me','g2':'I\'m launching a product or service','g3':'I\'m building a long-term connection','rb':'Start with this option',
+'s-t':'How a partnership runs','s-s':'Clear stages from the first call to the results report.',
+'s1':'Intro call','s1d':'We learn your goal, your audience and what you don\'t want to say.',
+'s2':'Idea & script','s2d':'We shape a story that carries your message in the channel\'s style.',
+'s3':'Filming & review','s3d':'We produce it and show you the cut before it goes live.',
+'s4':'Publish & report','s4d':'We publish with clear sponsorship disclosure and share the results.',
+'k-t':'Start with a short brief','k-s':'Tell us about your company and goal, and we\'ll prepare a ready-to-send message.',
+'fc':'Company name','fn':'Your name','fe':'Your email','fg':'Format of interest','fx':'What do you want to achieve?','fs':'Prepare the message','fp':'Copy text',
+'yt':'Watch our work','ytd':'See the channel\'s style before we talk.','sn':'Snapchat','snd':'Adventure behind-the-scenes and daily moments.','me':'Meet Karim','med':'The story and vision behind Hoscribe.',
+'ft':'Fun documentary and adventures from everywhere.','l0':'Home','l1':'YouTube','l2':'Snapchat','l3':'Feedback','l4':'About me','cp':'© 2026 Hoscribe — Karim Mohamed Ismail','up':'Back to top'}};
+var R={ar:{1:['المحتوى المدمج','أسرع طريق للوصول: تظهر علامتك في حلقة قائمة بأسلوب لا يقطع المشاهدة.'],2:['حلقة برعاية العلامة','الإطلاق يحتاج شرحاً: حلقة كاملة تحكي فكرة المنتج وتجربته أمام المشاهد.'],3:['شراكة سنوية','الارتباط يُبنى بالتكرار: حضور متجدد عبر الحلقات والمغامرات على مدار العام.']},
+ en:{1:['Integrated content','The fastest way to reach people: your brand appears in an existing episode without interrupting the watch.'],2:['Brand-sponsored episode','A launch needs explaining: a full episode tells the idea behind the product and tries it in front of the viewer.'],3:['Annual partnership','Connection is built by repetition: a renewed presence across episodes and adventures all year.']}};
+var MAP={1:'1',2:'2',3:'4'};
+var lang='ar',goal='1';
+var els=document.querySelectorAll('[data-i18n]');
+els.forEach(function(e){var k=e.getAttribute('data-i18n');if(!T.ar[k])T.ar[k]=e.tagName==='META'?e.getAttribute('content'):e.innerHTML;});
+var btns=document.querySelectorAll('.lang button');
+function plan(){var r=R[lang][goal];document.getElementById('rt').textContent=r[0];document.getElementById('rp').textContent=r[1];
+ document.querySelectorAll('.goal').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.k===goal)});
+ var c=document.getElementById('res');c.style.animation='none';void c.offsetWidth;c.style.animation='';}
+function set(l,u){var d=T[l];if(!d)return;lang=l;
+ els.forEach(function(e){var k=e.getAttribute('data-i18n');if(d[k]===undefined)return;if(e.tagName==='META')e.setAttribute('content',d[k]);else e.innerHTML=d[k];});
+ document.title=d.title;var h=document.documentElement;h.lang=l;h.dir=l==='ar'?'rtl':'ltr';
+ btns.forEach(function(b){var a=b.dataset.lang===l;b.classList.toggle('active',a);b.setAttribute('aria-pressed',a)});
+ var c=document.querySelector('link[rel=canonical]');if(c)c.href=l==='ar'?SITE:SITE+'?lang=en';
+ try{localStorage.setItem('hoscribe-lang',l)}catch(e){}
+ if(u){var x=new URL(location.href);l==='ar'?x.searchParams.delete('lang'):x.searchParams.set('lang',l);history.replaceState({},'',x)}
+ plan();}
+function pref(){var q=new URLSearchParams(location.search).get('lang');if(q==='ar'||q==='en')return q;
+ try{var s=localStorage.getItem('hoscribe-lang');if(s==='ar'||s==='en')return s}catch(e){}
+ return (navigator.language||'ar').toLowerCase().indexOf('en')===0?'en':'ar';}
+btns.forEach(function(b){b.addEventListener('click',function(){set(b.dataset.lang,true)})});
+set(pref(),false);
 
-            const i18nElements = document.querySelectorAll('[data-i18n]');
-            const metaDescription = document.querySelector('meta[name="description"]');
-            const htmlEl = document.documentElement;
-            const langBtns = document.querySelectorAll('.lang-btn');
+/* Goal planner */
+document.querySelectorAll('.goal').forEach(function(b){b.addEventListener('click',function(){goal=b.dataset.k;plan();})});
+document.getElementById('rb').addEventListener('click',function(){document.getElementById('fm').value=MAP[goal]});
 
-            // For placeholders (data-i18n-placeholder)
-            const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
+/* Mobile menu */
+var burger=document.getElementById('burger'),menu=document.getElementById('menu');
+function closeMenu(){menu.classList.remove('open');burger.setAttribute('aria-expanded','false')}
+burger.addEventListener('click',function(){var o=menu.classList.toggle('open');burger.setAttribute('aria-expanded',o?'true':'false')});
+menu.querySelectorAll('a').forEach(function(a){a.addEventListener('click',closeMenu)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu()});
 
-            function setLanguage(lang) {
-                const dict = translations[lang];
-                if (!dict) return;
+/* Compass needle follows pointer */
+var dial=document.querySelector('.dial'),nd=document.getElementById('needle'),ang=0;
+if(dial&&nd&&matchMedia('(hover:hover)').matches&&!matchMedia('(prefers-reduced-motion:reduce)').matches){
+ window.addEventListener('pointermove',function(e){var r=dial.getBoundingClientRect(),
+  a=Math.atan2(e.clientY-(r.top+r.height/2),e.clientX-(r.left+r.width/2))*180/Math.PI+90;
+  ang+=((a-ang+540)%360)-180;nd.style.transform='rotate('+ang+'deg)';},{passive:true});
+}
 
-                // Update innerHTML for data-i18n elements
-                i18nElements.forEach(el => {
-                    const key = el.getAttribute('data-i18n');
-                    if (dict[key] !== undefined) {
-                        el.innerHTML = dict[key];
-                    }
-                });
-
-                // Update placeholders for data-i18n-placeholder elements
-                placeholderElements.forEach(el => {
-                    const key = el.getAttribute('data-i18n-placeholder');
-                    if (dict[key] !== undefined) {
-                        el.setAttribute('placeholder', dict[key]);
-                    }
-                });
-
-                if (metaDescription && dict['meta-description'] !== undefined) {
-                    metaDescription.setAttribute('content', dict['meta-description']);
-                }
-
-                htmlEl.setAttribute('lang', lang);
-                htmlEl.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-
-                langBtns.forEach(btn => {
-                    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
-                });
-
-                localStorage.setItem('hoscribe-lang', lang);
-            }
-
-            function getPreferredLanguage() {
-                const stored = localStorage.getItem('hoscribe-lang');
-                if (stored === 'ar' || stored === 'en') return stored;
-                const browserLang = navigator.language || navigator.languages?.[0] || '';
-                if (browserLang.startsWith('ar')) return 'ar';
-                if (browserLang.startsWith('en')) return 'en';
-                return 'ar';
-            }
-
-            langBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const lang = this.getAttribute('data-lang');
-                    if (lang) setLanguage(lang);
-                });
-            });
-
-            const initialLang = getPreferredLanguage();
-            setLanguage(initialLang);
-
-            // Reveal on scroll
-            const revealEls = document.querySelectorAll('.reveal');
-            if (revealEls.length) {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('visible');
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, { threshold: 0.12, rootMargin: '0px 0px -20px 0px' });
-                revealEls.forEach(el => observer.observe(el));
-            }
-
-            // ——————————————————————————————
-            // Form Handler – Formspree
-            // ——————————————————————————————
-            const form = document.getElementById('contactForm');
-            const successDiv = document.getElementById('formSuccess');
-
-            if (form) {
-                form.addEventListener('submit', function(e) {
-                    e.preventDefault();
-
-                    const formData = new FormData(form);
-
-                    fetch(form.action, {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'Accept': 'application/json'
-                        }
-                    }).then(response => {
-                        if (response.ok) {
-                            form.reset();
-                            successDiv.classList.add('visible');
-                            setTimeout(() => {
-                                successDiv.classList.remove('visible');
-                            }, 6000);
-                        } else {
-                            alert('حدث خطأ. يرجى المحاولة مرة أخرى.');
-                        }
-                    }).catch(error => {
-                        alert('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.');
-                    });
-                });
-            }
-
-        })();
-    </script>
-
+/* Brief -> mail */
+var frm=document.getElementById('frm'),st=document.getElementById('st'),last='';
+function build(){var g=function(i){return document.getElementById(i).value.trim()},
+ fm=document.getElementById('fm'),fmt=fm.options[fm.selectedIndex].text,en=lang==='en';
+ var body=(en?['Company: ','Name: ','Email: ','Format: ','Goal: ']:['الشركة: ','الاسم: ','البريد: ','الصيغة: ','الهدف: ']);
+ return {s:(en?'Partnership inquiry — ':'طلب شراكة — ')+g('co'),
+  b:body[0]+g('co')+'\n'+body[1]+g('nm')+'\n'+body[2]+g('em')+'\n'+body[3]+fmt+'\n'+body[4]+g('ms')};}
+frm.addEventListener('submit',function(e){e.preventDefault();
+ var ok=['co','nm','em'].every(function(i){var f=document.getElementById(i);return f.value.trim()&&f.checkValidity()});
+ if(!ok){st.textContent=lang==='en'?'Please fill in company, name and a valid email.':'يرجى تعبئة اسم الشركة والاسم وبريد صحيح.';return}
+ var m=build();last=m.s+'\n\n'+m.b;
+ st.textContent=lang==='en'?'Your mail app should open with the message. If it doesn\'t, use "Copy text" and send it to '+CONTACT_EMAIL+'.':'يفترض أن يفتح بريدك مع الرسالة. إن لم يفتح، استخدم «نسخ النص» وأرسله إلى '+CONTACT_EMAIL+'.';
+ location.href='mailto:'+CONTACT_EMAIL+'?subject='+encodeURIComponent(m.s)+'&body='+encodeURIComponent(m.b);});
+document.getElementById('cp').addEventListener('click',function(){var m=build();last=m.s+'\n\n'+m.b;
+ var done=function(){st.textContent=lang==='en'?'Text copied.':'تم نسخ النص.'};
+ if(navigator.clipboard)navigator.clipboard.writeText(last).then(done,function(){st.textContent=last});else st.textContent=last;});
+})();
+</script>
 </body>
 </html>
