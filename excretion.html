@@ -1,727 +1,432 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="title">الشكاوى والاقتراحات | هوسكرايب</title>
-    <meta name="description" data-i18n="meta-description" content="أرسل شكواك أو اقتراحك لتحسين محتوى هوسكرايب — نرحب بملاحظاتك.">
-    <link rel="canonical" href="https://hoscribe.netlify.app/excretion.html">
-    <link rel="icon" href="logo.png" type="image/png">
-    <link rel="apple-touch-icon" href="logo.png">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title data-i18n="title">اقتراحاتك | هوسكرايب — رأيك يصنع الحلقة القادمة</title>
+<meta name="description" data-i18n="meta-description" content="شاركنا اقتراحك أو ملاحظتك على هوسكرايب. فكرة حلقة، مكان نزوره، أو رأي في آخر ما قدمناه — نقرأ كل رسالة بعناية." />
+<meta name="author" content="كريم محمد إسماعيل" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="theme-color" content="#FFD400" />
+<link id="canonical-link" rel="canonical" href="https://hoscribe.vercel.app/excretion.html" />
+<link rel="alternate" hreflang="ar" href="https://hoscribe.vercel.app/excretion.html" />
+<link rel="alternate" hreflang="en" href="https://hoscribe.vercel.app/excretion.html?lang=en" />
+<link rel="alternate" hreflang="x-default" href="https://hoscribe.vercel.app/excretion.html" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Hoscribe" />
+<meta property="og:locale" content="ar_AR" />
+<meta property="og:locale:alternate" content="en_US" />
+<meta property="og:url" content="https://hoscribe.vercel.app/excretion.html" />
+<meta property="og:title" data-i18n="og-title" content="اقتراحاتك | هوسكرايب" />
+<meta property="og:description" data-i18n="og-description" content="فكرة حلقة؟ مكان نزوره؟ ملاحظة؟ رأيك يصنع الحلقة القادمة." />
+<meta property="og:image" content="https://hoscribe.vercel.app/logo.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="color-scheme" content="light" />
+<link rel="icon" href="logo.png" type="image/png" />
+<link rel="apple-touch-icon" href="logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ContactPage","url":"https://hoscribe.vercel.app/excretion.html","name":"اقتراحات هوسكرايب","inLanguage":"ar","isPartOf":{"@type":"WebSite","url":"https://hoscribe.vercel.app/","name":"Hoscribe"}}
+</script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--y:#FFD400;--y-deep:#FFC400;--y-soft:#FFF6C2;--ink:#17150C;--ink-2:#2A2716;--muted:#5C5840;--line:#E8E1B8;--bg:#FFFDF2;--err:#B3261E;--r:14px;--ease:.25s cubic-bezier(.2,.7,.2,1)}
+html{scroll-behavior:smooth;scroll-padding-top:84px;-webkit-font-smoothing:antialiased}
+body{font-family:'IBM Plex Sans Arabic','Cairo',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.75;text-wrap:pretty}
+h1,h2,h3{font-family:'Cairo',sans-serif;line-height:1.25;font-weight:800;text-wrap:balance}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1160px;margin:0 auto;padding-inline:1.5rem}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px;border-radius:6px}
+::selection{background:var(--ink);color:var(--y)}
+.skip{position:absolute;inset-inline-start:1rem;top:-60px;background:var(--ink);color:var(--y);padding:.5rem 1rem;border-radius:8px;z-index:100}
+.skip:focus{top:1rem}
+.progress{position:fixed;top:0;inset-inline:0;height:4px;background:var(--ink);transform:scaleX(0);transform-origin:100% 50%;z-index:80;pointer-events:none}
+[dir=ltr] .progress{transform-origin:0 50%}
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+/* Nav */
+.nav{position:sticky;top:0;z-index:50;background:var(--y);border-bottom:2px solid var(--ink);transition:box-shadow var(--ease)}
+.nav.scrolled{box-shadow:0 5px 0 var(--ink)}
+.nav .wrap{display:flex;align-items:center;gap:1.5rem;height:68px}
+.brand{display:flex;align-items:center;gap:.7rem;font-family:'Cairo';font-weight:900;font-size:1.25rem}
+.brand img{width:42px;height:42px;border-radius:50%;border:2px solid var(--ink);background:#fff;object-fit:cover}
+.menu{display:flex;gap:.3rem;margin-inline-start:auto}
+.menu a{padding:.4rem .85rem;border-radius:99px;font-weight:600;font-size:.95rem;transition:background var(--ease)}
+.menu a:hover{background:rgba(23,21,12,.12)}
+.menu a[aria-current]{background:var(--ink);color:var(--y)}
+.lang{display:flex;border:2px solid var(--ink);border-radius:99px;overflow:hidden}
+.lang button{font:600 .8rem 'IBM Plex Sans Arabic',sans-serif;background:transparent;border:0;padding:.3rem .8rem;cursor:pointer;color:var(--ink)}
+.lang button.active{background:var(--ink);color:var(--y)}
+.burger{display:none;width:44px;height:44px;border:2px solid var(--ink);border-radius:50%;background:transparent;cursor:pointer;place-items:center}
+.burger i,.burger i::before,.burger i::after{display:block;width:18px;height:2px;background:var(--ink);border-radius:2px;position:relative;transition:transform var(--ease),top var(--ease),background var(--ease)}
+.burger i::before,.burger i::after{content:"";position:absolute;inset-inline-start:0}
+.burger i::before{top:-6px}.burger i::after{top:6px}
+.burger[aria-expanded=true] i{background:transparent}
+.burger[aria-expanded=true] i::before{top:0;transform:rotate(45deg)}.burger[aria-expanded=true] i::after{top:0;transform:rotate(-45deg)}
 
-    <style>
-        /* ——————————————————————————————
-           Reset & Base – مطابق للرئيسية
-           —————————————————————————————— */
-        *,
-        *::before,
-        *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.8rem 1.6rem;border-radius:99px;font:700 1rem 'Cairo',sans-serif;border:2px solid var(--ink);transition:transform var(--ease),box-shadow var(--ease),background var(--ease),color var(--ease);cursor:pointer}
+.btn--dark{background:var(--ink);color:var(--y)}
+.btn--dark:hover{transform:translateY(-2px);box-shadow:0 6px 0 rgba(23,21,12,.25)}
+.btn--yellow{background:var(--y);color:var(--ink)}
+.btn--yellow:hover{transform:translateY(-2px);box-shadow:0 6px 0 var(--y-deep)}
+.btn--line{background:transparent;color:var(--ink)}
+.btn--line:hover{background:var(--ink);color:var(--y)}
+.btn:active{transform:translateY(1px);box-shadow:none}
+.btn[disabled]{opacity:.6;cursor:progress}
 
-        :root {
-            --bg: #fafafa;
-            --surface: #ffffff;
-            --text-primary: #1a1a1a;
-            --text-secondary: #6e6e73;
-            --text-tertiary: #8e8e93;
-            --gold: #b8953a;
-            --border: #e5e5ea;
-            --radius: 16px;
-            --transition: 0.25s cubic-bezier(0.25, 0.1, 0.15, 1);
-        }
+/* Hero + form */
+.hero{background:var(--y);border-bottom:2px solid var(--ink);position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(23,21,12,.17) 1.5px,transparent 1.7px);background-size:26px 26px;-webkit-mask-image:linear-gradient(#000,transparent 85%);mask-image:linear-gradient(#000,transparent 85%);pointer-events:none}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1fr 1.05fr;gap:3.5rem;align-items:start;padding-block:4.5rem 5rem}
+.crumb{display:inline-flex;gap:.5rem;align-items:center;background:var(--ink);color:var(--y);padding:.25rem .9rem;border-radius:99px;font:700 .85rem 'Cairo';margin-bottom:1.3rem}
+.hero h1{font-size:clamp(2.1rem,4.8vw,3.6rem);font-weight:900;margin-bottom:1.1rem}
+.hero .lead{font-size:1.15rem;max-width:30em;color:var(--ink-2);margin-bottom:2rem}
+.bubbles{width:100%;max-width:380px;display:block}
+.hero .wrap>div:first-child>*{animation:rise .8s both cubic-bezier(.2,.7,.2,1)}
+.hero .wrap>div:first-child>:nth-child(2){animation-delay:.08s}.hero .wrap>div:first-child>:nth-child(3){animation-delay:.16s}.hero .wrap>div:first-child>:nth-child(4){animation-delay:.24s}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}}
+.formcard{background:#fff;border:2px solid var(--ink);border-radius:var(--r);padding:2rem;box-shadow:10px 10px 0 var(--ink)}
+.formcard h2{font-size:1.5rem;margin-bottom:.3rem}
+.formcard .sub{color:var(--muted);margin-bottom:1.4rem;font-size:.98rem}
+.field{margin-bottom:1.2rem;border:0}
+.field>label,.field>legend{display:block;font:800 1rem 'Cairo';margin-bottom:.5rem;padding:0}
+.opt{font:500 .85rem 'IBM Plex Sans Arabic';color:var(--muted);margin-inline-start:.4rem}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem}
+.chips label{cursor:pointer}
+.chips input{position:absolute;opacity:0;pointer-events:none}
+.chips span{display:inline-block;padding:.4rem 1rem;border:2px solid var(--ink);border-radius:99px;font-weight:600;font-size:.93rem;transition:background var(--ease),color var(--ease)}
+.chips label:hover span{background:var(--y-soft)}
+.chips input:checked+span{background:var(--ink);color:var(--y)}
+.chips input:focus-visible+span{outline:3px solid var(--ink);outline-offset:3px}
+input[type=text],textarea{width:100%;font:inherit;color:var(--ink);background:#fff;border:2px solid var(--ink);border-radius:12px;padding:.75rem 1rem;transition:background var(--ease)}
+textarea{min-height:150px;resize:vertical;line-height:1.7}
+input::placeholder,textarea::placeholder{color:#8A8668}
+input:focus,textarea:focus{background:var(--y-soft);outline:3px solid var(--ink);outline-offset:2px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.meta{display:flex;justify-content:space-between;gap:1rem;font-size:.85rem;color:var(--muted);margin-top:.35rem;min-height:1.4em}
+.meta .err{color:var(--err);font-weight:600}
+.hp{position:absolute;inset-inline-start:-9999px;height:0;overflow:hidden}
+.send{width:100%;font-size:1.1rem;padding:.95rem 1.6rem}
+.note{font-size:.85rem;color:var(--muted);margin-top:.9rem;text-align:center}
+.done{text-align:center;padding:1.5rem .5rem}
+.done svg{width:64px;height:64px;margin:0 auto 1rem;display:block}
+.done h2{font-size:1.7rem;margin-bottom:.5rem}
+.done p{color:var(--ink-2);margin-bottom:1.4rem}
+.done .btn{margin:.25rem}
+[hidden]{display:none!important}
 
-        html {
-            scroll-behavior: smooth;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
+/* Sections */
+section{padding-block:5rem}
+.head{max-width:40rem;margin-bottom:2.6rem}
+.head h2{font-size:clamp(1.7rem,3.4vw,2.4rem);margin-bottom:.7rem}
+.head p{color:var(--muted);font-size:1.08rem}
+.process{background:var(--y-soft);border-bottom:2px solid var(--ink)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);counter-reset:s;border:2px solid var(--ink);border-radius:var(--r);background:#fff;overflow:hidden}
+.step{padding:1.8rem 1.6rem;border-inline-end:2px solid var(--ink);transition:background var(--ease)}
+.step:last-child{border:0}.step:hover{background:var(--y-soft)}
+.step::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--y);border:2px solid var(--ink);font:900 1.1rem 'Cairo';margin-bottom:1rem}
+.step h3{font-size:1.2rem;margin-bottom:.35rem}
+.step p{font-size:.96rem;color:var(--muted)}
+.tips{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.tip{padding:1.8rem;border:2px solid var(--ink);border-radius:var(--r);background:#fff;transition:transform var(--ease),box-shadow var(--ease)}
+.tip:hover{transform:translate(-3px,-3px);box-shadow:6px 6px 0 var(--ink)}
+.tip:first-child{background:var(--y)}
+.tip h3{font-size:1.25rem;margin-bottom:.4rem}
+.tip p{color:var(--ink-2)}
+.faqs{background:#fff;border-block:2px solid var(--ink)}
+.faqs .wrap{display:grid;grid-template-columns:.8fr 1.2fr;gap:3.5rem;align-items:start}
+.faqs .head{margin:0}
+details{border:2px solid var(--ink);border-radius:var(--r);background:var(--bg);margin-bottom:.8rem;transition:background var(--ease)}
+details[open]{background:var(--y-soft)}
+summary{list-style:none;cursor:pointer;padding:1rem 1.3rem;font:800 1.05rem 'Cairo';display:flex;justify-content:space-between;align-items:center;gap:1rem}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:1.5rem;line-height:1;transition:transform var(--ease)}
+details[open] summary::after{transform:rotate(45deg)}
+details p{padding:0 1.3rem 1.1rem;color:var(--ink-2)}
+.join{background:var(--ink);color:#fff;text-align:center}
+.join h2{color:var(--y);font-size:clamp(1.7rem,3.4vw,2.4rem);margin-bottom:.8rem}
+.join p{color:#D9D5BC;max-width:34em;margin:0 auto 1.8rem}
+.join .actions{display:flex;flex-wrap:wrap;gap:.9rem;justify-content:center}
+.join .btn--line{color:var(--y);border-color:var(--y)}
+.join .btn--line:hover{background:var(--y);color:var(--ink)}
 
-        body {
-            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
-            color: var(--text-primary);
-            line-height: 1.7;
-            min-height: 100vh;
-            padding: 2.8rem 1.8rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+/* Footer */
+footer{background:var(--y);border-top:2px solid var(--ink);padding-block:3rem 2rem}
+.fgrid{display:flex;flex-wrap:wrap;gap:2rem;justify-content:space-between;align-items:flex-start}
+.fgrid nav{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;font-weight:600}
+.fgrid nav a:hover{text-decoration:underline;text-underline-offset:4px}
+.copy{margin-top:2rem;padding-top:1.2rem;border-top:2px solid var(--ink);font-size:.9rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+.totop{position:fixed;inset-inline-end:1.2rem;bottom:1.2rem;width:48px;height:48px;border-radius:50%;background:var(--ink);color:var(--y);border:2px solid var(--ink);display:grid;place-items:center;z-index:60;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity var(--ease),transform var(--ease),visibility var(--ease),background var(--ease),color var(--ease)}
+.totop.show{opacity:1;visibility:visible;transform:none}.totop:hover{background:var(--y);color:var(--ink)}
 
-        .container {
-            max-width: 640px;
-            width: 100%;
-            margin: 0 auto;
-        }
-
-        /* ——————————————————————————————
-           Lang Switcher
-           —————————————————————————————— */
-        .lang-switcher {
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.2rem;
-            margin-bottom: 2.4rem;
-        }
-
-        .lang-btn {
-            background: transparent;
-            border: none;
-            padding: 0.2rem 0.9rem;
-            font-family: 'Cairo', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 400;
-            color: var(--text-tertiary);
-            cursor: pointer;
-            border-radius: 30px;
-            transition: var(--transition);
-            letter-spacing: 0.03em;
-        }
-
-        .lang-btn:hover {
-            color: var(--text-primary);
-            background: var(--border);
-        }
-
-        .lang-btn.active {
-            color: var(--text-primary);
-            background: var(--surface);
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
-            font-weight: 600;
-        }
-
-        /* ——————————————————————————————
-           Hero
-           —————————————————————————————— */
-        .hero {
-            text-align: center;
-            padding: 1.6rem 0 2.4rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .logo-wrap {
-            display: inline-block;
-            margin-bottom: 1.4rem;
-        }
-
-        .logo-wrap img {
-            width: 76px;
-            height: 76px;
-            border-radius: 50%;
-            object-fit: cover;
-            display: block;
-            background: #f0efe8;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
-        }
-
-        .hero h1 {
-            font-size: 2.4rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            line-height: 1.1;
-            color: var(--text-primary);
-            margin-bottom: 0.1rem;
-        }
-
-        .hero .sub {
-            font-size: 0.9rem;
-            font-weight: 300;
-            color: var(--text-secondary);
-            margin-top: 0.1rem;
-        }
-
-        .hero .sub .real {
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .hero .tagline {
-            font-size: 0.85rem;
-            font-weight: 300;
-            color: var(--text-tertiary);
-            margin-top: 0.6rem;
-            max-width: 440px;
-            margin-left: auto;
-            margin-right: auto;
-            letter-spacing: 0.02em;
-        }
-
-        /* ——————————————————————————————
-           Cards – بدون أيقونات، أنيقة
-           —————————————————————————————— */
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
-            padding: 2.4rem 0 2rem;
-            border-top: 1px solid var(--border);
-            margin-top: 0.2rem;
-        }
-
-        .card {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 1.6rem 1.2rem;
-            border: 1px solid var(--border);
-            transition: var(--transition);
-            text-align: center;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
-        }
-
-        .card h3 {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 0.3rem;
-        }
-
-        .card p {
-            font-size: 0.8rem;
-            font-weight: 300;
-            color: var(--text-secondary);
-            line-height: 1.7;
-        }
-
-        /* ——————————————————————————————
-           Contact Section - New Form Style
-           —————————————————————————————— */
-        .contact-section {
-            padding: 2.4rem 0 2rem;
-            border-top: 1px solid var(--border);
-            text-align: center;
-        }
-
-        .contact-section h2 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 0.2rem;
-        }
-
-        .contact-section .sub-text {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            font-weight: 300;
-            max-width: 420px;
-            margin: 0 auto 1.8rem;
-            line-height: 1.8;
-        }
-
-        /* Form Styles */
-        .contact-form {
-            text-align: right;
-            max-width: 480px;
-            margin: 0 auto;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-            text-align: right;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 0.2rem;
-            letter-spacing: 0.03em;
-            text-transform: uppercase;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.7rem 1rem;
-            font-family: 'Cairo', sans-serif;
-            font-size: 0.9rem;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            transition: var(--transition);
-            color: var(--text-primary);
-            outline: none;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            border-color: var(--text-primary);
-            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.03);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.8rem;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.6rem 2.2rem;
-            border-radius: 40px;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            font-size: 0.85rem;
-            text-decoration: none;
-            background: transparent;
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: var(--transition);
-            line-height: 1.4;
-            letter-spacing: 0.02em;
-            width: 100%;
-        }
-
-        .btn:hover {
-            background: var(--text-primary);
-            color: #fff;
-            border-color: var(--text-primary);
-            transform: scale(0.97);
-        }
-
-        .btn:active {
-            transform: scale(0.95);
-        }
-
-        .btn--primary {
-            background: var(--text-primary);
-            color: #fff;
-            border-color: var(--text-primary);
-        }
-
-        .btn--primary:hover {
-            background: #2a2a2a;
-            border-color: #2a2a2a;
-        }
-
-        .btn--ghost {
-            background: transparent;
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-        }
-
-        .btn--ghost:hover {
-            background: var(--text-primary);
-            color: #fff;
-            border-color: var(--text-primary);
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 1.2rem;
-            color: var(--text-tertiary);
-            text-decoration: none;
-            font-size: 0.8rem;
-            font-weight: 300;
-            transition: color 0.2s ease;
-            letter-spacing: 0.02em;
-        }
-
-        .back-link:hover {
-            color: var(--text-primary);
-        }
-
-        /* Success Message */
-        .form-success {
-            display: none;
-            padding: 1.2rem;
-            background: #f0f7f0;
-            border: 1px solid #b8d9b8;
-            border-radius: var(--radius);
-            color: #2a5e2a;
-            font-size: 0.95rem;
-            margin-top: 1.2rem;
-            text-align: center;
-        }
-
-        .form-success.visible {
-            display: block;
-        }
-
-        /* ——————————————————————————————
-           Footer
-           —————————————————————————————— */
-        .footer {
-            padding: 2.4rem 0 1.2rem;
-            text-align: center;
-            border-top: 1px solid var(--border);
-            margin-top: 0.2rem;
-        }
-
-        .footer .signoff {
-            font-size: 0.85rem;
-            font-weight: 300;
-            color: var(--text-secondary);
-            margin-bottom: 0.2rem;
-        }
-
-        .footer .credit {
-            font-size: 0.65rem;
-            font-weight: 300;
-            color: var(--text-tertiary);
-            margin-top: 0.4rem;
-            letter-spacing: 0.02em;
-        }
-
-        /* ——————————————————————————————
-           Reveal
-           —————————————————————————————— */
-        .reveal {
-            opacity: 0;
-            transform: translateY(16px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* ——————————————————————————————
-           Responsive
-           —————————————————————————————— */
-        @media (max-width: 640px) {
-            body {
-                padding: 1.6rem 1.2rem;
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .hero .sub {
-                font-size: 0.8rem;
-            }
-
-            .cards {
-                grid-template-columns: 1fr;
-                gap: 0.8rem;
-                padding: 1.6rem 0;
-            }
-
-            .card {
-                padding: 1.2rem 1rem;
-            }
-
-            .contact-section h2 {
-                font-size: 1.2rem;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-                gap: 0;
-            }
-
-            .btn {
-                padding: 0.5rem 1.6rem;
-                font-size: 0.8rem;
-            }
-
-            .logo-wrap img {
-                width: 64px;
-                height: 64px;
-            }
-
-            .lang-switcher {
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 400px) {
-            .hero h1 {
-                font-size: 1.6rem;
-            }
-            .contact-section .sub-text {
-                font-size: 0.8rem;
-            }
-        }
-
-        ::-webkit-scrollbar {
-            width: 3px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 10px;
-        }
-    </style>
+@media(max-width:900px){
+ .menu{display:none}.lang{margin-inline-start:auto}.burger{display:grid}
+ .menu.open{display:flex;flex-direction:column;position:absolute;top:100%;inset-inline:0;background:var(--y);border-bottom:2px solid var(--ink);padding:.8rem 1.5rem 1.2rem;gap:.2rem}
+ .menu.open a{padding:.8rem 1rem;font-size:1.05rem}
+ .hero .wrap,.faqs .wrap{grid-template-columns:1fr;gap:2.2rem}
+ .hero .wrap{padding-block:3rem 3.5rem}.bubbles{max-width:260px}
+ .tips{grid-template-columns:1fr}.steps{grid-template-columns:1fr}
+ .step{border-inline-end:0;border-bottom:2px solid var(--ink)}.step:last-child{border:0}
+ section{padding-block:3.8rem}
+}
+@media(max-width:520px){.brand span{display:none}.row{grid-template-columns:1fr}.formcard{padding:1.4rem;box-shadow:6px 6px 0 var(--ink)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media(print){.nav,.totop,.progress{display:none}}
+</style>
 </head>
 <body>
+<div class="progress" id="bar" aria-hidden="true"></div>
+<a class="skip" href="#main" data-i18n="skip">تخطَّ إلى المحتوى</a>
 
-    <div class="container">
+<header class="nav" id="top">
+ <div class="wrap">
+  <a class="brand" href="/" aria-label="Hoscribe"><img src="logo.png" alt="" width="42" height="42" onerror="this.style.visibility='hidden'" /><span>Hoscribe</span></a>
+  <nav class="menu" id="menu" aria-label="Main">
+   <a href="/" data-i18n="n-home">الرئيسية</a>
+   <a href="excretion.html" aria-current="page" data-i18n="n-fb">اقتراحات</a>
+   <a href="me.html" data-i18n="n-me">من أكون</a>
+   <a href="ads.html" data-i18n="n-ads">للإعلانات</a>
+  </nav>
+  <div class="lang" role="group" aria-label="Language">
+   <button data-lang="ar" aria-pressed="true">عربي</button><button data-lang="en" aria-pressed="false">EN</button>
+  </div>
+  <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="menu" data-i18n-aria="menu" aria-label="القائمة"><i></i></button>
+ </div>
+</header>
 
-        <!-- Language Switcher -->
-        <div class="lang-switcher">
-            <button class="lang-btn" data-lang="ar" aria-label="العربية">عربي</button>
-            <button class="lang-btn" data-lang="en" aria-label="English">English</button>
-        </div>
+<main id="main">
+<section class="hero" style="padding:0">
+ <div class="wrap">
+  <div>
+   <span class="crumb" data-i18n="crumb">رأيك يهمنا</span>
+   <h1 data-i18n="h-title">الحلقة القادمة قد تبدأ من رسالتك</h1>
+   <p class="lead" data-i18n="h-lead">فكرة تحمسك؟ مكان تحلم أن نزوره؟ أو ملاحظة تجعل ما نقدمه أفضل؟ اكتب لنا، فهوسكرايب يُصنع مع جمهوره لا بعيداً عنه.</p>
+   <svg class="bubbles" viewBox="0 0 380 190" fill="none" stroke="#17150C" stroke-width="4" stroke-linejoin="round" aria-hidden="true">
+    <path d="M18 20h210a12 12 0 0112 12v70a12 12 0 01-12 12H88l-34 28v-28H18a12 12 0 01-12-12V32a12 12 0 0112-12z" fill="#fff"/>
+    <path d="M36 50h150M36 74h110" stroke-linecap="round"/>
+    <path d="M362 82H206a12 12 0 00-12 12v50a12 12 0 0012 12h100l30 24v-24h26a12 12 0 0012-12V94a12 12 0 00-12-12z" fill="#17150C" stroke="#17150C"/>
+    <path d="M216 108h110M216 130h70" stroke="#FFD400" stroke-linecap="round"/>
+   </svg>
+  </div>
 
-        <!-- Hero -->
-        <header class="hero reveal">
-            <div class="logo-wrap">
-                <img src="logo.png" alt="هوسكرايب" loading="eager" fetchpriority="high" onerror="this.style.background='#f0efe8'; this.alt='Hoscribe';" />
-            </div>
-            <h1 data-i18n="hero-title">الشكاوى والاقتراحات</h1>
-            <p class="sub"><span class="real" data-i18n="brand-owner">كريم محمد إسماعيل</span> <span style="color:var(--text-tertiary);">·</span> <span data-i18n="brand-sub">Hoscribe</span></p>
-            <p class="tagline" data-i18n="hero-tagline">نحن نستمع إليك — شاركنا رأيك لنساعد في تحسين المحتوى وتطويره باستمرار.</p>
-        </header>
-
-        <!-- Cards – أنواع الملاحظات -->
-        <div class="cards reveal">
-            <div class="card">
-                <h3 data-i18n="card1-title">شكوى فنية</h3>
-                <p data-i18n="card1-desc">مشكلة في جودة الصوت أو الصورة، أو عطل تقني في الفيديو — نعمل على حلها بأسرع وقت.</p>
-            </div>
-            <div class="card">
-                <h3 data-i18n="card2-title">اقتراح محتوى</h3>
-                <p data-i18n="card2-desc">موضوع جديد ترغب في مشاهدته، أو فكرة لتطوير السرد الوثائقي — نقدر كل فكرة مبدعة.</p>
-            </div>
-            <div class="card">
-                <h3 data-i18n="card3-title">رأي عام</h3>
-                <p data-i18n="card3-desc">انطباعك عن القناة، أو أسلوب الطرح، أو أي ملاحظة تراها مناسبة لتقديم تجربة أفضل.</p>
-            </div>
-        </div>
-
-        <!-- Contact Section with Form -->
-        <section class="contact-section reveal">
-            <h2 data-i18n="contact-title">أرسل ملاحظتك</h2>
-            <p class="sub-text" data-i18n="contact-desc">نرحب بكل رسالة تصلنا — سنقرأها بعناية ونسعى للرد خلال 48 ساعة.</p>
-
-            <!-- START: Contact Form -->
-            <!-- IMPORTANT: Replace YOUR_FORM_ID with your actual Formspree form ID -->
-            <form id="feedbackForm" class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="fullName" data-i18n="form-name">الاسم الكامل</label>
-                        <input type="text" id="fullName" name="name" required placeholder="أحمد محمد" data-i18n-placeholder="form-name-placeholder">
-                    </div>
-                    <div class="form-group">
-                        <label for="email" data-i18n="form-email">البريد الإلكتروني</label>
-                        <input type="email" id="email" name="email" required placeholder="example@mail.com" data-i18n-placeholder="form-email-placeholder">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="subject" data-i18n="form-subject">نوع الرسالة</label>
-                    <input type="text" id="subject" name="subject" required placeholder="شكوى فنية / اقتراح محتوى" data-i18n-placeholder="form-subject-placeholder">
-                </div>
-                <div class="form-group">
-                    <label for="message" data-i18n="form-message">الرسالة</label>
-                    <textarea id="message" name="message" required placeholder="اكتب تفاصيل ملاحظتك هنا..." data-i18n-placeholder="form-message-placeholder"></textarea>
-                </div>
-                <button type="submit" class="btn btn--primary" data-i18n="form-submit">إرسال الملاحظة</button>
-            </form>
-
-            <div id="formSuccess" class="form-success" data-i18n="form-success-msg">
-                ✓ تم استلام رسالتك بنجاح! نشكرك على تواصلك.
-            </div>
-            <!-- END: Contact Form -->
-
-            <br>
-            <a href="/" class="back-link" data-i18n="back-link">العودة إلى الرئيسية</a>
-        </section>
-
-        <!-- Footer -->
-        <footer class="footer reveal">
-            <p class="signoff" data-i18n="footer-signoff">— صوتك هو دليلنا للتطوير —</p>
-            <p class="credit" data-i18n="footer-credit">© 2026 هوسكرايب · Hoscribe — كريم محمد إسماعيل</p>
-        </footer>
-
+  <div class="formcard" id="formcard">
+   <form id="fb" novalidate>
+    <h2 data-i18n="f-h">أرسل اقتراحك</h2>
+    <p class="sub" data-i18n="f-sub">دقيقة واحدة تكفي. الاسم ووسيلة التواصل اختياريان.</p>
+    <fieldset class="field">
+     <legend data-i18n="f-type">ما نوع رسالتك؟</legend>
+     <div class="chips">
+      <label><input type="radio" name="type" value="idea" checked /><span data-i18n="c1">فكرة حلقة</span></label>
+      <label><input type="radio" name="type" value="place" /><span data-i18n="c2">مكان أو مغامرة</span></label>
+      <label><input type="radio" name="type" value="note" /><span data-i18n="c3">ملاحظة على حلقة</span></label>
+      <label><input type="radio" name="type" value="other" /><span data-i18n="c4">شيء آخر</span></label>
+     </div>
+    </fieldset>
+    <div class="field">
+     <label for="msg" data-i18n="f-msg">اقتراحك</label>
+     <textarea id="msg" name="message" maxlength="1000" required aria-describedby="msg-meta" data-i18n="f-msg-ph" placeholder="اكتب فكرتك بحرّية: ما هي، ولماذا تعتقد أنها تستحق حلقة؟"></textarea>
+     <div class="meta" id="msg-meta"><span class="err" id="err" role="alert"></span><span id="cnt">0 / 1000</span></div>
     </div>
+    <div class="row">
+     <div class="field"><label for="nm"><span data-i18n="f-name">اسمك</span><span class="opt" data-i18n="opt">(اختياري)</span></label><input type="text" id="nm" name="name" autocomplete="name" maxlength="60" /></div>
+     <div class="field"><label for="ct"><span data-i18n="f-ct">للتواصل</span><span class="opt" data-i18n="opt">(اختياري)</span></label><input type="text" id="ct" name="contact" autocomplete="email" maxlength="80" data-i18n="f-ct-ph" placeholder="بريد أو حساب سناب" /></div>
+    </div>
+    <div class="hp" aria-hidden="true"><label>Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label></div>
+    <button class="btn btn--dark send" id="go" type="submit" data-i18n="f-send">أرسل اقتراحك</button>
+    <p class="note" data-i18n="f-note">نستخدم بياناتك فقط لقراءة اقتراحك والتواصل معك بشأنه عند الحاجة.</p>
+   </form>
+   <div class="done" id="done" role="status" tabindex="-1" hidden>
+    <svg viewBox="0 0 64 64" fill="none" stroke="#17150C" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="32" cy="32" r="28" fill="#FFD400"/><path d="M20 33l9 9 16-18"/></svg>
+    <h2 data-i18n="d-h">وصلتنا رسالتك، شكراً لك</h2>
+    <p id="done-p" data-i18n="d-p">قراءة اقتراحك تهمنا فعلاً. تابعنا، فقد تجد فكرتك في إحدى الحلقات القادمة.</p>
+    <a class="btn btn--dark" href="https://youtube.com/@Hoscribe" target="_blank" rel="noopener noreferrer" data-i18n="yt-b">زيارة القناة</a>
+    <button class="btn btn--line" type="button" id="again" data-i18n="d-again">أرسل اقتراحاً آخر</button>
+   </div>
+  </div>
+ </div>
+</section>
 
-    <!-- ==========================================================
-    Script – i18n + reveal + Form Handler
-    ========================================================== -->
-    <script>
-        (function() {
-            'use strict';
+<section class="process" id="after">
+ <div class="wrap">
+  <div class="head"><h2 data-i18n="s-title">ماذا يحدث بعد الإرسال؟</h2><p data-i18n="s-sub">طريق واضح من رسالتك إلى الشاشة.</p></div>
+  <div class="steps">
+   <div class="step"><h3 data-i18n="s1-t">نقرأ رسالتك</h3><p data-i18n="s1-d">تصلنا كما كتبتها، من دون وسطاء.</p></div>
+   <div class="step"><h3 data-i18n="s2-t">نضعها في قائمة الأفكار</h3><p data-i18n="s2-d">نجمع الأفكار المتشابهة ونرى ما يستحق البحث أولاً.</p></div>
+   <div class="step"><h3 data-i18n="s3-t">قد تراها في حلقة</h3><p data-i18n="s3-d">إن اخترناها نبحث فيها ونحوّلها إلى حلقة أو مغامرة.</p></div>
+  </div>
+ </div>
+</section>
 
-            const translations = {
-                ar: {
-                    'title': 'الشكاوى والاقتراحات | هوسكرايب',
-                    'meta-description': 'أرسل شكواك أو اقتراحك لتحسين محتوى هوسكرايب — نرحب بملاحظاتك.',
-                    'hero-title': 'الشكاوى والاقتراحات',
-                    'brand-owner': 'كريم محمد إسماعيل',
-                    'brand-sub': 'Hoscribe',
-                    'hero-tagline': 'نحن نستمع إليك — شاركنا رأيك لنساعد في تحسين المحتوى وتطويره باستمرار.',
-                    'card1-title': 'شكوى فنية',
-                    'card1-desc': 'مشكلة في جودة الصوت أو الصورة، أو عطل تقني في الفيديو — نعمل على حلها بأسرع وقت.',
-                    'card2-title': 'اقتراح محتوى',
-                    'card2-desc': 'موضوع جديد ترغب في مشاهدته، أو فكرة لتطوير السرد الوثائقي — نقدر كل فكرة مبدعة.',
-                    'card3-title': 'رأي عام',
-                    'card3-desc': 'انطباعك عن القناة، أو أسلوب الطرح، أو أي ملاحظة تراها مناسبة لتقديم تجربة أفضل.',
-                    'contact-title': 'أرسل ملاحظتك',
-                    'contact-desc': 'نرحب بكل رسالة تصلنا — سنقرأها بعناية ونسعى للرد خلال 48 ساعة.',
-                    'form-name': 'الاسم الكامل',
-                    'form-name-placeholder': 'أحمد محمد',
-                    'form-email': 'البريد الإلكتروني',
-                    'form-email-placeholder': 'example@mail.com',
-                    'form-subject': 'نوع الرسالة',
-                    'form-subject-placeholder': 'شكوى فنية / اقتراح محتوى',
-                    'form-message': 'الرسالة',
-                    'form-message-placeholder': 'اكتب تفاصيل ملاحظتك هنا...',
-                    'form-submit': 'إرسال الملاحظة',
-                    'form-success-msg': '✓ تم استلام رسالتك بنجاح! نشكرك على تواصلك.',
-                    'back-link': 'العودة إلى الرئيسية',
-                    'footer-signoff': '— صوتك هو دليلنا للتطوير —',
-                    'footer-credit': '© 2026 هوسكرايب · Hoscribe — كريم محمد إسماعيل',
-                },
-                en: {
-                    'title': 'Feedback & Suggestions | Hoscribe',
-                    'meta-description': 'Send your complaint or suggestion to improve Hoscribe content — we welcome your feedback.',
-                    'hero-title': 'Feedback & Suggestions',
-                    'brand-owner': 'Karim Mohamed Ismail',
-                    'brand-sub': 'Hoscribe',
-                    'hero-tagline': 'We listen to you — share your opinion to help us continuously improve and develop the content.',
-                    'card1-title': 'Technical Complaint',
-                    'card1-desc': 'Issue with audio or video quality, or a technical glitch in the video — we work to resolve it as quickly as possible.',
-                    'card2-title': 'Content Suggestion',
-                    'card2-desc': 'A new topic you would like to see, or an idea to develop the documentary narrative — we appreciate every creative idea.',
-                    'card3-title': 'General Opinion',
-                    'card3-desc': 'Your impression of the channel, the presentation style, or any other feedback you find relevant to provide a better experience.',
-                    'contact-title': 'Send Your Feedback',
-                    'contact-desc': 'We welcome every message we receive — we will read it carefully and aim to respond within 48 hours.',
-                    'form-name': 'Full Name',
-                    'form-name-placeholder': 'Ahmed Mohamed',
-                    'form-email': 'Email Address',
-                    'form-email-placeholder': 'example@mail.com',
-                    'form-subject': 'Message Type',
-                    'form-subject-placeholder': 'Technical complaint / Content suggestion',
-                    'form-message': 'Message',
-                    'form-message-placeholder': 'Write your feedback details here...',
-                    'form-submit': 'Send Feedback',
-                    'form-success-msg': '✓ Your message has been received successfully! Thank you for contacting us.',
-                    'back-link': 'Back to home',
-                    'footer-signoff': '— Your voice is our guide to improvement —',
-                    'footer-credit': '© 2026 Hoscribe · هوسكرايب — Karim Mohamed Ismail',
-                }
-            };
+<section id="tips">
+ <div class="wrap">
+  <div class="head"><h2 data-i18n="t-title">كيف تكتب اقتراحاً نحبه؟</h2><p data-i18n="t-sub">لا توجد صيغة رسمية، لكن هذه الأمور تساعدنا على فهم فكرتك بسرعة.</p></div>
+  <div class="tips">
+   <article class="tip"><h3 data-i18n="t1-t">كن محدداً</h3><p data-i18n="t1-d">«قصة مدينة غرقت قبل ألف عام» أوضح من «شيء عن التاريخ».</p></article>
+   <article class="tip"><h3 data-i18n="t2-t">قل لنا لماذا يهمك</h3><p data-i18n="t2-d">ما الذي أثار فضولك؟ سببك يساعدنا على رؤية الفكرة بعينك.</p></article>
+   <article class="tip"><h3 data-i18n="t3-t">أضف ما تعرفه</h3><p data-i18n="t3-d">اسم مكان، تاريخ، أو مصدر قرأت فيه؛ كل تفصيلة تختصر علينا البحث.</p></article>
+  </div>
+ </div>
+</section>
 
-            const i18nElements = document.querySelectorAll('[data-i18n]');
-            const metaDescription = document.querySelector('meta[name="description"]');
-            const htmlEl = document.documentElement;
-            const langBtns = document.querySelectorAll('.lang-btn');
-            const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
+<section class="faqs" id="faq">
+ <div class="wrap">
+  <div class="head"><h2 data-i18n="q-title">أسئلة شائعة</h2><p data-i18n="q-sub">إجابات سريعة قبل أن ترسل.</p></div>
+  <div>
+   <details><summary data-i18n="q1">هل يجب أن أكتب اسمي؟</summary><p data-i18n="a1">لا. الاسم ووسيلة التواصل اختياريان، ويكفي أن تكتب اقتراحك.</p></details>
+   <details><summary data-i18n="q2">هل ستردّون عليّ؟</summary><p data-i18n="a2">نقرأ ما يصلنا. إن تركت وسيلة تواصل وكان اقتراحك قيد التنفيذ فقد نكتب لك.</p></details>
+   <details><summary data-i18n="q3">هل أستطيع اقتراح مكان بعيد أو فكرة جريئة؟</summary><p data-i18n="a3">طبعاً. المغامرة في صميم القناة، اكتب فكرتك ونحن نقرر ما يمكن تنفيذه.</p></details>
+   <details><summary data-i18n="q4">كيف تُستخدم بياناتي؟</summary><p data-i18n="a4">تُستخدم فقط لقراءة اقتراحك والتواصل معك بشأنه عند الحاجة.</p></details>
+  </div>
+ </div>
+</section>
 
-            function setLanguage(lang) {
-                const dict = translations[lang];
-                if (!dict) return;
+<section class="join">
+ <div class="wrap">
+  <h2 data-i18n="j-title">تفضّل الحوار المباشر؟</h2>
+  <p data-i18n="j-text">نلتقي أيضاً في التعليقات وعلى سناب، وكل رأي هناك يصل إلينا.</p>
+  <div class="actions">
+   <a class="btn btn--yellow" href="https://youtube.com/@Hoscribe" target="_blank" rel="noopener noreferrer" data-i18n="yt-b">زيارة القناة</a>
+   <a class="btn btn--line" href="https://www.snapchat.com/add/hoscribe" target="_blank" rel="noopener noreferrer" data-i18n="sn-b">أضِفنا على سناب</a>
+  </div>
+ </div>
+</section>
+</main>
 
-                i18nElements.forEach(el => {
-                    const key = el.getAttribute('data-i18n');
-                    if (dict[key] !== undefined) {
-                        el.innerHTML = dict[key];
-                    }
-                });
+<footer>
+ <div class="wrap">
+  <div class="fgrid">
+   <div><a class="brand" href="/"><img src="logo.png" alt="" width="42" height="42" onerror="this.style.visibility='hidden'" /><span>Hoscribe</span></a><p style="margin-top:.6rem;max-width:22em" data-i18n="ft-tag">وثائقي مرح ومغامرات من كل مكان.</p></div>
+   <nav aria-label="Footer">
+    <a href="https://youtube.com/@Hoscribe" target="_blank" rel="noopener noreferrer" data-i18n="l-yt">يوتيوب</a>
+    <a href="https://www.snapchat.com/add/hoscribe" target="_blank" rel="noopener noreferrer" data-i18n="l-sn">سناب شات</a>
+    <a href="ads.html" data-i18n="l-ads">للإعلانات</a>
+    <a href="excretion.html" data-i18n="l-fb">اقتراحات</a>
+    <a href="me.html" data-i18n="l-me">من أكون</a>
+   </nav>
+  </div>
+  <div class="copy"><span data-i18n="ft-c">© 2026 Hoscribe — كريم محمد إسماعيل</span><a href="#top" data-i18n="ft-top">العودة للأعلى</a></div>
+ </div>
+</footer>
 
-                placeholderElements.forEach(el => {
-                    const key = el.getAttribute('data-i18n-placeholder');
-                    if (dict[key] !== undefined) {
-                        el.setAttribute('placeholder', dict[key]);
-                    }
-                });
+<a class="totop" id="up" href="#top" data-i18n-aria="up" aria-label="العودة للأعلى"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></a>
 
-                if (metaDescription && dict['meta-description'] !== undefined) {
-                    metaDescription.setAttribute('content', dict['meta-description']);
-                }
+<script>
+(function(){
+'use strict';
+/* ---- إعداد الإرسال: اختر واحداً ----
+   endpoint: رابط خدمة نماذج (مثل Formspree) يستقبل POST بصيغة JSON
+   email:    بريدك، فيفتح النموذج تطبيق البريد عند الزائر
+   إن تُرك الاثنان فارغين تُنسخ الرسالة ويُطلب من الزائر إرسالها على سناب */
+var CFG={endpoint:'',email:''};
+var SITE='https://hoscribe.vercel.app/excretion.html';
+var A={ar:{menu:'القائمة',up:'العودة للأعلى',short:'اكتب 10 أحرف على الأقل ليصلنا اقتراح واضح.',fail:'تعذّر الإرسال. تحقق من اتصالك وحاول مرة أخرى.',sending:'جارٍ الإرسال…',send:'أرسل اقتراحك',mail:'فتحنا تطبيق البريد لإكمال الإرسال. اضغط «إرسال» هناك.',copied:'نسخنا رسالتك. الصقها في محادثة معنا على سناب شات لتصلنا.'},
+ en:{menu:'Menu',up:'Back to top',short:'Please write at least 10 characters so we can understand your idea.',fail:'We couldn’t send that. Check your connection and try again.',sending:'Sending…',send:'Send your suggestion',mail:'We opened your email app to finish sending. Press “Send” there.',copied:'We copied your message. Paste it in a chat with us on Snapchat so it reaches us.'}};
+var T={ar:{},en:{
+'title':'Your suggestions | Hoscribe — your voice shapes the next episode',
+'meta-description':'Share a suggestion or feedback with Hoscribe: an episode idea, a place to visit, or a note on our latest work. We read every message with care.',
+'og-title':'Your suggestions | Hoscribe','og-description':'An episode idea? A place to visit? A note? Your voice shapes the next episode.',
+'skip':'Skip to content','n-home':'Home','n-fb':'Suggestions','n-me':'About me','n-ads':'Advertising',
+'crumb':'Your opinion matters','h-title':'The next episode may start with your message',
+'h-lead':'An idea that excites you? A place you dream of seeing? A note that would make us better? Write to us. Hoscribe is made with its audience, not apart from it.',
+'f-h':'Send your suggestion','f-sub':'One minute is enough. Name and contact are optional.','f-type':'What kind of message is it?',
+'c1':'Episode idea','c2':'Place or adventure','c3':'Note on an episode','c4':'Something else',
+'f-msg':'Your suggestion','f-msg-ph':'Write freely: what is it, and why does it deserve an episode?',
+'f-name':'Your name','opt':'(optional)','f-ct':'How to reach you','f-ct-ph':'Email or Snapchat name',
+'f-send':'Send your suggestion','f-note':'We only use your details to read your suggestion and, if needed, get back to you about it.',
+'d-h':'We got your message, thank you','d-p':'We really do care about reading it. Stay tuned, your idea might show up in a coming episode.','d-again':'Send another suggestion',
+'s-title':'What happens after you send?','s-sub':'A clear path from your message to the screen.',
+'s1-t':'We read your message','s1-d':'It reaches us just as you wrote it, with no middlemen.',
+'s2-t':'It joins our idea list','s2-d':'We group similar ideas and see which deserve research first.',
+'s3-t':'You may see it in an episode','s3-d':'If we pick it, we research it and turn it into an episode or an adventure.',
+'t-title':'How to write a suggestion we love','t-sub':'There is no official format, but these help us grasp your idea quickly.',
+'t1-t':'Be specific','t1-d':'“The story of a city that sank a thousand years ago” beats “something about history”.',
+'t2-t':'Tell us why it matters to you','t2-d':'What sparked your curiosity? Your reason helps us see the idea through your eyes.',
+'t3-t':'Add what you know','t3-d':'A place name, a date, or a source you read: every detail shortens our research.',
+'q-title':'Common questions','q-sub':'Quick answers before you send.',
+'q1':'Do I have to write my name?','a1':'No. Name and contact are optional; your suggestion is enough.',
+'q2':'Will you reply to me?','a2':'We read what reaches us. If you leave a way to reach you and your idea moves forward, we may write to you.',
+'q3':'Can I suggest a faraway place or a bold idea?','a3':'Of course. Adventure is at the heart of the channel. Write your idea and we will decide what is doable.',
+'q4':'How is my data used?','a4':'Only to read your suggestion and, if needed, get back to you about it.',
+'j-title':'Prefer to talk directly?','j-text':'We also meet in the comments and on Snapchat, and every opinion there reaches us.',
+'yt-b':'Visit channel','sn-b':'Add us on Snap',
+'ft-tag':'Fun documentary and adventures from everywhere.','l-yt':'YouTube','l-sn':'Snapchat','l-ads':'Advertising','l-fb':'Suggestions','l-me':'About me',
+'ft-c':'© 2026 Hoscribe — Karim Mohamed Ismail','ft-top':'Back to top'}};
+var cur='ar';
+function isF(e){return e.tagName==='INPUT'||e.tagName==='TEXTAREA'}
+function get(e){return e.tagName==='META'?e.getAttribute('content'):isF(e)?e.getAttribute('placeholder'):e.innerHTML}
+function put(e,v){if(e.tagName==='META')e.setAttribute('content',v);else if(isF(e))e.setAttribute('placeholder',v);else e.innerHTML=v}
+var els=document.querySelectorAll('[data-i18n]');
+els.forEach(function(e){var k=e.getAttribute('data-i18n');if(!(k in T.ar))T.ar[k]=get(e)});
+var btns=document.querySelectorAll('.lang button');
+function set(l,u){
+ var d=T[l];if(!d)return;cur=l;
+ els.forEach(function(e){var k=e.getAttribute('data-i18n');if(d[k]!==undefined)put(e,d[k])});
+ document.title=d['title'];
+ document.querySelectorAll('[data-i18n-aria]').forEach(function(e){e.setAttribute('aria-label',A[l][e.dataset.i18nAria])});
+ var h=document.documentElement;h.lang=l;h.dir=l==='ar'?'rtl':'ltr';
+ btns.forEach(function(b){var a=b.dataset.lang===l;b.classList.toggle('active',a);b.setAttribute('aria-pressed',a)});
+ var c=document.getElementById('canonical-link');if(c)c.href=l==='ar'?SITE:SITE+'?lang=en';
+ try{localStorage.setItem('hoscribe-lang',l)}catch(e){}
+ if(u){var x=new URL(location.href);l==='ar'?x.searchParams.delete('lang'):x.searchParams.set('lang',l);history.replaceState({},'',x)}
+}
+function pref(){
+ var q=new URLSearchParams(location.search).get('lang');if(q==='ar'||q==='en')return q;
+ try{var s=localStorage.getItem('hoscribe-lang');if(s==='ar'||s==='en')return s}catch(e){}
+ return (navigator.language||'ar').toLowerCase().indexOf('en')===0?'en':'ar';
+}
+btns.forEach(function(b){b.addEventListener('click',function(){set(b.dataset.lang,true)})});
+set(pref(),false);
 
-                htmlEl.setAttribute('lang', lang);
-                htmlEl.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+/* Nav, progress, mobile menu */
+var nav=document.querySelector('.nav'),bar=document.getElementById('bar'),up=document.getElementById('up'),burger=document.getElementById('burger'),menu=document.getElementById('menu');
+function onScroll(){var y=window.scrollY,h=document.documentElement.scrollHeight-window.innerHeight;
+ bar.style.transform='scaleX('+(h>0?Math.min(y/h,1):0)+')';nav.classList.toggle('scrolled',y>10);up.classList.toggle('show',y>700)}
+var tick=false;
+window.addEventListener('scroll',function(){if(!tick){tick=true;requestAnimationFrame(function(){onScroll();tick=false})}},{passive:true});onScroll();
+function closeMenu(){menu.classList.remove('open');burger.setAttribute('aria-expanded','false')}
+burger.addEventListener('click',function(){var o=menu.classList.toggle('open');burger.setAttribute('aria-expanded',o?'true':'false')});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu()});
 
-                langBtns.forEach(btn => {
-                    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
-                });
-
-                localStorage.setItem('hoscribe-lang', lang);
-            }
-
-            function getPreferredLanguage() {
-                const stored = localStorage.getItem('hoscribe-lang');
-                if (stored === 'ar' || stored === 'en') return stored;
-                const browserLang = navigator.language || navigator.languages?.[0] || '';
-                if (browserLang.startsWith('ar')) return 'ar';
-                if (browserLang.startsWith('en')) return 'en';
-                return 'ar';
-            }
-
-            langBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const lang = this.getAttribute('data-lang');
-                    if (lang) setLanguage(lang);
-                });
-            });
-
-            const initialLang = getPreferredLanguage();
-            setLanguage(initialLang);
-
-            // Reveal on scroll
-            const revealEls = document.querySelectorAll('.reveal');
-            if (revealEls.length) {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('visible');
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, { threshold: 0.12, rootMargin: '0px 0px -20px 0px' });
-                revealEls.forEach(el => observer.observe(el));
-            }
-
-            // Form handler
-            const form = document.getElementById('feedbackForm');
-            const successDiv = document.getElementById('formSuccess');
-
-            if (form) {
-                form.addEventListener('submit', function(e) {
-                    e.preventDefault();
-
-                    const formData = new FormData(form);
-
-                    fetch(form.action, {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'Accept': 'application/json'
-                        }
-                    }).then(response => {
-                        if (response.ok) {
-                            form.reset();
-                            successDiv.classList.add('visible');
-                            setTimeout(() => {
-                                successDiv.classList.remove('visible');
-                            }, 6000);
-                        } else {
-                            alert('حدث خطأ. يرجى المحاولة مرة أخرى.');
-                        }
-                    }).catch(error => {
-                        alert('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.');
-                    });
-                });
-            }
-
-        })();
-    </script>
-
+/* Suggestion form */
+var form=document.getElementById('fb'),msg=document.getElementById('msg'),cnt=document.getElementById('cnt'),err=document.getElementById('err'),
+ go=document.getElementById('go'),done=document.getElementById('done'),donep=document.getElementById('done-p'),again=document.getElementById('again');
+msg.addEventListener('input',function(){cnt.textContent=msg.value.length+' / 1000';if(err.textContent&&msg.value.trim().length>=10)err.textContent=''});
+function finish(note){
+ form.hidden=true;done.hidden=false;
+ if(note){donep.removeAttribute('data-i18n');donep.textContent=note}
+ done.focus({preventScroll:true});
+ document.getElementById('formcard').scrollIntoView({behavior:'smooth',block:'center'});
+}
+form.addEventListener('submit',function(ev){
+ ev.preventDefault();
+ var f=new FormData(form);if(f.get('website'))return;
+ var text=msg.value.trim();
+ if(text.length<10){err.textContent=A[cur].short;msg.focus();return}
+ err.textContent='';
+ var data={type:f.get('type'),message:text,name:(f.get('name')||'').trim(),contact:(f.get('contact')||'').trim(),lang:cur,page:location.href};
+ var body=data.message+'\n\n— '+(data.name||'—')+(data.contact?' ('+data.contact+')':'');
+ if(CFG.endpoint){
+  go.disabled=true;go.textContent=A[cur].sending;
+  fetch(CFG.endpoint,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)})
+   .then(function(r){if(!r.ok)throw new Error(r.status);finish()})
+   .catch(function(){err.textContent=A[cur].fail})
+   .then(function(){go.disabled=false;go.textContent=A[cur].send});
+ }else if(CFG.email){
+  location.href='mailto:'+CFG.email+'?subject='+encodeURIComponent('Hoscribe — '+data.type)+'&body='+encodeURIComponent(body);
+  finish(A[cur].mail);
+ }else{
+  var ok=function(){finish(A[cur].copied)};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(body).then(ok,ok)}else{ok()}
+ }
+});
+again.addEventListener('click',function(){
+ form.reset();cnt.textContent='0 / 1000';done.hidden=true;form.hidden=false;
+ if(!donep.hasAttribute('data-i18n')){donep.setAttribute('data-i18n','d-p');donep.innerHTML=T[cur]['d-p']!==undefined?T[cur]['d-p']:T.ar['d-p']}
+ msg.focus();
+});
+})();
+</script>
 </body>
 </html>
