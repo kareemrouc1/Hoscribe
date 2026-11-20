@@ -1,1056 +1,412 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- Mark JS as available early to avoid FOUC and to gate animations -->
-    <script>document.documentElement.classList.add('js');</script>
-
-    <!-- Primary SEO -->
-    <title data-i18n="title">هوسكرايب | محتوى وثائقي عالمي — كريم محمد إسماعيل</title>
-    <meta name="description" data-i18n="meta-description"
-        content="هوسكرايب (Hoscribe) — قناة ومحتوى وثائقي عالمي يقدّم قصصاً وحقائق من كل مكان بأسلوب بسيط وجذاب. تعرّف على القناة، سناب شات، والمسابقة السنوية." />
-    <meta name="author" content="كريم محمد إسماعيل" />
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-    <meta name="theme-color" content="#fafafa" />
-    <meta name="format-detection" content="telephone=no" />
-
-    <!-- Canonical & i18n alternates -->
-    <link id="canonical-link" rel="canonical" href="https://hoscribe.vercel.app/" />
-    <link rel="alternate" hreflang="ar" href="https://hoscribe.vercel.app/" />
-    <link rel="alternate" hreflang="en" href="https://hoscribe.vercel.app/?lang=en" />
-    <link rel="alternate" hreflang="x-default" href="https://hoscribe.vercel.app/" />
-
-    <!-- Open Graph -->
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Hoscribe" />
-    <meta property="og:locale" content="ar_AR" />
-    <meta property="og:locale:alternate" content="en_US" />
-    <meta property="og:url" content="https://hoscribe.vercel.app/" />
-    <meta property="og:title" data-i18n="og-title" content="هوسكرايب | محتوى وثائقي عالمي" />
-    <meta property="og:description" data-i18n="og-description"
-        content="قصص وحقائق من كل مكان بأسلوب بسيط. تعرّف على هوسكرايب، قناته، والمسابقة السنوية." />
-    <meta property="og:image" content="https://hoscribe.vercel.app/logo.png" />
-    <meta property="og:image:alt" content="شعار هوسكرايب" />
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" data-i18n="og-title" content="هوسكرايب | محتوى وثائقي عالمي" />
-    <meta name="twitter:description" data-i18n="og-description"
-        content="قصص وحقائق من كل مكان بأسلوب بسيط. تعرّف على هوسكرايب، قناته، والمسابقة السنوية." />
-    <meta name="twitter:image" content="https://hoscribe.vercel.app/logo.png" />
-
-    <!-- Icons -->
-    <link rel="icon" href="logo.png" type="image/png" />
-    <link rel="apple-touch-icon" href="logo.png" />
-
-    <!-- Performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" href="logo.png" as="image" fetchpriority="high" />
-
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" />
-
-    <!-- Structured Data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "WebSite",
-          "@id": "https://hoscribe.vercel.app/#website",
-          "url": "https://hoscribe.vercel.app/",
-          "name": "Hoscribe",
-          "alternateName": "هوسكرايب",
-          "description": "محتوى وثائقي عالمي — قصص وحقائق من كل مكان.",
-          "inLanguage": "ar",
-          "publisher": { "@id": "https://hoscribe.vercel.app/#person" }
-        },
-        {
-          "@type": "Person",
-          "@id": "https://hoscribe.vercel.app/#person",
-          "name": "كريم محمد إسماعيل",
-          "alternateName": "Karim Mohamed Ismail",
-          "url": "https://hoscribe.vercel.app/",
-          "jobTitle": "صانع محتوى وثائقي",
-          "sameAs": [
-            "https://youtube.com/@Hoscribe",
-            "https://www.snapchat.com/add/hoscribe"
-          ]
-        }
-      ]
-    }
-    </script>
-
-    <style>
-        /* ——————————————————————————————
-           Reset & Base – Ultra Minimal / Speed First
-           —————————————————————————————— */
-        *,
-        *::before,
-        *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg: #fafafa;
-            --surface: #ffffff;
-            --text-primary: #1a1a1a;
-            --text-secondary: #6e6e73;
-            --text-tertiary: #8e8e93;
-            --gold: #b8953a;
-            --gold-light: #f5edd6;
-            --border: #e5e5ea;
-            --radius: 16px;
-            --transition: 0.2s cubic-bezier(0.25, 0.1, 0.15, 1);
-        }
-
-        html {
-            scroll-behavior: smooth;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            contain: layout style paint;
-        }
-
-        body {
-            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
-            color: var(--text-primary);
-            line-height: 1.7;
-            min-height: 100vh;
-            padding: 2.8rem 1.8rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            contain: layout style;
-        }
-
-        .container {
-            max-width: 720px;
-            width: 100%;
-            margin: 0 auto;
-            contain: layout style;
-        }
-
-        /* ——————————————————————————————
-           Lang Switcher – Refined
-           —————————————————————————————— */
-        .lang-switcher {
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.2rem;
-            margin-bottom: 2.4rem;
-        }
-
-        .lang-btn {
-            background: transparent;
-            border: none;
-            padding: 0.2rem 0.9rem;
-            font-family: 'Cairo', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 400;
-            color: var(--text-tertiary);
-            cursor: pointer;
-            border-radius: 30px;
-            transition: var(--transition);
-            letter-spacing: 0.03em;
-            will-change: background, color;
-        }
-
-        .lang-btn:hover {
-            color: var(--text-primary);
-            background: var(--border);
-        }
-
-        .lang-btn.active {
-            color: var(--text-primary);
-            background: var(--surface);
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
-            font-weight: 600;
-        }
-
-        /* ——————————————————————————————
-           Hero – Serene & Balanced
-           —————————————————————————————— */
-        .hero {
-            text-align: center;
-            padding: 1.6rem 0 2.4rem;
-            border-bottom: 1px solid var(--border);
-            contain: layout style;
-        }
-
-        .logo-wrap {
-            display: inline-block;
-            margin-bottom: 1.4rem;
-            width: 76px;
-            height: 76px;
-        }
-
-        .logo-wrap img {
-            width: 76px;
-            height: 76px;
-            border-radius: 50%;
-            object-fit: cover;
-            display: block;
-            background: #f0efe8;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
-            aspect-ratio: 1/1;
-            will-change: transform;
-        }
-
-        .hero h1 {
-            font-size: 2.8rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            line-height: 1.1;
-            color: var(--text-primary);
-            margin-bottom: 0.1rem;
-        }
-
-        .hero .sub {
-            font-size: 0.95rem;
-            font-weight: 300;
-            color: var(--text-secondary);
-            margin-top: 0.1rem;
-        }
-
-        .hero .sub .real {
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .hero .tagline {
-            font-size: 0.85rem;
-            font-weight: 300;
-            color: var(--text-tertiary);
-            margin-top: 0.6rem;
-            max-width: 380px;
-            margin-left: auto;
-            margin-right: auto;
-            letter-spacing: 0.02em;
-        }
-
-        /* ——————————————————————————————
-           About – Minimalist statement
-           —————————————————————————————— */
-        .about {
-            padding: 2.6rem 0 1.6rem;
-            text-align: center;
-        }
-
-        .about p {
-            font-size: 1rem;
-            font-weight: 300;
-            color: var(--text-secondary);
-            max-width: 500px;
-            margin: 0 auto;
-            line-height: 2;
-        }
-
-        .about p .accent {
-            color: var(--gold);
-            font-weight: 600;
-        }
-
-        .about .sig {
-            margin-top: 0.8rem;
-            font-size: 0.8rem;
-            font-weight: 300;
-            color: var(--text-tertiary);
-            font-style: normal;
-            letter-spacing: 0.02em;
-        }
-
-        /* ——————————————————————————————
-           CTA Row – Two columns grid (always two columns)
-           —————————————————————————————— */
-        .cta-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            padding: 1.8rem 0;
-            border-top: 1px solid var(--border);
-        }
-
-        .cta-row:last-of-type {
-            border-bottom: 1px solid var(--border);
-        }
-
-        .cta-section {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 1.8rem 1.2rem;
-            text-align: center;
-            transition: var(--transition);
-            border: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 200px;
-            will-change: transform, border-color, box-shadow;
-            contain: layout style;
-        }
-
-        .cta-section:hover {
-            border-color: var(--gold);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-            transform: translateY(-2px);
-        }
-
-        .cta-section .label {
-            display: inline-block;
-            font-size: 0.6rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--gold);
-            margin-bottom: 0.1rem;
-        }
-
-        .cta-section h2 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 0.1rem;
-            word-break: break-word;
-        }
-
-        .cta-section p {
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            font-weight: 300;
-            max-width: 260px;
-            margin: 0.2rem auto 1.2rem;
-            line-height: 1.7;
-            word-break: break-word;
-        }
-
-        /* Buttons – Formal, refined */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.5rem 1.8rem;
-            border-radius: 40px;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            font-size: 0.8rem;
-            text-decoration: none;
-            background: transparent;
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: var(--transition);
-            line-height: 1.4;
-            letter-spacing: 0.02em;
-            will-change: transform, background, color;
-            white-space: nowrap;
-        }
-
-        .btn:hover {
-            background: var(--text-primary);
-            color: #fff;
-            border-color: var(--text-primary);
-            transform: scale(0.97);
-        }
-        .btn:active {
-            transform: scale(0.95);
-        }
-
-        .btn--primary {
-            background: var(--text-primary);
-            color: #fff;
-            border-color: var(--text-primary);
-        }
-        .btn--primary:hover {
-            background: #2a2a2a;
-            border-color: #2a2a2a;
-        }
-
-        .btn--ghost {
-            background: transparent;
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-        }
-        .btn--ghost:hover {
-            background: var(--text-primary);
-            color: #fff;
-            border-color: var(--text-primary);
-        }
-
-        /* ——————————————————————————————
-           Competition Card – Simplified, elegant, compact, single row
-           —————————————————————————————— */
-        .competition-row {
-            padding: 1.8rem 0;
-            border-top: 1px solid var(--border);
-        }
-
-        .competition-card {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 1.2rem 1.5rem;
-            text-align: center;
-            border: 1px solid var(--border);
-            transition: var(--transition);
-            will-change: transform, border-color, box-shadow;
-            contain: layout style;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 160px;
-        }
-
-        .competition-card:hover {
-            border-color: var(--gold);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-            transform: translateY(-2px);
-        }
-
-        .competition-card .label {
-            display: inline-block;
-            font-size: 0.6rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--gold);
-            margin-bottom: 0.05rem;
-        }
-
-        .competition-card h2 {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 0.05rem;
-            word-break: break-word;
-        }
-
-        .competition-card h2 .highlight {
-            color: var(--gold);
-        }
-
-        .competition-card p {
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-            font-weight: 300;
-            max-width: 340px;
-            margin: 0.1rem auto 0.9rem;
-            line-height: 1.6;
-            word-break: break-word;
-        }
-
-        .btn--gold {
-            background: var(--gold);
-            color: #fff;
-            border-color: var(--gold);
-            padding: 0.4rem 1.6rem;
-            font-size: 0.75rem;
-            box-shadow: 0 2px 12px rgba(184, 149, 58, 0.15);
-        }
-        .btn--gold:hover {
-            background: #a07f2e;
-            border-color: #a07f2e;
-            transform: scale(0.97);
-            box-shadow: 0 4px 18px rgba(184, 149, 58, 0.25);
-        }
-
-        /* ——————————————————————————————
-           Quick Links
-           —————————————————————————————— */
-        .quick-links {
-            padding: 2rem 0 1.2rem;
-            border-top: 1px solid var(--border);
-            text-align: center;
-        }
-
-        .quick-links .links {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.8rem 1.6rem;
-            margin-top: 0.6rem;
-        }
-
-        .quick-links a {
-            font-size: 0.8rem;
-            font-weight: 400;
-            color: var(--text-secondary);
-            text-decoration: none;
-            border-bottom: 1px dotted transparent;
-            transition: var(--transition);
-            will-change: color, border-color;
-        }
-
-        .quick-links a:hover {
-            color: var(--text-primary);
-            border-bottom-color: var(--gold);
-        }
-
-        /* ——————————————————————————————
-           Footer
-           —————————————————————————————— */
-        .footer {
-            padding: 2rem 0 1.2rem;
-            text-align: center;
-        }
-
-        .footer .signoff {
-            font-size: 0.85rem;
-            font-weight: 300;
-            color: var(--text-secondary);
-            margin-bottom: 0.2rem;
-        }
-
-        .footer .credit {
-            font-size: 0.65rem;
-            font-weight: 300;
-            color: var(--text-tertiary);
-            margin-top: 0.4rem;
-            letter-spacing: 0.02em;
-        }
-
-        /* ——————————————————————————————
-           Reveal – SEO-safe: content visible without JS.
-           Animations only activate when .js is present on <html>.
-           —————————————————————————————— */
-        .reveal {
-            opacity: 1;
-            transform: none;
-        }
-
-        html.js .reveal {
-            opacity: 0;
-            transform: translateY(18px);
-            transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
-                transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
-            will-change: opacity, transform;
-        }
-
-        html.js .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* ——————————————————————————————
-           Responsive
-           —————————————————————————————— */
-        @media (max-width: 640px) {
-            body {
-                padding: 1.6rem 1.2rem;
-            }
-            .hero h1 {
-                font-size: 2.2rem;
-            }
-            .hero .sub {
-                font-size: 0.85rem;
-            }
-
-            .cta-row {
-                grid-template-columns: 1fr 1fr;
-                gap: 0.8rem;
-                padding: 1.2rem 0;
-            }
-
-            .cta-section {
-                min-height: 140px;
-                padding: 1rem 0.8rem;
-            }
-
-            .cta-section h2 {
-                font-size: 0.95rem;
-            }
-
-            .cta-section p {
-                font-size: 0.7rem;
-                max-width: 180px;
-                margin: 0.1rem auto 0.9rem;
-            }
-
-            .btn {
-                padding: 0.4rem 1rem;
-                font-size: 0.7rem;
-                white-space: nowrap;
-            }
-
-            .logo-wrap,
-            .logo-wrap img {
-                width: 64px;
-                height: 64px;
-            }
-
-            .lang-switcher {
-                justify-content: center;
-            }
-
-            .quick-links .links {
-                gap: 0.6rem 1.2rem;
-            }
-
-            .cta-row:last-of-type {
-                border-bottom: none;
-            }
-            .cta-row:last-of-type .cta-section:last-of-type {
-                border-bottom: 1px solid var(--border);
-                border-radius: var(--radius) var(--radius) var(--radius) var(--radius);
-            }
-
-            .competition-card {
-                padding: 1rem 1.2rem;
-                min-height: 140px;
-            }
-            .competition-card h2 {
-                font-size: 0.95rem;
-            }
-            .competition-card p {
-                font-size: 0.7rem;
-                max-width: 280px;
-            }
-            .competition-card .btn--gold {
-                padding: 0.4rem 1.4rem;
-                font-size: 0.7rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .cta-section {
-                min-height: 120px;
-                padding: 0.8rem 0.5rem;
-            }
-            .cta-section h2 {
-                font-size: 0.8rem;
-            }
-            .cta-section p {
-                font-size: 0.65rem;
-                max-width: 140px;
-                margin: 0.1rem auto 0.7rem;
-            }
-            .btn {
-                font-size: 0.6rem;
-                padding: 0.3rem 0.8rem;
-            }
-            .competition-card {
-                min-height: 120px;
-                padding: 0.8rem 1rem;
-            }
-            .competition-card h2 {
-                font-size: 0.85rem;
-            }
-            .competition-card p {
-                font-size: 0.65rem;
-                max-width: 220px;
-            }
-            .competition-card .btn--gold {
-                font-size: 0.65rem;
-                padding: 0.3rem 1.2rem;
-            }
-        }
-
-        @media (max-width: 400px) {
-            .hero h1 {
-                font-size: 1.8rem;
-            }
-            .about p {
-                font-size: 0.9rem;
-            }
-            .cta-row {
-                gap: 0.6rem;
-            }
-            .cta-section {
-                min-height: 100px;
-                padding: 0.6rem 0.4rem;
-                border-radius: 12px;
-            }
-            .cta-section h2 {
-                font-size: 0.7rem;
-            }
-            .cta-section p {
-                font-size: 0.6rem;
-                max-width: 120px;
-                margin: 0.1rem auto 0.5rem;
-            }
-            .btn {
-                font-size: 0.55rem;
-                padding: 0.25rem 0.6rem;
-                border-radius: 30px;
-            }
-            .competition-card {
-                min-height: 100px;
-                padding: 0.6rem 0.8rem;
-            }
-            .competition-card h2 {
-                font-size: 0.75rem;
-            }
-            .competition-card p {
-                font-size: 0.6rem;
-                max-width: 180px;
-            }
-            .competition-card .btn--gold {
-                font-size: 0.6rem;
-                padding: 0.25rem 1rem;
-            }
-        }
-
-        /* Scrollbar – Minimal */
-        ::-webkit-scrollbar {
-            width: 3px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 10px;
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title data-i18n="title">هوسكرايب | وثائقي مرح ومغامرات — كريم محمد إسماعيل</title>
+<meta name="description" data-i18n="meta-description" content="هوسكرايب (Hoscribe) — قناة وثائقية مرحة ومغامرات حقيقية بقيادة كريم محمد إسماعيل. حقائق مدهشة وقصص من كل مكان بأسلوب بسيط وممتع." />
+<meta name="author" content="كريم محمد إسماعيل" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="theme-color" content="#FFD400" />
+<link id="canonical-link" rel="canonical" href="https://hoscribe.vercel.app/" />
+<link rel="alternate" hreflang="ar" href="https://hoscribe.vercel.app/" />
+<link rel="alternate" hreflang="en" href="https://hoscribe.vercel.app/?lang=en" />
+<link rel="alternate" hreflang="x-default" href="https://hoscribe.vercel.app/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Hoscribe" />
+<meta property="og:locale" content="ar_AR" />
+<meta property="og:url" content="https://hoscribe.vercel.app/" />
+<meta property="og:title" data-i18n="og-title" content="هوسكرايب | وثائقي مرح ومغامرات" />
+<meta property="og:description" data-i18n="og-description" content="حقائق مدهشة وقصص حقيقية ومغامرات نخوضها معاً بأسلوب مرح." />
+<meta property="og:image" content="https://hoscribe.vercel.app/logo.png" />
+<meta property="og:image:alt" content="Hoscribe" />
+<meta property="og:locale:alternate" content="en_US" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="هوسكرايب | وثائقي مرح ومغامرات" />
+<meta name="twitter:description" content="حقائق مدهشة وقصص حقيقية ومغامرات نخوضها معاً بأسلوب مرح." />
+<meta name="twitter:image" content="https://hoscribe.vercel.app/logo.png" />
+<meta name="color-scheme" content="light" />
+<link rel="icon" href="logo.png" type="image/png" />
+<link rel="apple-touch-icon" href="logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebSite","@id":"https://hoscribe.vercel.app/#website","url":"https://hoscribe.vercel.app/","name":"Hoscribe","alternateName":"هوسكرايب","description":"محتوى وثائقي مرح ومغامرات.","inLanguage":"ar","publisher":{"@id":"https://hoscribe.vercel.app/#person"}},
+{"@type":"Person","@id":"https://hoscribe.vercel.app/#person","name":"كريم محمد إسماعيل","alternateName":"Karim Mohamed Ismail","url":"https://hoscribe.vercel.app/","jobTitle":"صانع محتوى وثائقي ومغامرات","sameAs":["https://youtube.com/@Hoscribe","https://www.snapchat.com/add/hoscribe"]}]}
+</script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--y:#FFD400;--y-deep:#FFC400;--y-soft:#FFF6C2;--ink:#17150C;--ink-2:#2A2716;--muted:#5C5840;--line:#E8E1B8;--bg:#FFFDF2;--r:14px;--ease:.25s cubic-bezier(.2,.7,.2,1)}
+html{scroll-behavior:smooth;scroll-padding-top:84px;-webkit-font-smoothing:antialiased}
+body{font-family:'IBM Plex Sans Arabic','Cairo',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.75;font-size:1rem}
+h1,h2,h3{font-family:'Cairo',sans-serif;line-height:1.25;font-weight:800}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.wrap{max-width:1160px;margin:0 auto;padding-inline:1.5rem}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px;border-radius:6px}
+.skip{position:absolute;inset-inline-start:1rem;top:-60px;background:var(--ink);color:var(--y);padding:.5rem 1rem;border-radius:8px;z-index:100}
+.skip:focus{top:1rem}
+
+/* Nav */
+.nav{position:sticky;top:0;z-index:50;background:var(--y);border-bottom:2px solid var(--ink)}
+.nav .wrap{display:flex;align-items:center;gap:1.5rem;height:68px}
+.brand{display:flex;align-items:center;gap:.7rem;font-family:'Cairo';font-weight:900;font-size:1.25rem}
+.brand img{width:42px;height:42px;border-radius:50%;border:2px solid var(--ink);background:#fff;object-fit:cover}
+.menu{display:flex;gap:.3rem;margin-inline-start:auto}
+.menu a{padding:.4rem .85rem;border-radius:99px;font-weight:600;font-size:.95rem;transition:background var(--ease)}
+.menu a:hover{background:rgba(23,21,12,.12)}
+.lang{display:flex;border:2px solid var(--ink);border-radius:99px;overflow:hidden}
+.lang button{font:600 .8rem 'IBM Plex Sans Arabic',sans-serif;background:transparent;border:0;padding:.3rem .8rem;cursor:pointer;color:var(--ink)}
+.lang button.active{background:var(--ink);color:var(--y)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.6rem;border-radius:99px;font:700 1rem 'Cairo',sans-serif;border:2px solid var(--ink);transition:transform var(--ease),box-shadow var(--ease),background var(--ease);cursor:pointer}
+.btn--dark{background:var(--ink);color:var(--y)}
+.btn--dark:hover{transform:translateY(-2px);box-shadow:0 6px 0 rgba(23,21,12,.25)}
+.btn--yellow{background:var(--y);color:var(--ink)}
+.btn--yellow:hover{transform:translateY(-2px);box-shadow:0 6px 0 var(--ink)}
+.btn--line{background:transparent;color:var(--ink)}
+.btn--line:hover{background:var(--ink);color:var(--y)}
+
+/* Hero */
+.hero{background:var(--y);position:relative;overflow:hidden;border-bottom:2px solid var(--ink)}
+.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:3rem;align-items:center;padding-block:5.5rem 6rem}
+.tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.4rem}
+.tags span{background:var(--ink);color:var(--y);padding:.25rem .9rem;border-radius:99px;font:700 .85rem 'Cairo'}
+.hero h1{font-size:clamp(2.3rem,5.4vw,4.1rem);font-weight:900;letter-spacing:-.01em;margin-bottom:1.2rem}
+.hero p.lead{font-size:1.15rem;max-width:34em;color:var(--ink-2);margin-bottom:2rem}
+.actions{display:flex;flex-wrap:wrap;gap:.9rem}
+.dial{position:relative;aspect-ratio:1;max-width:420px;margin-inline:auto;width:100%}
+.dial svg{width:100%;height:100%}
+.dial .badge{position:absolute;inset-inline-start:-4%;bottom:6%;background:var(--ink);color:var(--y);padding:.6rem 1.1rem;border-radius:12px;font:800 .95rem 'Cairo';transform:rotate(-4deg)}
+.spin{transform-origin:200px 200px;animation:spin 40s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Marquee */
+.strip{background:var(--ink);color:var(--y);overflow:hidden;white-space:nowrap;padding:.9rem 0;direction:ltr}
+.strip .track{display:inline-flex;gap:3rem;animation:slide 32s linear infinite;font:800 1.1rem 'Cairo'}
+.strip span::after{content:"◆";margin-inline-start:3rem;font-size:.7rem;vertical-align:middle}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* Sections */
+section{padding-block:5.5rem}
+.head{max-width:40rem;margin-bottom:3rem}
+.head h2{font-size:clamp(1.8rem,3.6vw,2.6rem);margin-bottom:.8rem}
+.head p{color:var(--muted);font-size:1.08rem}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.pillar{padding:2rem;border-radius:var(--r);background:#fff;border:2px solid var(--ink)}
+.pillar:first-child{background:var(--y)}
+.pillar svg{width:44px;height:44px;margin-bottom:1.2rem}
+.pillar h3{font-size:1.4rem;margin-bottom:.5rem}
+.pillar p{color:var(--ink-2)}
+.process{background:var(--y-soft);border-block:2px solid var(--ink)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;counter-reset:s;border:2px solid var(--ink);border-radius:var(--r);background:#fff;overflow:hidden}
+.step{padding:1.8rem 1.5rem;border-inline-end:2px solid var(--ink)}
+.step:last-child{border:0}
+.step::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--y);border:2px solid var(--ink);font:900 1.1rem 'Cairo';margin-bottom:1rem}
+.step h3{font-size:1.15rem;margin-bottom:.35rem}
+.step p{font-size:.95rem;color:var(--muted)}
+.platforms{display:grid;grid-template-columns:1.3fr 1fr;gap:1.2rem}
+.card{padding:2.4rem;border-radius:var(--r);border:2px solid var(--ink);display:flex;flex-direction:column;align-items:flex-start;gap:1rem}
+.card h3{font-size:1.9rem}
+.card p{max-width:30em}
+.card--dark{background:var(--ink);color:#fff}
+.card--dark h3{color:var(--y)}
+.card--dark p{color:#D9D5BC}
+.card--y{background:var(--y)}
+.card .btn{margin-top:auto}
+.about .wrap{display:grid;grid-template-columns:.7fr 1.3fr;gap:3.5rem;align-items:center}
+.portrait{aspect-ratio:1;border-radius:50%;background:var(--y);border:2px solid var(--ink);display:grid;place-items:center;max-width:320px;margin-inline:auto;box-shadow:12px 12px 0 var(--ink);width:100%}
+.portrait img{width:62%;border-radius:50%}
+.about h2{font-size:clamp(1.8rem,3.4vw,2.4rem);margin-bottom:1rem}
+.about p{color:var(--ink-2);font-size:1.1rem;margin-bottom:1.6rem;max-width:36em}
+.partner{background:var(--ink);color:#fff}
+.partner .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:3rem;align-items:center}
+.partner h2{font-size:clamp(1.8rem,3.6vw,2.6rem);color:var(--y);margin-bottom:1rem}
+.partner p{color:#D9D5BC;margin-bottom:1.8rem;max-width:34em}
+.offers{list-style:none;display:grid;gap:.8rem}
+.offers li{border:2px solid var(--y);border-radius:var(--r);padding:1rem 1.3rem;font-weight:600;display:flex;gap:.8rem;align-items:center}
+.offers li::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--y);flex:none}
+.more{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;padding-block:5rem}
+.more a{display:block;padding:2rem;border:2px solid var(--ink);border-radius:var(--r);background:#fff;transition:background var(--ease),transform var(--ease)}
+.more a:hover{background:var(--y);transform:translateY(-3px)}
+.more h3{font-size:1.4rem;margin-bottom:.4rem}
+.more p{color:var(--muted)}
+.more b{display:inline-block;margin-top:1rem;font-family:'Cairo';border-bottom:3px solid var(--y-deep)}
+footer{background:var(--y);border-top:2px solid var(--ink);padding-block:3rem 2rem}
+.fgrid{display:flex;flex-wrap:wrap;gap:2rem;justify-content:space-between;align-items:flex-start}
+.fgrid nav{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;font-weight:600}
+.fgrid nav a:hover{text-decoration:underline;text-underline-offset:4px}
+.copy{margin-top:2rem;padding-top:1.2rem;border-top:2px solid var(--ink);font-size:.9rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+
+@media(max-width:900px){
+ .menu{display:none}.lang{margin-inline-start:auto}
+ .hero .wrap,.about .wrap,.partner .wrap,.platforms,.more{grid-template-columns:1fr}
+ .hero .wrap{padding-block:3.5rem 4rem}.dial{max-width:300px}
+ .pillars{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}
+ .step:nth-child(2){border-inline-end:0}.step:nth-child(-n+2){border-bottom:2px solid var(--ink)}
+ section{padding-block:4rem}.portrait{max-width:220px}
+}
+@media(max-width:520px){.steps{grid-template-columns:1fr}.step{border-inline-end:0;border-bottom:2px solid var(--ink)}.step:last-child{border:0}.brand span{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* Finishing touches */
+::selection{background:var(--ink);color:var(--y)}
+body{text-wrap:pretty}h1,h2,h3{text-wrap:balance}
+.progress{position:fixed;top:0;inset-inline:0;height:4px;background:var(--ink);transform:scaleX(0);transform-origin:100% 50%;z-index:80;pointer-events:none}
+[dir=ltr] .progress{transform-origin:0 50%}
+.nav{transition:box-shadow var(--ease)}.nav.scrolled{box-shadow:0 5px 0 var(--ink)}
+.menu a.on{background:var(--ink);color:var(--y)}
+.hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(23,21,12,.17) 1.5px,transparent 1.7px);background-size:26px 26px;-webkit-mask-image:linear-gradient(#000,transparent 85%);mask-image:linear-gradient(#000,transparent 85%);pointer-events:none}
+.hero .wrap{position:relative}
+.hero .wrap>div:first-child>*,.dial{animation:rise .8s both cubic-bezier(.2,.7,.2,1)}
+.hero .wrap>div:first-child>:nth-child(2){animation-delay:.08s}.hero .wrap>div:first-child>:nth-child(3){animation-delay:.16s}.hero .wrap>div:first-child>:nth-child(4){animation-delay:.24s}.dial{animation-delay:.2s}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}}
+#needle{transform-origin:200px 200px;transition:transform .25s ease-out}
+.strip:hover .track{animation-play-state:paused}
+.pillar,.card{transition:transform var(--ease),box-shadow var(--ease)}
+.pillar:hover,.card:hover{transform:translate(-3px,-3px);box-shadow:6px 6px 0 var(--ink)}
+.step{transition:background var(--ease)}.step:hover{background:var(--y-soft)}
+.btn:active{transform:translateY(1px);box-shadow:none}
+.totop{position:fixed;inset-inline-end:1.2rem;bottom:1.2rem;width:48px;height:48px;border-radius:50%;background:var(--ink);color:var(--y);border:2px solid var(--ink);display:grid;place-items:center;z-index:60;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity var(--ease),transform var(--ease),visibility var(--ease),background var(--ease),color var(--ease)}
+.totop.show{opacity:1;visibility:visible;transform:none}.totop:hover{background:var(--y);color:var(--ink)}
+.burger{display:none;width:44px;height:44px;border:2px solid var(--ink);border-radius:50%;background:transparent;cursor:pointer;place-items:center}
+.burger i,.burger i::before,.burger i::after{display:block;width:18px;height:2px;background:var(--ink);border-radius:2px;position:relative;transition:transform var(--ease),top var(--ease),background var(--ease)}
+.burger i::before,.burger i::after{content:"";position:absolute;inset-inline-start:0}
+.burger i::before{top:-6px}.burger i::after{top:6px}
+.burger[aria-expanded=true] i{background:transparent}
+.burger[aria-expanded=true] i::before{top:0;transform:rotate(45deg)}.burger[aria-expanded=true] i::after{top:0;transform:rotate(-45deg)}
+@media(max-width:900px){
+ .burger{display:grid}
+ .menu.open{display:flex;flex-direction:column;position:absolute;top:100%;inset-inline:0;background:var(--y);border-bottom:2px solid var(--ink);padding:.8rem 1.5rem 1.2rem;gap:.2rem}
+ .menu.open a{padding:.8rem 1rem;font-size:1.05rem}
+}
+@media(print){.nav,.totop,.progress,.strip{display:none}}
+</style>
 </head>
 <body>
+<div class="progress" id="bar" aria-hidden="true"></div>
+<a class="skip" href="#main" data-i18n="skip">تخطَّ إلى المحتوى</a>
 
-    <div class="container">
+<header class="nav" id="top">
+ <div class="wrap">
+  <a class="brand" href="/" aria-label="Hoscribe"><img src="logo.png" alt="" width="42" height="42" onerror="this.style.visibility='hidden'" /><span>Hoscribe</span></a>
+  <nav class="menu" id="menu" aria-label="Main">
+   <a href="#what" data-i18n="n-what">ما نقدمه</a>
+   <a href="#process" data-i18n="n-process">كيف نصنع</a>
+   <a href="#channels" data-i18n="n-channels">المنصات</a>
+   <a href="#about" data-i18n="n-about">عن كريم</a>
+   <a href="#partner" data-i18n="n-partner">التعاون</a>
+  </nav>
+  <div class="lang" role="group" aria-label="Language">
+   <button data-lang="ar" aria-pressed="true">عربي</button><button data-lang="en" aria-pressed="false">EN</button>
+  </div>
+  <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="menu" data-i18n-aria="menu" aria-label="القائمة"><i></i></button>
+ </div>
+</header>
 
-        <!-- Language Switcher -->
-        <nav class="lang-switcher" aria-label="Language selector">
-            <button class="lang-btn" data-lang="ar" aria-label="العربية">عربي</button>
-            <button class="lang-btn" data-lang="en" aria-label="English">English</button>
-        </nav>
+<main id="main">
+<section class="hero" style="padding:0">
+ <div class="wrap">
+  <div>
+   <div class="tags"><span data-i18n="t1">وثائقي</span><span data-i18n="t2">مرح</span><span data-i18n="t3">مغامرات</span></div>
+   <h1 data-i18n="h-title">العالم أغرب من الخيال… وأمتع مما تتوقع</h1>
+   <p class="lead" data-i18n="h-lead">هوسكرايب قناة وثائقية مرحة يقودها كريم محمد إسماعيل: حقائق مدهشة، قصص حقيقية، ومغامرات نخوضها معاً بأسلوب بسيط وخفيف.</p>
+   <div class="actions">
+    <a class="btn btn--dark" href="https://youtube.com/@Hoscribe" target="_blank" rel="noopener noreferrer" data-i18n="h-cta1">شاهد على يوتيوب</a>
+    <a class="btn btn--line" href="#partner" data-i18n="h-cta2">تعاون معنا</a>
+   </div>
+  </div>
+  <div class="dial" aria-hidden="true">
+   <svg viewBox="0 0 400 400" fill="none" stroke="#17150C" stroke-width="4">
+    <circle cx="200" cy="200" r="185" fill="#fff"/>
+    <circle cx="200" cy="200" r="150" stroke-dasharray="3 12" stroke-linecap="round"/>
+    <g class="spin"><path d="M200 50v30M200 320v30M50 200h30M320 200h30M94 94l21 21M285 285l21 21M306 94l-21 21M115 285l-21 21"/></g>
+    <g id="needle"><path d="M200 90l38 110-38 110-38-110z" fill="#FFD400"/><path d="M200 90l38 110H162z" fill="#17150C"/></g>
+    <circle cx="200" cy="200" r="11" fill="#fff"/>
+   </svg>
+   <div class="badge" data-i18n="badge">اكتشف معنا</div>
+  </div>
+ </div>
+</section>
 
-        <!-- Hero -->
-        <header class="hero reveal">
-            <div class="logo-wrap">
-                <img src="logo.png" alt="شعار هوسكرايب — Hoscribe" loading="eager" fetchpriority="high" width="76" height="76" onerror="this.style.background='#f0efe8'; this.alt='Hoscribe';" />
-            </div>
-            <h1 data-i18n="brand-name">هوسكرايب</h1>
-            <p class="sub"><span class="real" data-i18n="brand-owner">كريم محمد إسماعيل</span> <span style="color:var(--text-tertiary);">·</span> <span data-i18n="brand-sub">Hoscribe</span></p>
-            <p class="tagline" data-i18n="hero-tagline">محتوى وثائقي عالمي — قصص وحقائق من كل مكان</p>
-        </header>
+<div class="strip" aria-hidden="true"><div class="track">
+ <span data-i18n="m1">حضارات منسية</span><span data-i18n="m2">ألغاز حقيقية</span><span data-i18n="m3">رحلات ميدانية</span><span data-i18n="m4">حقائق صادمة</span><span data-i18n="m5">مدن عجيبة</span><span data-i18n="m6">تجارب جريئة</span>
+ <span data-i18n="m1">حضارات منسية</span><span data-i18n="m2">ألغاز حقيقية</span><span data-i18n="m3">رحلات ميدانية</span><span data-i18n="m4">حقائق صادمة</span><span data-i18n="m5">مدن عجيبة</span><span data-i18n="m6">تجارب جريئة</span>
+</div></div>
 
-        <!-- About -->
-        <section class="about reveal">
-            <p data-i18n="about-text">
-                أنا <span class="accent">كريم</span>، أصنع فيديوهات يوتيوب تحت اسم <span class="accent">هوسكرايب</span>.
-                أقدم محتوى وثائقياً عالمياً يناسب الجميع، بعيداً عن التعقيد.
-            </p>
-            <p class="sig" data-i18n="about-sig">— نروي القصص ونكتشف الحقائق</p>
-        </section>
+<section id="what">
+ <div class="wrap">
+  <div class="head"><h2 data-i18n="w-title">ثلاث نكهات… وهوية واحدة</h2><p data-i18n="w-sub">كل حلقة تجمع بين دقة المعلومة وروح المغامرة وخفة الظل، لتخرج منها وقد تعلمت شيئاً وابتسمت أكثر من مرة.</p></div>
+  <div class="pillars">
+   <article class="pillar"><svg viewBox="0 0 44 44" fill="none" stroke="#17150C" stroke-width="3" stroke-linejoin="round"><rect x="5" y="9" width="34" height="26" rx="4"/><path d="M18 17l9 5-9 5z" fill="#17150C"/></svg><h3 data-i18n="p1-t">وثائقي</h3><p data-i18n="p1-d">قصص وحقائق من كل مكان في العالم، نبحث فيها ونتحقق منها ونرويها بسلاسة.</p></article>
+   <article class="pillar"><svg viewBox="0 0 44 44" fill="none" stroke="#17150C" stroke-width="3" stroke-linecap="round"><circle cx="22" cy="22" r="17"/><path d="M14 26c2 5 14 5 16 0M15 17v2M29 17v2"/></svg><h3 data-i18n="p2-t">مرح</h3><p data-i18n="p2-d">نقدم المعلومة بخفة ظل وإيقاع سريع، فالمعرفة لا يجب أن تكون ثقيلة.</p></article>
+   <article class="pillar"><svg viewBox="0 0 44 44" fill="none" stroke="#17150C" stroke-width="3" stroke-linejoin="round"><path d="M3 36L16 12l8 14 5-8 12 18z"/><circle cx="33" cy="9" r="3.5"/></svg><h3 data-i18n="p3-t">مغامرات</h3><p data-i18n="p3-d">نخرج إلى الميدان ونعيش التجربة بأنفسنا، لتشاهد المكان كأنك معنا.</p></article>
+  </div>
+ </div>
+</section>
 
-        <!-- Row 1: YouTube + Snapchat -->
-        <div class="cta-row reveal">
-            <section class="cta-section">
-                <span class="label" data-i18n="yt-label">القناة</span>
-                <h2 data-i18n="yt-title">هوسكرايب</h2>
-                <p data-i18n="yt-desc">قناة تقدم محتوى وثائقياً عالمياً، قصص وحقائق من جميع أنحاء العالم بأسلوب بسيط وجذاب.</p>
-                <a href="https://youtube.com/@Hoscribe" target="_blank" rel="noopener noreferrer" class="btn btn--primary">
-                    <span data-i18n="yt-btn">زيارة القناة</span>
-                </a>
-            </section>
+<section class="process" id="process">
+ <div class="wrap">
+  <div class="head"><h2 data-i18n="s-title">كيف تُصنع الحلقة</h2><p data-i18n="s-sub">رحلة من الفضول إلى الشاشة، بمنهج واضح يحفظ الجودة في كل مرة.</p></div>
+  <div class="steps">
+   <div class="step"><h3 data-i18n="s1-t">فكرة تشعل الفضول</h3><p data-i18n="s1-d">نختار موضوعاً يستحق أن يُحكى.</p></div>
+   <div class="step"><h3 data-i18n="s2-t">بحث وتحقق</h3><p data-i18n="s2-d">نقارن المصادر ونتأكد من كل معلومة.</p></div>
+   <div class="step"><h3 data-i18n="s3-t">تصوير ومغامرة</h3><p data-i18n="s3-d">نعيش القصة في موقعها الحقيقي.</p></div>
+   <div class="step"><h3 data-i18n="s4-t">مونتاج ونشر</h3><p data-i18n="s4-d">نصوغها بإيقاع ممتع ونقدمها لكم.</p></div>
+  </div>
+ </div>
+</section>
 
-            <section class="cta-section">
-                <span class="label" data-i18n="snap-label">سناب شات</span>
-                <h2 data-i18n="snap-title">@hoscribe</h2>
-                <p data-i18n="snap-desc">محتوى يومي، خلف الكواليس، ولحظات ممتعة على سناب شات.</p>
-                <a href="https://www.snapchat.com/add/hoscribe" target="_blank" rel="noopener noreferrer" class="btn btn--ghost">
-                    <span data-i18n="snap-btn">تابعنا على سناب</span>
-                </a>
-            </section>
-        </div>
+<section id="channels">
+ <div class="wrap">
+  <div class="head"><h2 data-i18n="c-title">تابعنا أينما كنت</h2></div>
+  <div class="platforms">
+   <article class="card card--dark"><h3 data-i18n="yt-t">قناة هوسكرايب</h3><p data-i18n="yt-d">حلقات وثائقية ومغامرات مصوّرة تصلك أولاً بأول. اشترك وفعّل الجرس كي لا يفوتك جديد.</p><a class="btn btn--yellow" href="https://youtube.com/@Hoscribe" target="_blank" rel="noopener noreferrer" data-i18n="yt-b">زيارة القناة</a></article>
+   <article class="card card--y"><h3 data-i18n="sn-t">سناب شات</h3><p data-i18n="sn-d">لقطات يومية وكواليس المغامرات ولحظات لا تُنشر في أي مكان آخر.</p><a class="btn btn--dark" href="https://www.snapchat.com/add/hoscribe" target="_blank" rel="noopener noreferrer" data-i18n="sn-b">أضِفنا على سناب</a></article>
+  </div>
+ </div>
+</section>
 
-        <!-- Row 2: Ads + Feedback -->
-        <div class="cta-row reveal">
-            <section class="cta-section">
-                <span class="label" data-i18n="ads-label">التعاون</span>
-                <h2 data-i18n="ads-title">للإعلانات والشراكات</h2>
-                <p data-i18n="ads-desc">نرحب بالعلامات التجارية التي تشاركنا الرؤية. نسعد بالتواصل معكم.</p>
-                <a href="ads.html" class="btn btn--ghost">
-                    <span data-i18n="ads-btn">تواصل معنا</span>
-                </a>
-            </section>
+<section class="about" id="about" style="padding-top:0">
+ <div class="wrap">
+  <div class="portrait"><img src="logo.png" alt="Hoscribe" width="200" height="200" onerror="this.style.visibility='hidden'" /></div>
+  <div>
+   <h2 data-i18n="a-title">أنا كريم، وهذه حكايتي مع الفضول</h2>
+   <p data-i18n="a-text">أصنع محتوى وثائقياً مرحاً تحت اسم هوسكرايب، أبحث عن القصص الغريبة وأخوض المغامرات لأنقلها إليكم ببساطة بعيداً عن التعقيد.</p>
+   <a class="btn btn--dark" href="me.html" data-i18n="a-btn">اقرأ قصتي</a>
+  </div>
+ </div>
+</section>
 
-            <section class="cta-section">
-                <span class="label" data-i18n="feedback-label">الشكاوى والاقتراحات</span>
-                <h2 data-i18n="feedback-title">رأيك يهمنا</h2>
-                <p data-i18n="feedback-desc">نرحب بملاحظاتكم وشكاويكم واقتراحاتكم لتحسين المحتوى.</p>
-                <a href="excretion.html" class="btn btn--ghost">
-                    <span data-i18n="feedback-btn">أرسل ملاحظاتك</span>
-                </a>
-            </section>
-        </div>
+<section class="partner" id="partner">
+ <div class="wrap">
+  <div>
+   <h2 data-i18n="pt-title">لنصنع شيئاً لا يُنسى مع علامتك</h2>
+   <p data-i18n="pt-text">نرحب بالعلامات التي تشاركنا الرؤية. نقدم تعاوناً احترافياً يحترم الجمهور ويخدم هدفك بأسلوب إبداعي.</p>
+   <a class="btn btn--yellow" href="ads.html" data-i18n="pt-btn">تواصل معنا للإعلانات</a>
+  </div>
+  <ul class="offers">
+   <li data-i18n="o1">محتوى مدمج بأسلوب القناة</li>
+   <li data-i18n="o2">حلقات خاصة برعاية العلامة</li>
+   <li data-i18n="o3">حملات مغامرات ميدانية</li>
+  </ul>
+ </div>
+</section>
 
-        <!-- Row 3: About Me + Game -->
-        <div class="cta-row reveal">
-            <section class="cta-section">
-                <span class="label" data-i18n="me-label">من أكون</span>
-                <h2 data-i18n="me-title">قصة حياتي</h2>
-                <p data-i18n="me-desc">اكتشف رحلتي، شغفي، وكيف أصبحت هوسكرايب. قصة مليئة بالتحديات والطموح.</p>
-                <a href="me.html" class="btn btn--ghost">
-                    <span data-i18n="me-btn">اقرأ قصتي</span>
-                </a>
-            </section>
+<div class="wrap more">
+ <a href="excretion.html"><h3 data-i18n="f-title">رأيك يهمنا</h3><p data-i18n="f-text">اقتراحاتك وملاحظاتك تصنع الحلقة القادمة.</p><b data-i18n="f-btn">أرسل ملاحظاتك</b></a>
+ <a href="me.html"><h3 data-i18n="m-title">قصة هوسكرايب</h3><p data-i18n="m-text">كيف بدأت الرحلة وإلى أين تتجه.</p><b data-i18n="m-btn">اقرأ المزيد</b></a>
+</div>
+</main>
 
-            <section class="cta-section">
-                <span class="label" data-i18n="brand-label">اللعبة</span>
-                <h2 data-i18n="brand-title">جرب لعبتي</h2>
-                <p data-i18n="brand-desc">لعبة الظل التي برمجتها بنفسي — جربها الآن واستمتع.</p>
-                <a href="game.html" class="btn btn--ghost">
-                    <span data-i18n="brand-btn">العب لعبة الظل</span>
-                </a>
-            </section>
-        </div>
+<footer>
+ <div class="wrap">
+  <div class="fgrid">
+   <div><a class="brand" href="/"><img src="logo.png" alt="" width="42" height="42" onerror="this.style.visibility='hidden'" /><span>Hoscribe</span></a><p style="margin-top:.6rem;max-width:22em" data-i18n="ft-tag">وثائقي مرح ومغامرات من كل مكان.</p></div>
+   <nav aria-label="Footer">
+    <a href="https://youtube.com/@Hoscribe" target="_blank" rel="noopener noreferrer" data-i18n="l-yt">يوتيوب</a>
+    <a href="https://www.snapchat.com/add/hoscribe" target="_blank" rel="noopener noreferrer" data-i18n="l-sn">سناب شات</a>
+    <a href="ads.html" data-i18n="l-ads">للإعلانات</a>
+    <a href="excretion.html" data-i18n="l-fb">اقتراحات</a>
+    <a href="me.html" data-i18n="l-me">من أكون</a>
+   </nav>
+  </div>
+  <div class="copy"><span data-i18n="ft-c">© 2026 Hoscribe — كريم محمد إسماعيل</span><a href="#top" data-i18n="ft-top">العودة للأعلى</a></div>
+ </div>
+</footer>
 
-        <!-- Competition -->
-        <div class="competition-row reveal">
-            <div class="competition-card">
-                <span class="label" data-i18n="comp-label">🏆 المسابقة</span>
-                <h2 data-i18n="comp-title">سجل في <span class="highlight">المسابقة السنوية</span></h2>
-                <p data-i18n="comp-desc">فرصة لربح <strong>أحدث إيفون</strong>! اشترك الآن وكن من الفائزين. المسابقة مفتوحة للجميع.</p>
-                <a href="co.html" class="btn btn--gold" data-i18n="comp-btn">سجل الآن ←</a>
-            </div>
-        </div>
+<a class="totop" id="up" href="#top" data-i18n-aria="up" aria-label="العودة للأعلى"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></a>
 
-        <!-- Quick Links -->
-        <section class="quick-links reveal">
-            <div class="links">
-                <a href="/" data-i18n="link-home">الرئيسية</a>
-                <a href="https://youtube.com/@Hoscribe" target="_blank" rel="noopener noreferrer" data-i18n="link-youtube">يوتيوب</a>
-                <a href="https://www.snapchat.com/add/hoscribe" target="_blank" rel="noopener noreferrer" data-i18n="link-snapchat">سناب شات</a>
-                <a href="ads.html" data-i18n="link-ads">تواصل</a>
-                <a href="excretion.html" data-i18n="link-feedback">اقتراحات</a>
-                <a href="me.html" data-i18n="link-me">من أكون</a>
-                <a href="brand.html" data-i18n="link-brand">برانداتي</a>
-                <a href="co.html" data-i18n="link-competition">المسابقة</a>
-            </div>
-        </section>
+<script>
+(function(){
+'use strict';
+var SITE='https://hoscribe.vercel.app/';
+var A={ar:{menu:'القائمة',up:'العودة للأعلى'},en:{menu:'Menu',up:'Back to top'}};
+var T={ar:{},en:{
+'title':'Hoscribe | Fun Documentary & Adventures — Karim Mohamed Ismail',
+'meta-description':'Hoscribe — a fun documentary and adventure channel by Karim Mohamed Ismail. Amazing facts and real stories from everywhere, told simply.',
+'og-title':'Hoscribe | Fun Documentary & Adventures','og-description':'Amazing facts, real stories and adventures we take on together.',
+'skip':'Skip to content','n-what':'What we do','n-process':'How we make it','n-channels':'Platforms','n-about':'About Karim','n-partner':'Partner',
+'t1':'Documentary','t2':'Fun','t3':'Adventure',
+'h-title':'The world is stranger than fiction… and more fun than you think',
+'h-lead':'Hoscribe is a fun documentary channel led by Karim Mohamed Ismail: amazing facts, true stories and adventures we take on together, told simply and lightly.',
+'h-cta1':'Watch on YouTube','h-cta2':'Partner with us','badge':'Explore with us',
+'w-title':'Three flavors, one identity','w-sub':'Every episode blends accurate facts, a spirit of adventure and a light touch, so you learn something and smile more than once.',
+'p1-t':'Documentary','p1-d':'Stories and facts from all over the world, researched, verified and told smoothly.',
+'p2-t':'Fun','p2-d':'Information with humor and a quick rhythm, because knowledge should never feel heavy.',
+'p3-t':'Adventure','p3-d':'We go out into the field and live the experience ourselves, so you feel like you are there.',
+'s-title':'How an episode is made','s-sub':'A journey from curiosity to screen, with a clear process that keeps quality high every time.',
+'s1-t':'A spark of curiosity','s1-d':'We pick a topic worth telling.','s2-t':'Research & verify','s2-d':'We compare sources and check every fact.',
+'s3-t':'Filming & adventure','s3-d':'We live the story where it happened.','s4-t':'Edit & publish','s4-d':'We shape it with great rhythm and share it with you.',
+'c-title':'Follow us anywhere',
+'yt-t':'The Hoscribe channel','yt-d':'Documentary episodes and filmed adventures, delivered first. Subscribe and turn on the bell so you never miss one.','yt-b':'Visit channel',
+'sn-t':'Snapchat','sn-d':'Daily snaps, adventure behind-the-scenes and moments you will not see anywhere else.','sn-b':'Add us on Snap',
+'a-title':'I\'m Karim, and this is my story with curiosity','a-text':'I make fun documentary content under the name Hoscribe, hunting for strange stories and taking on adventures to bring them to you simply, without the complexity.','a-btn':'Read my story',
+'pt-title':'Let\'s create something unforgettable with your brand','pt-text':'We welcome brands that share our vision. We offer professional collaboration that respects the audience and serves your goal creatively.','pt-btn':'Contact us for ads',
+'o1':'Integrated content in the channel\'s style','o2':'Special episodes sponsored by your brand','o3':'Field adventure campaigns',
+'f-title':'Your opinion matters','f-text':'Your suggestions and feedback shape the next episode.','f-btn':'Send feedback',
+'m-title':'The Hoscribe story','m-text':'How the journey began and where it is heading.','m-btn':'Read more',
+'ft-tag':'Fun documentary and adventures from everywhere.','l-yt':'YouTube','l-sn':'Snapchat','l-ads':'Advertising','l-fb':'Feedback','l-me':'About me',
+'m1':'Lost civilizations','m2':'Real mysteries','m3':'Field trips','m4':'Shocking facts','m5':'Amazing cities','m6':'Bold experiments',
+'ft-c':'© 2026 Hoscribe — Karim Mohamed Ismail','ft-top':'Back to top'}};
+var els=document.querySelectorAll('[data-i18n]');
+els.forEach(function(e){T.ar[e.getAttribute('data-i18n')]=e.tagName==='META'?e.getAttribute('content'):e.innerHTML;});
+var btns=document.querySelectorAll('.lang button');
+function set(l,u){
+ var d=T[l];if(!d)return;
+ els.forEach(function(e){var k=e.getAttribute('data-i18n');if(d[k]===undefined)return;
+  if(e.tagName==='META'){e.setAttribute('content',d[k]);}else{e.innerHTML=d[k];}});
+ document.title=d['title'];
+ document.querySelectorAll('[data-i18n-aria]').forEach(function(e){e.setAttribute('aria-label',A[l][e.dataset.i18nAria])});
+ var h=document.documentElement;h.lang=l;h.dir=l==='ar'?'rtl':'ltr';
+ btns.forEach(function(b){var a=b.dataset.lang===l;b.classList.toggle('active',a);b.setAttribute('aria-pressed',a);});
+ var c=document.getElementById('canonical-link');if(c)c.href=l==='ar'?SITE:SITE+'?lang=en';
+ try{localStorage.setItem('hoscribe-lang',l)}catch(e){}
+ if(u){var x=new URL(location.href);l==='ar'?x.searchParams.delete('lang'):x.searchParams.set('lang',l);history.replaceState({},'',x)}
+}
+function pref(){
+ var q=new URLSearchParams(location.search).get('lang');if(q==='ar'||q==='en')return q;
+ try{var s=localStorage.getItem('hoscribe-lang');if(s==='ar'||s==='en')return s}catch(e){}
+ return (navigator.language||'ar').toLowerCase().indexOf('en')===0?'en':'ar';
+}
+btns.forEach(function(b){b.addEventListener('click',function(){set(b.dataset.lang,true)})});
+set(pref(),false);
 
-        <!-- Footer -->
-        <footer class="footer reveal">
-            <p class="signoff" data-i18n="footer-signoff">— وجودكم معنا هو كل شيء، نتمنى أن تستمتعوا دائماً —</p>
-            <p class="credit" data-i18n="footer-credit">© 2025 Hoscribe · هوسكرايب — كريم محمد إسماعيل</p>
-        </footer>
+/* Scroll progress, nav state, scrollspy */
+var nav=document.querySelector('.nav'),bar=document.getElementById('bar'),up=document.getElementById('up'),
+ burger=document.getElementById('burger'),menu=document.getElementById('menu'),
+ links=[].slice.call(menu.querySelectorAll('a')),
+ secs=links.map(function(a){return document.querySelector(a.getAttribute('href'))});
+function onScroll(){
+ var y=window.scrollY,h=document.documentElement.scrollHeight-window.innerHeight;
+ bar.style.transform='scaleX('+(h>0?Math.min(y/h,1):0)+')';
+ nav.classList.toggle('scrolled',y>10);up.classList.toggle('show',y>700);
+ var cur=-1;secs.forEach(function(s,i){if(s&&s.getBoundingClientRect().top<window.innerHeight*.4)cur=i});
+ links.forEach(function(a,i){a.classList.toggle('on',i===cur)});
+}
+var tick=false;
+window.addEventListener('scroll',function(){if(!tick){tick=true;requestAnimationFrame(function(){onScroll();tick=false})}},{passive:true});
+onScroll();
 
-    </div>
+/* Mobile menu */
+function closeMenu(){menu.classList.remove('open');burger.setAttribute('aria-expanded','false')}
+burger.addEventListener('click',function(){var o=menu.classList.toggle('open');burger.setAttribute('aria-expanded',o?'true':'false')});
+links.forEach(function(a){a.addEventListener('click',closeMenu)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu()});
 
-    <!-- ==========================================================
-    Script – i18n + reveal + URL sync – Non-blocking
-    ========================================================== -->
-    <script>
-        (function() {
-            'use strict';
-
-            const SITE_URL = 'https://hoscribe.vercel.app/';
-
-            const translations = {
-                ar: {
-                    'title': 'هوسكرايب | محتوى وثائقي عالمي — كريم محمد إسماعيل',
-                    'meta-description': 'هوسكرايب (Hoscribe) — قناة ومحتوى وثائقي عالمي يقدّم قصصاً وحقائق من كل مكان بأسلوب بسيط وجذاب. تعرّف على القناة، سناب شات، والمسابقة السنوية.',
-                    'og-title': 'هوسكرايب | محتوى وثائقي عالمي',
-                    'og-description': 'قصص وحقائق من كل مكان بأسلوب بسيط. تعرّف على هوسكرايب، قناته، والمسابقة السنوية.',
-                    'brand-name': 'هوسكرايب',
-                    'brand-owner': 'كريم محمد إسماعيل',
-                    'brand-sub': 'Hoscribe',
-                    'hero-tagline': 'محتوى وثائقي عالمي — قصص وحقائق من كل مكان',
-                    'about-text': 'أنا <span class="accent">كريم</span>، أصنع فيديوهات يوتيوب تحت اسم <span class="accent">هوسكرايب</span>. أقدم محتوى وثائقياً عالمياً يناسب الجميع، بعيداً عن التعقيد.',
-                    'about-sig': '— نروي القصص ونكتشف الحقائق',
-                    'yt-label': 'القناة',
-                    'yt-title': 'هوسكرايب',
-                    'yt-desc': 'قناة تقدم محتوى وثائقياً عالمياً، قصص وحقائق من جميع أنحاء العالم بأسلوب بسيط وجذاب.',
-                    'yt-btn': 'زيارة القناة',
-                    'snap-label': 'سناب شات',
-                    'snap-title': '@hoscribe',
-                    'snap-desc': 'محتوى يومي، خلف الكواليس، ولحظات ممتعة على سناب شات.',
-                    'snap-btn': 'تابعنا على سناب',
-                    'ads-label': 'التعاون',
-                    'ads-title': 'للإعلانات والشراكات',
-                    'ads-desc': 'نرحب بالعلامات التجارية التي تشاركنا الرؤية. نسعد بالتواصل معكم.',
-                    'ads-btn': 'تواصل معنا',
-                    'feedback-label': 'الشكاوى والاقتراحات',
-                    'feedback-title': 'رأيك يهمنا',
-                    'feedback-desc': 'نرحب بملاحظاتكم وشكاويكم واقتراحاتكم لتحسين المحتوى.',
-                    'feedback-btn': 'أرسل ملاحظاتك',
-                    'me-label': 'من أكون',
-                    'me-title': 'قصة حياتي',
-                    'me-desc': 'اكتشف رحلتي، شغفي، وكيف أصبحت هوسكرايب. قصة مليئة بالتحديات والطموح.',
-                    'me-btn': 'اقرأ قصتي',
-                    'brand-label': 'اللعبة',
-                    'brand-title': 'جرب لعبتي',
-                    'brand-desc': 'لعبة الظل التي برمجتها بنفسي — جربها الآن واستمتع.',
-                    'brand-btn': 'العب لعبة الظل',
-                    'comp-label': '🏆 المسابقة',
-                    'comp-title': 'سجل في <span class="highlight">المسابقة السنوية</span>',
-                    'comp-desc': 'فرصة لربح <strong>أحدث إيفون</strong>! اشترك الآن وكن من الفائزين. المسابقة مفتوحة للجميع.',
-                    'comp-btn': 'سجل الآن ←',
-                    'link-home': 'الرئيسية',
-                    'link-youtube': 'يوتيوب',
-                    'link-snapchat': 'سناب شات',
-                    'link-ads': 'تواصل',
-                    'link-feedback': 'اقتراحات',
-                    'link-me': 'من أكون',
-                    'link-brand': 'برانداتي',
-                    'link-competition': 'المسابقة',
-                    'footer-signoff': '— وجودكم معنا هو كل شيء، نتمنى أن تستمتعوا دائماً —',
-                    'footer-credit': '© 2025 Hoscribe · هوسكرايب — كريم محمد إسماعيل',
-                },
-                en: {
-                    'title': 'Hoscribe | Global Documentary Content — Karim Mohamed Ismail',
-                    'meta-description': 'Hoscribe — a global documentary channel sharing stories and facts from everywhere in a simple, engaging style. Discover the channel, Snapchat, and the annual competition.',
-                    'og-title': 'Hoscribe | Global Documentary Content',
-                    'og-description': 'Stories and facts from everywhere, told simply. Discover Hoscribe, its channel, and annual competition.',
-                    'brand-name': 'Hoscribe',
-                    'brand-owner': 'Karim Mohamed Ismail',
-                    'brand-sub': 'Hoscribe',
-                    'hero-tagline': 'Global documentary content — stories and facts from everywhere',
-                    'about-text': 'I\'m <span class="accent">Karim</span>, I create YouTube videos under <span class="accent">Hoscribe</span>. I offer global documentary content for everyone, away from complexity.',
-                    'about-sig': '— We tell stories and discover facts',
-                    'yt-label': 'Channel',
-                    'yt-title': 'Hoscribe',
-                    'yt-desc': 'A channel offering global documentary content, stories and facts from all over the world in a simple and engaging style.',
-                    'yt-btn': 'Visit channel',
-                    'snap-label': 'Snapchat',
-                    'snap-title': '@hoscribe',
-                    'snap-desc': 'Daily content, behind the scenes, and fun moments on Snapchat.',
-                    'snap-btn': 'Follow us on Snap',
-                    'ads-label': 'Collaboration',
-                    'ads-title': 'Advertising & Partnerships',
-                    'ads-desc': 'We welcome brands that share our vision. We look forward to hearing from you.',
-                    'ads-btn': 'Contact us',
-                    'feedback-label': 'Feedback & Suggestions',
-                    'feedback-title': 'Your opinion matters',
-                    'feedback-desc': 'We welcome your comments, complaints and suggestions to improve the content.',
-                    'feedback-btn': 'Send your feedback',
-                    'me-label': 'About Me',
-                    'me-title': 'My Story',
-                    'me-desc': 'Discover my journey, my passion, and how I became Hoscribe. A story full of challenges and ambition.',
-                    'me-btn': 'Read my story',
-                    'brand-label': 'Game',
-                    'brand-title': 'Try My Game',
-                    'brand-desc': 'Shadow Game, programmed by me — try it now and enjoy.',
-                    'brand-btn': 'Play Shadow Game',
-                    'comp-label': '🏆 Competition',
-                    'comp-title': 'Register for the <span class="highlight">Annual Competition</span>',
-                    'comp-desc': 'Chance to win the <strong>latest iPhone</strong>! Sign up now and be one of the lucky winners. Open to everyone.',
-                    'comp-btn': 'Sign up now →',
-                    'link-home': 'Home',
-                    'link-youtube': 'YouTube',
-                    'link-snapchat': 'Snapchat',
-                    'link-ads': 'Contact',
-                    'link-feedback': 'Feedback',
-                    'link-me': 'About Me',
-                    'link-brand': 'My Brands',
-                    'link-competition': 'Competition',
-                    'footer-signoff': '— Your presence means everything, we hope you always enjoy —',
-                    'footer-credit': '© 2025 Hoscribe · هوسكرايب — Karim Mohamed Ismail',
-                }
-            };
-
-            const i18nElements = document.querySelectorAll('[data-i18n]');
-            const metaDescription = document.querySelector('meta[name="description"]');
-            const ogTitle = document.querySelector('meta[property="og:title"]');
-            const ogDescription = document.querySelector('meta[property="og:description"]');
-            const ogLocale = document.querySelector('meta[property="og:locale"]');
-            const canonicalLink = document.getElementById('canonical-link');
-            const htmlEl = document.documentElement;
-            const langBtns = document.querySelectorAll('.lang-btn');
-
-            function setLanguage(lang, updateUrl) {
-                const dict = translations[lang];
-                if (!dict) return;
-
-                i18nElements.forEach(el => {
-                    const key = el.getAttribute('data-i18n');
-                    if (dict[key] !== undefined) {
-                        el.innerHTML = dict[key];
-                    }
-                });
-
-                if (metaDescription && dict['meta-description']) {
-                    metaDescription.setAttribute('content', dict['meta-description']);
-                }
-                if (ogTitle && dict['og-title']) {
-                    ogTitle.setAttribute('content', dict['og-title']);
-                }
-                if (ogDescription && dict['og-description']) {
-                    ogDescription.setAttribute('content', dict['og-description']);
-                }
-                if (ogLocale) {
-                    ogLocale.setAttribute('content', lang === 'ar' ? 'ar_AR' : 'en_US');
-                }
-
-                htmlEl.setAttribute('lang', lang);
-                htmlEl.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-
-                langBtns.forEach(btn => {
-                    const isActive = btn.getAttribute('data-lang') === lang;
-                    btn.classList.toggle('active', isActive);
-                    btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-                });
-
-                if (canonicalLink) {
-                    canonicalLink.href = lang === 'ar' ? SITE_URL : SITE_URL + '?lang=en';
-                }
-
-                try { localStorage.setItem('hoscribe-lang', lang); } catch (e) {}
-
-                if (updateUrl) {
-                    const url = new URL(window.location.href);
-                    if (lang === 'ar') {
-                        url.searchParams.delete('lang');
-                    } else {
-                        url.searchParams.set('lang', lang);
-                    }
-                    history.replaceState({}, '', url.toString());
-                }
-            }
-
-            function getPreferredLanguage() {
-                const urlLang = new URLSearchParams(window.location.search).get('lang');
-                if (urlLang === 'ar' || urlLang === 'en') return urlLang;
-                let stored = null;
-                try { stored = localStorage.getItem('hoscribe-lang'); } catch (e) {}
-                if (stored === 'ar' || stored === 'en') return stored;
-                const browserLang = navigator.language || (navigator.languages && navigator.languages[0]) || '';
-                if (browserLang.toLowerCase().startsWith('ar')) return 'ar';
-                if (browserLang.toLowerCase().startsWith('en')) return 'en';
-                return 'ar';
-            }
-
-            langBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const lang = this.getAttribute('data-lang');
-                    if (lang) setLanguage(lang, true);
-                });
-            });
-
-            setLanguage(getPreferredLanguage(), false);
-
-            /* Reveal on scroll – only when JS is enabled */
-            const revealEls = document.querySelectorAll('.reveal');
-            if (revealEls.length && 'IntersectionObserver' in window) {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('visible');
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
-
-                const startObserving = () => revealEls.forEach(el => observer.observe(el));
-                if ('requestIdleCallback' in window) {
-                    requestIdleCallback(startObserving);
-                } else {
-                    startObserving();
-                }
-
-                /* Safety net: if something fails, reveal everything after 3s */
-                setTimeout(() => revealEls.forEach(el => el.classList.add('visible')), 3000);
-            } else {
-                revealEls.forEach(el => el.classList.add('visible'));
-            }
-
-        })();
-    </script>
-
+/* Compass needle follows the pointer */
+var dial=document.querySelector('.dial'),nd=document.getElementById('needle'),ang=0;
+if(dial&&nd&&matchMedia('(hover:hover)').matches&&!matchMedia('(prefers-reduced-motion:reduce)').matches){
+ window.addEventListener('pointermove',function(e){
+  var r=dial.getBoundingClientRect(),
+   a=Math.atan2(e.clientY-(r.top+r.height/2),e.clientX-(r.left+r.width/2))*180/Math.PI+90;
+  ang+=((a-ang+540)%360)-180;nd.style.transform='rotate('+ang+'deg)';
+ },{passive:true});
+}
+})();
+</script>
 </body>
 </html>
