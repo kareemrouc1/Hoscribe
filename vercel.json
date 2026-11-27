@@ -1,0 +1,5 @@
+{
+  "redirects": [
+    { "source": "/excretion.html", "destination": "/feedback.html", "permanent": true }
+  ]
+}
