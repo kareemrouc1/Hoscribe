@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title data-i18n="title">هوسكرايب (Hoscribe) | وثائقي مرح ومغامرات — كريم محمد إسماعيل</title>
 <meta name="description" data-i18n="meta-description" content="هوسكرايب (Hoscribe) — قناة وثائقية مرحة ومغامرات حقيقية بقيادة كريم محمد إسماعيل. حقائق مدهشة وقصص من كل مكان بأسلوب بسيط وممتع." />
 <meta name="author" content="كريم محمد إسماعيل" />
@@ -36,12 +36,13 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{--y:#FFD400;--y-deep:#FFC400;--y-soft:#FFF6C2;--ink:#17150C;--ink-2:#2A2716;--muted:#5C5840;--line:#E8E1B8;--bg:#FFFDF2;--r:14px;--ease:.25s cubic-bezier(.2,.7,.2,1)}
-html{scroll-behavior:smooth;scroll-padding-top:84px;-webkit-font-smoothing:antialiased;overflow-x:clip}
+html{scroll-behavior:smooth;scroll-padding-top:84px;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;text-size-adjust:100%;overflow-x:clip}
 body{font-family:'IBM Plex Sans Arabic','Cairo',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.75;font-size:1rem;overflow-x:clip}
 h1,h2,h3{font-family:'Cairo',sans-serif;line-height:1.25;font-weight:800}
 a{color:inherit;text-decoration:none}
+a,button{touch-action:manipulation;-webkit-tap-highlight-color:rgba(23,21,12,.12)}
 img{max-width:100%;height:auto;display:block}
-.wrap{width:100%;max-width:1160px;margin:0 auto;padding-inline:clamp(1rem,4vw,1.5rem)}
+.wrap{width:100%;max-width:1160px;margin:0 auto;padding-inline:clamp(1rem,4vw,1.5rem);padding-left:max(clamp(1rem,4vw,1.5rem),env(safe-area-inset-left,0px));padding-right:max(clamp(1rem,4vw,1.5rem),env(safe-area-inset-right,0px))}
 :focus-visible{outline:3px solid var(--ink);outline-offset:3px;border-radius:6px}
 .skip{position:absolute;inset-inline-start:1rem;top:-60px;background:var(--ink);color:var(--y);padding:.5rem 1rem;border-radius:8px;z-index:100}
 .skip:focus{top:1rem}
@@ -53,7 +54,6 @@ img{max-width:100%;height:auto;display:block}
 .brand img{width:42px;height:42px;border-radius:50%;border:2px solid var(--ink);background:#fff;object-fit:cover;flex:none}
 .menu{display:flex;gap:.3rem;margin-inline-start:auto}
 .menu a{padding:.4rem .85rem;border-radius:99px;font-weight:600;font-size:.95rem;transition:background var(--ease);white-space:nowrap}
-.menu a:hover{background:rgba(23,21,12,.12)}
 .lang{display:flex;border:2px solid var(--ink);border-radius:99px;overflow:hidden;flex:none}
 .lang button{font:600 .8rem 'IBM Plex Sans Arabic',sans-serif;background:transparent;border:0;padding:.3rem .8rem;cursor:pointer;color:var(--ink)}
 .lang button.active{background:var(--ink);color:var(--y)}
@@ -61,11 +61,8 @@ img{max-width:100%;height:auto;display:block}
 /* Buttons */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.78rem clamp(1.1rem,4vw,1.6rem);border-radius:99px;font:700 clamp(.92rem,2.6vw,1rem) 'Cairo',sans-serif;border:2px solid var(--ink);transition:transform var(--ease),box-shadow var(--ease),background var(--ease);cursor:pointer;max-width:100%;text-align:center}
 .btn--dark{background:var(--ink);color:var(--y)}
-.btn--dark:hover{transform:translateY(-2px);box-shadow:0 6px 0 rgba(23,21,12,.25)}
 .btn--yellow{background:var(--y);color:var(--ink)}
-.btn--yellow:hover{transform:translateY(-2px);box-shadow:0 6px 0 var(--ink)}
 .btn--line{background:transparent;color:var(--ink)}
-.btn--line:hover{background:var(--ink);color:var(--y)}
 
 /* Hero */
 .hero{background:var(--y);position:relative;overflow:hidden;border-bottom:2px solid var(--ink)}
@@ -149,7 +146,6 @@ section{padding-block:clamp(3rem,7vw,5.5rem)}
 /* More */
 .more{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:1.2rem;padding-block:clamp(2.5rem,6vw,5rem)}
 .more a{display:block;padding:clamp(1.4rem,4vw,2rem);border:2px solid var(--ink);border-radius:var(--r);background:#fff;transition:background var(--ease),transform var(--ease);min-width:0}
-.more a:hover{background:var(--y);transform:translateY(-3px)}
 .more h2{font-size:clamp(1.2rem,3.4vw,1.4rem);margin-bottom:.4rem}
 .more p{color:var(--muted)}
 .more b{display:inline-block;margin-top:1rem;font-family:'Cairo';border-bottom:3px solid var(--y-deep)}
@@ -160,16 +156,14 @@ section{padding-block:clamp(3rem,7vw,5.5rem)}
 .latest:not([hidden]) .lv-card{animation:fade .5s cubic-bezier(.2,.7,.2,1)}
 @keyframes fade{from{opacity:0;transform:translateY(12px)}}
 .lv-card{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);background:var(--bg);border:2px solid var(--ink);border-radius:var(--r);overflow:hidden;transition:transform var(--ease),box-shadow var(--ease)}
-.lv-card:hover{transform:translate(-4px,-4px);box-shadow:8px 8px 0 var(--ink)}
 .lv-media{position:relative;display:block;aspect-ratio:16/9;background:var(--y);overflow:hidden;min-width:0}
 .lv-media::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(23,21,12,.16) 1.5px,transparent 1.7px);background-size:22px 22px}
-.lv-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.lv-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.latest.no-media .lv-media{display:none}
+.latest.no-media .lv-card{grid-template-columns:1fr}
 .lv-media:focus-visible{outline:3px solid var(--ink);outline-offset:-5px;border-radius:0}
 .lv-badge{position:absolute;top:.8rem;inset-inline-start:.8rem;z-index:2;display:inline-flex;align-items:center;gap:.4rem;background:var(--ink);color:var(--y);font:800 .75rem 'Cairo';padding:.22rem .7rem;border-radius:99px}
 .lv-badge::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--y);flex:none;animation:pulse 1.8s ease-in-out infinite}
-.lv-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;width:clamp(54px,8vw,72px);height:clamp(54px,8vw,72px);border-radius:50%;display:grid;place-items:center;background:var(--y);color:var(--ink);border:2px solid var(--ink);box-shadow:0 4px 0 rgba(23,21,12,.3);transition:transform var(--ease),background var(--ease),color var(--ease)}
-.lv-play svg{width:46%;height:46%;margin-left:8%}
-.lv-card:hover .lv-play{transform:translate(-50%,-50%) scale(1.07);background:var(--ink);color:var(--y)}
 .lv-body{padding:clamp(1.25rem,3.5vw,2.4rem);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:.9rem;min-width:0}
 .lv-eyebrow{display:inline-flex;align-items:center;gap:.45rem;background:var(--y-soft);border:2px solid var(--ink);border-radius:99px;padding:.18rem .75rem;font:800 .78rem 'Cairo';color:var(--ink)}
 .lv-eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:#E5432F;flex:none;animation:pulse 2s ease-in-out infinite}
@@ -184,7 +178,6 @@ footer{background:var(--y);border-top:2px solid var(--ink);padding-block:3rem 2r
 .fgrid{display:flex;flex-wrap:wrap;gap:2rem;justify-content:space-between;align-items:flex-start}
 .fgrid>div{min-width:0}
 .fgrid nav{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;font-weight:600}
-.fgrid nav a:hover{text-decoration:underline;text-underline-offset:4px}
 .copy{margin-top:2rem;padding-top:1.2rem;border-top:2px solid var(--ink);font-size:.9rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
 
 @media(max-width:900px){
@@ -212,6 +205,19 @@ footer{background:var(--y);border-top:2px solid var(--ink);padding-block:3rem 2r
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
 /* Finishing touches */
+@media(hover:hover){
+ .menu a:hover:not(.on){background:rgba(23,21,12,.12)}
+ .btn--dark:hover{transform:translateY(-2px);box-shadow:0 6px 0 rgba(23,21,12,.25)}
+ .btn--yellow:hover{transform:translateY(-2px);box-shadow:0 6px 0 var(--ink)}
+ .btn--line:hover{background:var(--ink);color:var(--y)}
+ .more a:hover{background:var(--y);transform:translateY(-3px)}
+ .lv-card:hover{transform:translate(-4px,-4px);box-shadow:8px 8px 0 var(--ink)}
+ .lv-card:hover .lv-media img{transform:scale(1.04)}
+ .fgrid nav a:hover{text-decoration:underline;text-underline-offset:4px}
+ .pillar:hover,.card:hover{transform:translate(-3px,-3px);box-shadow:6px 6px 0 var(--ink)}
+ .step:hover{background:var(--y-soft)}
+ .totop:hover{background:var(--y);color:var(--ink)}
+}
 ::selection{background:var(--ink);color:var(--y)}
 body{text-wrap:pretty}h1,h2,h3{text-wrap:balance}
 .progress{position:fixed;top:0;inset-inline:0;height:4px;background:var(--ink);transform:scaleX(0);transform-origin:100% 50%;z-index:80;pointer-events:none}
@@ -226,11 +232,10 @@ body{text-wrap:pretty}h1,h2,h3{text-wrap:balance}
 #needle{transform-origin:200px 200px;transition:transform .25s ease-out}
 .strip:hover .track{animation-play-state:paused}
 .pillar,.card{transition:transform var(--ease),box-shadow var(--ease)}
-.pillar:hover,.card:hover{transform:translate(-3px,-3px);box-shadow:6px 6px 0 var(--ink)}
-.step{transition:background var(--ease)}.step:hover{background:var(--y-soft)}
+.step{transition:background var(--ease)}
 .btn:active{transform:translateY(1px);box-shadow:none}
 .totop{position:fixed;inset-inline-end:1.2rem;bottom:1.2rem;width:48px;height:48px;border-radius:50%;background:var(--ink);color:var(--y);border:2px solid var(--ink);display:grid;place-items:center;z-index:60;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity var(--ease),transform var(--ease),visibility var(--ease),background var(--ease),color var(--ease)}
-.totop.show{opacity:1;visibility:visible;transform:none}.totop:hover{background:var(--y);color:var(--ink)}
+.totop.show{opacity:1;visibility:visible;transform:none}
 .burger{display:none;width:44px;height:44px;border:2px solid var(--ink);border-radius:50%;background:transparent;cursor:pointer;place-items:center;flex:none}
 .burger i,.burger i::before,.burger i::after{display:block;width:18px;height:2px;background:var(--ink);border-radius:2px;position:relative;transition:transform var(--ease),top var(--ease),background var(--ease)}
 .burger i::before,.burger i::after{content:"";position:absolute;inset-inline-start:0}
@@ -241,6 +246,17 @@ body{text-wrap:pretty}h1,h2,h3{text-wrap:balance}
  .burger{display:grid}
  .menu.open{display:flex;flex-direction:column;position:absolute;top:100%;inset-inline:0;background:var(--y);border-bottom:2px solid var(--ink);padding:.8rem 1.5rem 1.2rem;gap:.2rem}
  .menu.open a{padding:.8rem 1rem;font-size:1.05rem}
+}
+@media(pointer:coarse){
+ .lang button{padding:.55rem .95rem;min-height:40px}
+ .fgrid nav a{padding-block:.45rem}
+}
+.totop{bottom:max(1.2rem,env(safe-area-inset-bottom,0px));inset-inline-end:max(1.2rem,env(safe-area-inset-left,0px),env(safe-area-inset-right,0px))}
+main:focus{outline:none}
+.hero.paused .spin,.strip.paused .track{animation-play-state:paused}
+@media(min-width:1600px){
+ html{font-size:112.5%}
+ .wrap{max-width:1240px}
 }
 @media(print){.nav,.totop,.progress,.strip{display:none}}
 </style>
@@ -266,7 +282,7 @@ body{text-wrap:pretty}h1,h2,h3{text-wrap:balance}
  </div>
 </header>
 
-<main id="main">
+<main id="main" tabindex="-1">
 <section class="hero" style="padding:0">
  <div class="wrap">
   <div>
@@ -304,10 +320,9 @@ body{text-wrap:pretty}h1,h2,h3{text-wrap:balance}
    <p data-i18n="lv-sub">جديدنا على يوتيوب — شاهد أحدث ما قدمناه بأسلوب هوسكرايب.</p>
   </div>
   <article class="lv-card" id="lvCard">
-   <a class="lv-media" id="lvMedia" href="https://youtube.com/@Hoscribe" target="_blank" rel="noopener noreferrer">
+   <a class="lv-media" id="lvMedia" href="https://youtube.com/@Hoscribe" target="_blank" rel="noopener noreferrer" data-i18n-aria="watch" aria-label="شاهد أحدث حلقة على يوتيوب">
     <img id="lvImg" alt="أحدث حلقة من هوسكرايب" width="1280" height="720" loading="lazy" decoding="async" hidden />
     <span class="lv-badge" data-i18n="lv-new">جديد</span>
-    <span class="lv-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
    </a>
    <div class="lv-body">
     <span class="lv-eyebrow" data-i18n="lv-eyebrow">آخر إصدار</span>
@@ -411,7 +426,7 @@ body{text-wrap:pretty}h1,h2,h3{text-wrap:balance}
 (function(){
 'use strict';
 var SITE='https://hoscribe.vercel.app/';
-var A={ar:{menu:'القائمة',up:'العودة للأعلى'},en:{menu:'Menu',up:'Back to top'}};
+var A={ar:{menu:'القائمة',up:'العودة للأعلى',watch:'شاهد أحدث حلقة على يوتيوب'},en:{menu:'Menu',up:'Back to top',watch:'Watch the latest episode on YouTube'}};
 var T={ar:{},en:{
 'title':'Hoscribe | Fun Documentary & Adventures — Karim Mohamed Ismail',
 'meta-description':'Hoscribe — a fun documentary and adventure channel by Karim Mohamed Ismail. Amazing facts and real stories from everywhere, told simply.',
@@ -486,15 +501,29 @@ function closeMenu(){menu.classList.remove('open');burger.setAttribute('aria-exp
 burger.addEventListener('click',function(){var o=menu.classList.toggle('open');burger.setAttribute('aria-expanded',o?'true':'false')});
 links.forEach(function(a){a.addEventListener('click',closeMenu)});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu()});
+document.addEventListener('click',function(e){if(menu.classList.contains('open')&&!nav.contains(e.target))closeMenu()});
+var mqD=matchMedia('(min-width:901px)');
+if(mqD.addEventListener)mqD.addEventListener('change',closeMenu);else if(mqD.addListener)mqD.addListener(closeMenu);
 
 /* Compass needle follows the pointer */
-var dial=document.querySelector('.dial'),nd=document.getElementById('needle'),ang=0;
+var dial=document.querySelector('.dial'),nd=document.getElementById('needle'),ang=0,px=0,py=0,pw=false;
 if(dial&&nd&&matchMedia('(hover:hover)').matches&&!matchMedia('(prefers-reduced-motion:reduce)').matches){
  window.addEventListener('pointermove',function(e){
-  var r=dial.getBoundingClientRect(),
-   a=Math.atan2(e.clientY-(r.top+r.height/2),e.clientX-(r.left+r.width/2))*180/Math.PI+90;
-  ang+=((a-ang+540)%360)-180;nd.style.transform='rotate('+ang+'deg)';
+  px=e.clientX;py=e.clientY;
+  if(pw)return;pw=true;
+  requestAnimationFrame(function(){
+   pw=false;
+   var r=dial.getBoundingClientRect(),
+    a=Math.atan2(py-(r.top+r.height/2),px-(r.left+r.width/2))*180/Math.PI+90;
+   ang+=((a-ang+540)%360)-180;nd.style.transform='rotate('+ang+'deg)';
+  });
  },{passive:true});
+}
+
+/* Pause endless animations while off-screen (saves CPU & battery) */
+if('IntersectionObserver' in window){
+ var io=new IntersectionObserver(function(es){es.forEach(function(en){en.target.classList.toggle('paused',!en.isIntersecting)})});
+ [document.querySelector('.hero'),document.querySelector('.strip')].forEach(function(n){if(n)io.observe(n)});
 }
 
 /* ============================================================
@@ -506,7 +535,7 @@ var latest=document.getElementById('latest');
 if(latest){
  var lvImg=document.getElementById('lvImg'),
      lvTitle=document.getElementById('lvTitle'),
-     lvSteps=0,lvImgOk=false,lvTitleText='',lvStamp=Date.now();
+     lvSteps=0,lvImgOk=false,lvTitleText='',lvStamp=Math.floor(Date.now()/300000); // يتجدّد كل 5 دقائق: سرعة أكبر مع ظهور الفيديو الجديد سريعاً
 
  function lvReveal(){
   if(++lvSteps<2)return;                       // انتظر اكتمال الصورة والعنوان معاً
@@ -520,6 +549,7 @@ if(latest){
    lvTitle.textContent=lvTitleText;
    lvTitle.removeAttribute('data-i18n');       // حتى لا يستبدله مبدّل اللغة
   }
+  latest.classList.toggle('no-media',!lvImgOk);
   latest.hidden=false;
  }
 
@@ -528,7 +558,7 @@ if(latest){
  lvProbe.onerror=function(){lvImgOk=false;lvReveal()};
  lvProbe.src=SB_BASE+'new.webp?t='+lvStamp;
 
- fetch(SB_BASE+'new.json?t='+lvStamp,{cache:'no-store'})
+ fetch(SB_BASE+'new.json?t='+lvStamp)
   .then(function(r){return r.ok?r.json():null})
   .then(function(j){if(j&&typeof j.title==='string')lvTitleText=j.title.trim()})
   .catch(function(){})
