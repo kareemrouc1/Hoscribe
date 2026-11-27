@@ -27,6 +27,7 @@
 <link rel="apple-touch-icon" href="logo.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preconnect" href="https://jxavqgvshecyttdqznqi.supabase.co" crossorigin />
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cairo:wght@800;900&family=IBM+Plex+Sans+Arabic:wght@400;600&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@800;900&family=IBM+Plex+Sans+Arabic:wght@400;600&display=swap" /></noscript>
 <script type="application/ld+json">
@@ -153,6 +154,31 @@ section{padding-block:clamp(3rem,7vw,5.5rem)}
 .more p{color:var(--muted)}
 .more b{display:inline-block;margin-top:1rem;font-family:'Cairo';border-bottom:3px solid var(--y-deep)}
 
+/* Latest video */
+.latest{background:#fff}
+.latest[hidden]{display:none}
+.latest:not([hidden]) .lv-card{animation:fade .5s cubic-bezier(.2,.7,.2,1)}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}}
+.lv-card{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);background:var(--bg);border:2px solid var(--ink);border-radius:var(--r);overflow:hidden;transition:transform var(--ease),box-shadow var(--ease)}
+.lv-card:hover{transform:translate(-4px,-4px);box-shadow:8px 8px 0 var(--ink)}
+.lv-media{position:relative;display:block;aspect-ratio:16/9;background:var(--y);overflow:hidden;min-width:0}
+.lv-media::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(23,21,12,.16) 1.5px,transparent 1.7px);background-size:22px 22px}
+.lv-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.lv-media:focus-visible{outline:3px solid var(--ink);outline-offset:-5px;border-radius:0}
+.lv-badge{position:absolute;top:.8rem;inset-inline-start:.8rem;z-index:2;display:inline-flex;align-items:center;gap:.4rem;background:var(--ink);color:var(--y);font:800 .75rem 'Cairo';padding:.22rem .7rem;border-radius:99px}
+.lv-badge::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--y);flex:none;animation:pulse 1.8s ease-in-out infinite}
+.lv-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;width:clamp(54px,8vw,72px);height:clamp(54px,8vw,72px);border-radius:50%;display:grid;place-items:center;background:var(--y);color:var(--ink);border:2px solid var(--ink);box-shadow:0 4px 0 rgba(23,21,12,.3);transition:transform var(--ease),background var(--ease),color var(--ease)}
+.lv-play svg{width:46%;height:46%;margin-left:8%}
+.lv-card:hover .lv-play{transform:translate(-50%,-50%) scale(1.07);background:var(--ink);color:var(--y)}
+.lv-body{padding:clamp(1.25rem,3.5vw,2.4rem);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:.9rem;min-width:0}
+.lv-eyebrow{display:inline-flex;align-items:center;gap:.45rem;background:var(--y-soft);border:2px solid var(--ink);border-radius:99px;padding:.18rem .75rem;font:800 .78rem 'Cairo';color:var(--ink)}
+.lv-eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:#E5432F;flex:none;animation:pulse 2s ease-in-out infinite}
+.lv-body h3{font-size:clamp(1.25rem,3.2vw,1.85rem);line-height:1.4;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;overflow-wrap:anywhere}
+.lv-desc{color:var(--muted);font-size:clamp(.95rem,2.2vw,1.02rem);max-width:36em}
+.lv-body .btn{margin-top:.3rem}
+.lv-body .btn svg{flex:none}
+@keyframes pulse{50%{opacity:.3;transform:scale(.75)}}
+
 /* Footer */
 footer{background:var(--y);border-top:2px solid var(--ink);padding-block:3rem 2rem}
 .fgrid{display:flex;flex-wrap:wrap;gap:2rem;justify-content:space-between;align-items:flex-start}
@@ -163,7 +189,7 @@ footer{background:var(--y);border-top:2px solid var(--ink);padding-block:3rem 2r
 
 @media(max-width:900px){
  .menu{display:none}.lang{margin-inline-start:auto}
- .hero .wrap,.about .wrap,.partner .wrap{grid-template-columns:1fr}
+ .hero .wrap,.about .wrap,.partner .wrap,.lv-card{grid-template-columns:1fr}
  .hero .wrap{padding-block:clamp(2.5rem,6vw,3.5rem) clamp(3rem,7vw,4rem)}
  .dial{max-width:min(300px,72vw)}
  .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -270,6 +296,34 @@ body{text-wrap:pretty}h1,h2,h3{text-wrap:balance}
  <span data-i18n="m1">حضارات منسية</span><span data-i18n="m2">ألغاز حقيقية</span><span data-i18n="m3">رحلات ميدانية</span><span data-i18n="m4">حقائق صادمة</span><span data-i18n="m5">مدن عجيبة</span><span data-i18n="m6">تجارب جريئة</span>
 </div></div>
 
+<!-- أحدث فيديو (يُسحب تلقائياً من صفحة Last video) -->
+<section class="latest" id="latest" aria-labelledby="latest-h" hidden>
+ <div class="wrap">
+  <div class="head">
+   <h2 id="latest-h" data-i18n="lv-title">أحدث حلقة</h2>
+   <p data-i18n="lv-sub">جديدنا على يوتيوب — شاهد أحدث ما قدمناه بأسلوب هوسكرايب.</p>
+  </div>
+  <article class="lv-card" id="lvCard">
+   <a class="lv-media" id="lvMedia" href="https://youtube.com/@Hoscribe" target="_blank" rel="noopener noreferrer">
+    <img id="lvImg" alt="أحدث حلقة من هوسكرايب" width="1280" height="720" loading="lazy" decoding="async" hidden />
+    <span class="lv-badge" data-i18n="lv-new">جديد</span>
+    <span class="lv-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
+   </a>
+   <div class="lv-body">
+    <span class="lv-eyebrow" data-i18n="lv-eyebrow">آخر إصدار</span>
+    <h3 id="lvTitle" dir="auto" data-i18n="lv-fallback">حلقة جديدة من هوسكرايب</h3>
+    <p class="lv-desc" data-i18n="lv-desc">حلقة وثائقية جديدة بانتظارك على يوتيوب — حقائق ومغامرات بأسلوب هوسكرايب.</p>
+    <div class="actions">
+     <a class="btn btn--dark" href="https://youtube.com/@Hoscribe" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+      <span data-i18n="lv-btn">شاهد الآن</span>
+     </a>
+    </div>
+   </div>
+  </article>
+ </div>
+</section>
+
 <section id="what">
  <div class="wrap">
   <div class="head"><h2 data-i18n="w-title">ثلاث نكهات… وهوية واحدة</h2><p data-i18n="w-sub">كل حلقة تجمع بين دقة المعلومة وروح المغامرة وخفة الظل، لتخرج منها وقد تعلمت شيئاً وابتسمت أكثر من مرة.</p></div>
@@ -367,6 +421,10 @@ var T={ar:{},en:{
 'h-title':'The world is stranger than fiction… and more fun than you think',
 'h-lead':'Hoscribe is a fun documentary channel led by Karim Mohamed Ismail: amazing facts, true stories and adventures we take on together, told simply and lightly.',
 'h-cta1':'Watch on YouTube','h-cta2':'Partner with us','badge':'Explore with us',
+'lv-title':'Latest episode','lv-sub':'Fresh from YouTube — watch our newest release, the Hoscribe way.',
+'lv-eyebrow':'New release','lv-fallback':'A new episode from Hoscribe',
+'lv-desc':'A brand-new documentary episode is waiting for you on YouTube — facts and adventures, the Hoscribe way.',
+'lv-btn':'Watch now','lv-new':'New',
 'w-title':'Three flavors, one identity','w-sub':'Every episode blends accurate facts, a spirit of adventure and a light touch, so you learn something and smile more than once.',
 'p1-t':'Documentary','p1-d':'Stories and facts from all over the world, researched, verified and told smoothly.',
 'p2-t':'Fun','p2-d':'Information with humor and a quick rhythm, because knowledge should never feel heavy.',
@@ -437,6 +495,44 @@ if(dial&&nd&&matchMedia('(hover:hover)').matches&&!matchMedia('(prefers-reduced-
    a=Math.atan2(e.clientY-(r.top+r.height/2),e.clientX-(r.left+r.width/2))*180/Math.PI+90;
   ang+=((a-ang+540)%360)-180;nd.style.transform='rotate('+ang+'deg)';
  },{passive:true});
+}
+
+/* ============================================================
+   أحدث فيديو — يقرأ new.webp + new.json من حاوية images
+   (نفس المحتوى الذي ترفعه من صفحة Last video.html)
+   ============================================================ */
+var SB_BASE='https://jxavqgvshecyttdqznqi.supabase.co/storage/v1/object/public/images/';
+var latest=document.getElementById('latest');
+if(latest){
+ var lvImg=document.getElementById('lvImg'),
+     lvTitle=document.getElementById('lvTitle'),
+     lvSteps=0,lvImgOk=false,lvTitleText='',lvStamp=Date.now();
+
+ function lvReveal(){
+  if(++lvSteps<2)return;                       // انتظر اكتمال الصورة والعنوان معاً
+  if(!lvImgOk&&!lvTitleText)return;            // لا يوجد محتوى → يبقى القسم مخفياً
+  if(lvImgOk){
+   lvImg.src=SB_BASE+'new.webp?t='+lvStamp;
+   lvImg.hidden=false;
+   if(lvTitleText)lvImg.alt=lvTitleText;
+  }
+  if(lvTitleText){
+   lvTitle.textContent=lvTitleText;
+   lvTitle.removeAttribute('data-i18n');       // حتى لا يستبدله مبدّل اللغة
+  }
+  latest.hidden=false;
+ }
+
+ var lvProbe=new Image();
+ lvProbe.onload=function(){lvImgOk=true;lvReveal()};
+ lvProbe.onerror=function(){lvImgOk=false;lvReveal()};
+ lvProbe.src=SB_BASE+'new.webp?t='+lvStamp;
+
+ fetch(SB_BASE+'new.json?t='+lvStamp,{cache:'no-store'})
+  .then(function(r){return r.ok?r.json():null})
+  .then(function(j){if(j&&typeof j.title==='string')lvTitleText=j.title.trim()})
+  .catch(function(){})
+  .then(lvReveal);
 }
 })();
 </script>
